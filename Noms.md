@@ -1,4 +1,4 @@
-# Noms des Membres du groupe
+# Noms des membres du groupe
 
 ## MVOGO EKAM PAUL SALOMON
 ## TCHASSEM KAMWA RANDY AARON
