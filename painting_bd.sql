@@ -1,16 +1,16 @@
 CREATE TABLE utilisateur (
-    id_user INT PRIMARY KEY AUTO_INCREMENT,
+    id_user SERIAL PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     motdepasse VARCHAR(255) NOT NULL,
     role VARCHAR(50) DEFAULT 'user',
-    date_inscription DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     adresse TEXT
 );
 
 CREATE TABLE categorie_peinture (
-    id_categorie INT PRIMARY KEY AUTO_INCREMENT,
+    id_categorie SERIAL PRIMARY KEY,
     id_parent INT NULL,
     nom VARCHAR(100) NOT NULL,
     slug VARCHAR(100) UNIQUE NOT NULL,
@@ -19,26 +19,40 @@ CREATE TABLE categorie_peinture (
 );
 
 CREATE TABLE tag (
-    id_tag INT PRIMARY KEY AUTO_INCREMENT,
+    id_tag SERIAL PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     slug VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE fiche_peinture (
-    id_fiche INT PRIMARY KEY AUTO_INCREMENT,
+    id_fiche SERIAL PRIMARY KEY,
     titre VARCHAR(255) NOT NULL,
     resume TEXT,
     niveau VARCHAR(50),
-    date_publication DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_publication TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     statut VARCHAR(50) DEFAULT 'brouillon',
-    date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    date_modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     nb_vues INT DEFAULT 0,
     id_categorie INT NOT NULL,
     FOREIGN KEY (id_categorie) REFERENCES categorie_peinture(id_categorie)
 );
 
+-- Pour le trigger de mise à jour automatique de date_modification
+CREATE OR REPLACE FUNCTION update_date_modification()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.date_modification = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_fiche_peinture_modification
+    BEFORE UPDATE ON fiche_peinture
+    FOR EACH ROW
+    EXECUTE FUNCTION update_date_modification();
+
 CREATE TABLE roadmap (
-    id_roadmap INT PRIMARY KEY AUTO_INCREMENT,
+    id_roadmap SERIAL PRIMARY KEY,
     titre VARCHAR(255) NOT NULL,
     description TEXT,
     id_user INT NOT NULL,
@@ -56,11 +70,11 @@ CREATE TABLE roadmap_fiche (
 );
 
 CREATE TABLE media (
-    id_media INT PRIMARY KEY AUTO_INCREMENT,
+    id_media SERIAL PRIMARY KEY,
     url VARCHAR(500) NOT NULL,
     type VARCHAR(50),
     taille INT,
-    date_publication DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_publication TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_user INT NOT NULL,
     FOREIGN KEY (id_user) REFERENCES utilisateur(id_user)
 );
@@ -87,17 +101,17 @@ CREATE TABLE fiche_index (
     PRIMARY KEY (id_fiche1, id_fiche2),
     FOREIGN KEY (id_fiche1) REFERENCES fiche_peinture(id_fiche) ON DELETE CASCADE,
     FOREIGN KEY (id_fiche2) REFERENCES fiche_peinture(id_fiche) ON DELETE CASCADE,
-    CHECK (id_fiche1 < id_fiche2)
+    CONSTRAINT check_fiche_order CHECK (id_fiche1 < id_fiche2)
 );
 
 CREATE TABLE audit_log (
-    id_log INT PRIMARY KEY AUTO_INCREMENT,
+    id_log SERIAL PRIMARY KEY,
     action VARCHAR(50) NOT NULL,
     entity_type VARCHAR(100) NOT NULL,
     entity_id INT NOT NULL,
     old_values TEXT,
     new_values TEXT,
-    date_action DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_action TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ip_adresse VARCHAR(45),
     id_user INT,
     FOREIGN KEY (id_user) REFERENCES utilisateur(id_user) ON DELETE SET NULL
