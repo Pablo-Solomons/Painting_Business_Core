@@ -5,7 +5,8 @@ target/
 !**/src/test/**/target/
 
 #Credentials for liquibase.
-/src/**/resources/liquibase.properties
+#Should be gitignored if serious credentials are used, but for development purposes, we can keep it here.
+#/src/**/resources/liquibase.properties
 
 
 ### STS ###
