@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArtPlastique — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --page: #f8f1e7;
+    --bone: #2a2019;
+    --bone-muted: #7b6b5d;
+    --ochre: #9d6a3b;
+    --ochre-light: #d6b189;
+    --ink: #201712;
+    --surface: #fffdfa;
+    --surface2: #eadfce;
+    --umber: #e6d9c7;
+    --stroke: rgba(42,32,25,0.11);
+    --canvas: #3f2c22;
+    --sienna: #5b3221;
+    --accent-green: #6a7662;
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--page);
+    color: var(--bone);
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 210px;
+    min-height: 100vh;
+    background: var(--canvas);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 1.4rem 1.5rem 1.2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .sidebar-logo .logo-text {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.05em;
+  }
+
+  .sidebar-logo .logo-text span {
+    color: var(--ochre-light);
+    font-style: italic;
+  }
+
+  .sidebar-badge {
+    background: var(--ochre);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.45rem;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+
+  .sidebar-profile {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .sidebar-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--ochre);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    color: #fff;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .sidebar-avatar::after {
+    content: '';
+    position: absolute;
+    bottom: 1px; right: 1px;
+    width: 8px; height: 8px;
+    background: #6dbb7b;
+    border-radius: 50%;
+    border: 1.5px solid var(--canvas);
+  }
+
+  .sidebar-profile-info .name {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .sidebar-profile-info .handle {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .sidebar-section-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.3);
+    padding: 1.2rem 1.5rem 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 0.5rem 0;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .nav-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.04); }
+
+  .nav-item.active {
+    color: #fff;
+    background: rgba(157,106,59,0.18);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2.5px;
+    background: var(--ochre);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .nav-item .nav-icon { font-size: 0.9rem; width: 16px; text-align: center; }
+
+  .nav-badge {
+    background: var(--ochre);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: 10px;
+    margin-left: auto;
+  }
+
+  .sidebar-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .sidebar-footer a {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    margin-bottom: 0.3rem;
+    font-family: var(--font-sans);
+  }
+
+  /* MAIN */
+  .main {
+    margin-left: 210px;
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    height: 56px;
+    background: rgba(248,241,231,0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--stroke);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    position: sticky; top: 0; z-index: 50;
+  }
+
+  .topbar-breadcrumb {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--bone-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .topbar-breadcrumb span { color: var(--ochre); font-weight: 500; }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .btn-outline {
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--stroke);
+    background: transparent;
+    color: var(--bone);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+
+  .btn-outline:hover { background: var(--surface2); }
+
+  .btn-primary {
+    padding: 0.45rem 1.1rem;
+    background: var(--ochre);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+
+  .btn-primary:hover { background: var(--sienna); }
+
+  .dot-status {
+    width: 8px; height: 8px;
+    background: #6dbb7b;
+    border-radius: 50%;
+  }
+
+  /* CONTENT */
+  .content {
+    padding: 2.5rem 2.5rem;
+    flex: 1;
+  }
+
+  .page-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--ochre);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--bone);
+    margin-bottom: 0.3rem;
+  }
+
+  .page-title em {
+    font-style: italic;
+    color: var(--ochre);
+  }
+
+  .page-subtitle {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--bone-muted);
+    margin-bottom: 2.2rem;
+  }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--stroke);
+    border: 1px solid var(--stroke);
+    margin-bottom: 2rem;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    padding: 1.8rem 1.6rem;
+  }
+
+  .kpi-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    color: var(--bone-muted);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .kpi-value {
+    font-family: var(--font-serif);
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--bone);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.4rem;
+    line-height: 1;
+  }
+
+  .kpi-trend {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    color: var(--bone-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .kpi-trend.up { color: #6a7662; }
+  .kpi-trend.warning { color: var(--ochre); }
+  .kpi-trend.neutral { color: var(--bone-muted); }
+
+  /* MAIN GRID */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  /* CHART */
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--stroke);
+    padding: 1.8rem;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--ochre);
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .card-title {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--bone);
+  }
+
+  .card-title em { font-style: italic; color: var(--ochre); }
+
+  .card-link {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--bone-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.15s;
+  }
+
+  .card-link:hover { color: var(--ochre); }
+
+  .chart-wrapper {
+    height: 200px;
+    position: relative;
+  }
+
+  /* RECENT ACTIONS */
+  .recent-card {
+    background: var(--surface);
+    border: 1px solid var(--stroke);
+    padding: 1.8rem;
+  }
+
+  .activity-list { list-style: none; }
+
+  .activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--stroke);
+  }
+
+  .activity-item:last-child { border-bottom: none; }
+
+  .activity-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .activity-dot.green { background: #6dbb7b; }
+  .activity-dot.ochre { background: var(--ochre); }
+  .activity-dot.muted { background: var(--bone-muted); opacity: 0.4; }
+  .activity-dot.red { background: #c0443c; }
+
+  .activity-content { flex: 1; }
+
+  .activity-text {
+    font-size: 0.82rem;
+    color: var(--bone);
+    line-height: 1.4;
+  }
+
+  .activity-text a {
+    color: var(--ochre);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .activity-time {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--bone-muted);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* BOTTOM GRID */
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  /* QUICK ACTIONS */
+  .quick-card {
+    background: var(--surface);
+    border: 1px solid var(--stroke);
+    padding: 1.8rem;
+  }
+
+  .quick-actions-list { list-style: none; margin-top: 0.5rem; }
+
+  .quick-action-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.85rem 0.9rem;
+    border: 1px solid var(--stroke);
+    background: var(--page);
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+
+  .quick-action-item:hover { background: var(--surface2); }
+
+  .quick-action-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .quick-action-icon.bg-ochre { background: rgba(157,106,59,0.12); }
+  .quick-action-icon.bg-green { background: rgba(106,118,98,0.12); }
+  .quick-action-icon.bg-red { background: rgba(192,68,60,0.08); }
+
+  .quick-action-info { flex: 1; }
+
+  .quick-action-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--bone);
+  }
+
+  .quick-action-desc {
+    font-size: 0.72rem;
+    color: var(--bone-muted);
+    margin-top: 0.1rem;
+  }
+
+  .quick-action-arrow {
+    font-size: 0.7rem;
+    color: var(--ochre-light);
+  }
+
+  /* CONTRIBUTOR SCORE */
+  .score-card {
+    background: var(--ink);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .score-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .score-value {
+    font-family: var(--font-serif);
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .score-sub {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.4);
+    font-family: var(--font-sans);
+  }
+
+  .score-alerts { margin-top: 1.2rem; }
+
+  .alert-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.9rem;
+    background: rgba(192,68,60,0.15);
+    border-left: 2px solid #c0443c;
+    margin-bottom: 0.5rem;
+  }
+
+  .alert-text {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.7);
+    font-family: var(--font-sans);
+  }
+
+  .alert-text strong { color: #fff; }
+
+  /* MODERATION ALERTS */
+  .mod-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+
+  .mod-badge.pending {
+    background: rgba(157,106,59,0.12);
+    color: var(--ochre);
+    border: 1px solid rgba(157,106,59,0.2);
+  }
+
+  .mod-badge.revision {
+    background: rgba(157,106,59,0.08);
+    color: var(--ochre);
+    border: 1px solid rgba(157,106,59,0.15);
+  }
+
+  .mod-badge.published {
+    background: rgba(109,187,123,0.1);
+    color: #5aa569;
+    border: 1px solid rgba(109,187,123,0.2);
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-text">Art<span>Plastique</span></span>
+    <span class="sidebar-badge">ADMIN</span>
+  </div>
+
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar">A</div>
+    <div class="sidebar-profile-info">
+      <div class="name">Admin</div>
+      <div class="handle">@admin</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section-label">Tableau de bord</div>
+  <nav class="sidebar-nav">
+    <a class="nav-item active" href="#">
+      <span class="nav-icon">○</span> Vue d'ensemble
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🔔</span> Notifications
+      <span class="nav-badge">3</span>
+    </a>
+
+    <div class="sidebar-section-label" style="margin-top:0.5rem">Gestion</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">👤</span> Peintres
+      <span class="nav-badge">5</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📄</span> Fiches
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🗺</span> Roadmaps
+    </a>
+
+    <div class="sidebar-section-label" style="margin-top:0.5rem">Analytiques</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📊</span> Statistiques
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🛡</span> Modération
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="#">⚙ Paramètres</a>
+    <a href="#">← Retour accueil</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-breadcrumb">
+      Art Plastique &nbsp;·&nbsp; <span>Administration</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-outline">+ NOUVELLE FICHE</button>
+      <button class="btn-primary">+ ROADMAP</button>
+      <div class="dot-status"></div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="page-eyebrow">Administration</div>
+    <h1 class="page-title">Bonjour, <em>Admin.</em></h1>
+    <p class="page-subtitle">Mercredi 7 mai 2025 — Voici un aperçu de la plateforme</p>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Peintres inscrits</div>
+        <div class="kpi-value">148</div>
+        <div class="kpi-trend up">↑ +12 ce mois</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">En attente validation</div>
+        <div class="kpi-value">5</div>
+        <div class="kpi-trend warning">⚠ À valider</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Fiches publiées</div>
+        <div class="kpi-value">241</div>
+        <div class="kpi-trend up">↑ +8 cette semaine</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Fiches en révision</div>
+        <div class="kpi-value">7</div>
+        <div class="kpi-trend neutral">— En cours de traitement</div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+      <!-- CHART -->
+      <div class="chart-card">
+        <div class="card-header">
+          <div>
+            <div class="card-eyebrow">Tendance</div>
+            <div class="card-title">Inscriptions <em>sur 30 jours</em></div>
+          </div>
+          <a href="#" class="card-link">Tout voir</a>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="inscriptionsChart"></canvas>
+        </div>
+      </div>
+
+      <!-- RECENT ACTIONS -->
+      <div class="recent-card">
+        <div class="card-header">
+          <div>
+            <div class="card-eyebrow">Historique</div>
+            <div class="card-title">Actions récentes</div>
+          </div>
+          <a href="#" class="card-link">Tout voir</a>
+        </div>
+        <ul class="activity-list">
+          <li class="activity-item">
+            <div class="activity-dot green"></div>
+            <div class="activity-content">
+              <div class="activity-text">Fiche <a href="#">Bleu de Prusse</a> publiée</div>
+            </div>
+            <div class="activity-time">il y a 1h</div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-dot ochre"></div>
+            <div class="activity-content">
+              <div class="activity-text">Nouveau peintre <a href="#">@thomas.b</a> en attente</div>
+            </div>
+            <div class="activity-time">il y a 2h</div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-dot red"></div>
+            <div class="activity-content">
+              <div class="activity-text">Fiche <a href="#">Cadmium Rouge</a> signalée</div>
+            </div>
+            <div class="activity-time">Hier</div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-dot green"></div>
+            <div class="activity-content">
+              <div class="activity-text">Peintre <a href="#">@clara.m</a> validée</div>
+            </div>
+            <div class="activity-time">Hier</div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-dot muted"></div>
+            <div class="activity-content">
+              <div class="activity-text">Roadmap <a href="#">Aquarelle débutant</a> mise à jour</div>
+            </div>
+            <div class="activity-time">il y a 2j</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BOTTOM GRID -->
+    <div class="bottom-grid">
+      <!-- QUICK ACTIONS -->
+      <div class="quick-card">
+        <div class="card-header">
+          <div>
+            <div class="card-eyebrow">Créer</div>
+            <div class="card-title">Accès rapides</div>
+          </div>
+        </div>
+        <ul class="quick-actions-list">
+          <li>
+            <a class="quick-action-item" href="#">
+              <div class="quick-action-icon bg-ochre">👤</div>
+              <div class="quick-action-info">
+                <div class="quick-action-title">Valider les peintres</div>
+                <div class="quick-action-desc">5 demandes en attente</div>
+              </div>
+              <span class="quick-action-arrow">›</span>
+            </a>
+          </li>
+          <li>
+            <a class="quick-action-item" href="#">
+              <div class="quick-action-icon bg-green">📄</div>
+              <div class="quick-action-info">
+                <div class="quick-action-title">Modérer les fiches</div>
+                <div class="quick-action-desc">7 fiches en révision</div>
+              </div>
+              <span class="quick-action-arrow">›</span>
+            </a>
+          </li>
+          <li>
+            <a class="quick-action-item" href="#">
+              <div class="quick-action-icon bg-red">🛡</div>
+              <div class="quick-action-info">
+                <div class="quick-action-title">Alertes modération</div>
+                <div class="quick-action-desc">1 signalement à traiter</div>
+              </div>
+              <span class="quick-action-arrow">›</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ALERTS CARD -->
+      <div class="score-card">
+        <div>
+          <div class="score-label">Modération</div>
+          <div class="score-value">12</div>
+          <div class="score-sub">actions en attente</div>
+        </div>
+        <div class="score-alerts">
+          <div class="alert-item">
+            <span style="font-size:0.8rem">⚠</span>
+            <div class="alert-text"><strong>5 peintres</strong> en attente de validation</div>
+          </div>
+          <div class="alert-item">
+            <span style="font-size:0.8rem">🔍</span>
+            <div class="alert-text"><strong>7 fiches</strong> soumises à révision</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const ctx = document.getElementById('inscriptionsChart').getContext('2d');
+  const labels = [];
+  const data = [];
+  const now = new Date(2025, 4, 7);
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    labels.push(d.getDate() + '/' + (d.getMonth()+1));
+    data.push(Math.floor(2 + Math.random() * 8 + (29 - i) * 0.3));
+  }
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: data.map((v, i) => i === 29 ? '#9d6a3b' : 'rgba(214,177,137,0.4)'),
+        borderRadius: 1,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        backgroundColor: '#2a2019',
+        titleFont: { family: 'DM Mono', size: 10 },
+        bodyFont: { family: 'DM Sans', size: 11 },
+        padding: 8,
+      }},
+      scales: {
+        x: {
+          ticks: {
+            maxTicksLimit: 6,
+            font: { family: 'DM Mono', size: 9 },
+            color: '#7b6b5d',
+          },
+          grid: { display: false },
+          border: { display: false }
+        },
+        y: {
+          ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7b6b5d' },
+          grid: { color: 'rgba(42,32,25,0.06)' },
+          border: { display: false }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>
