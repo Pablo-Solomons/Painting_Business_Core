@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+#Credentials for liquibase.
+/src/**/resources/liquibase.properties
+
+
 ### STS ###
 .apt_generated
 .classpath
