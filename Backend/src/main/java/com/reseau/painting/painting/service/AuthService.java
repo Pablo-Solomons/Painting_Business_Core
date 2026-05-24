@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.reseau.painting.core.JwtService;
+import com.reseau.painting.core.security.JwtService;
 import com.reseau.painting.painting.domain.Utilisateur;
 
 @Service
