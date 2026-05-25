@@ -15,7 +15,7 @@ CREATE TABLE categorie_peinture (
     nom VARCHAR(100) NOT NULL,
     slug VARCHAR(100) UNIQUE NOT NULL,
     description TEXT,
-    FOREIGN KEY (id_parent) REFERENCES categorie_peinture(id_categorie) ON DELETE SET NULL
+    CONSTRAINT fk_parent FOREIGN KEY (id_parent) REFERENCES categorie_peinture(id_categorie) ON DELETE SET NULL
 );
 
 CREATE TABLE tag (
