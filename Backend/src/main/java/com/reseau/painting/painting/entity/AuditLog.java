@@ -1,4 +1,4 @@
-package com.reseau.painting.entity;
+package com.reseau.painting.painting.entity;
 
 import java.time.Instant;
 
