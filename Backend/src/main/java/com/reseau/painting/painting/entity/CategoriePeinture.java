@@ -1,4 +1,4 @@
-package com.reseau.painting.entity;
+package com.reseau.painting.painting.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
