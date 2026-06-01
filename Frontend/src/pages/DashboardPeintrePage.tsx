@@ -51,13 +51,54 @@ export function DashboardPeintrePage() {
   return (
     <PainterShell activePanel={activePanel} onNavigate={setActivePanel}>
       <section className={`panel ${activePanel === 'overview' ? 'active' : ''}`} id="panel-overview">
-        <div className="overview-welcome">
-          <div className="welcome-text">
-            <div className="welcome-eyebrow">Espace peintre</div>
-            <h1 className="welcome-title">
-              Bonjour, <em>Marie.</em>
-            </h1>
-            <div className="welcome-date">Mardi 6 mai 2025 — Voici un aperçu de votre activité</div>
+        <div className="overview-hero">
+          <div className="overview-welcome">
+            <div className="welcome-text">
+              <div className="welcome-eyebrow">Espace peintre</div>
+              <h1 className="welcome-title">
+                Bonjour, <em>Marie.</em>
+              </h1>
+              <div className="welcome-date">Mardi 6 mai 2025 — Voici un aperçu de votre activité</div>
+            </div>
+
+            <div className="hero-pills">
+              <span>3 fiches en révision</span>
+              <span>1 nouveau commentaire</span>
+              <span>72 points contributeur</span>
+            </div>
+          </div>
+
+          <div className="overview-hero-card">
+            <div className="overview-hero-card-head">
+              <div>
+                <div className="overview-hero-card-eyebrow">Vue rapide</div>
+                <div className="overview-hero-card-title">Votre atelier aujourd'hui</div>
+              </div>
+              <div className="overview-hero-card-badge">Actif</div>
+            </div>
+
+            <div className="overview-hero-card-grid">
+              <div>
+                <span>À publier</span>
+                <strong>2 fiches prêtes</strong>
+              </div>
+              <div>
+                <span>En attente</span>
+                <strong>1 roadmap</strong>
+              </div>
+              <div>
+                <span>Favoris</span>
+                <strong>+28 cette semaine</strong>
+              </div>
+              <div>
+                <span>Lectures</span>
+                <strong>892 vues</strong>
+              </div>
+            </div>
+
+            <button type="button" className="overview-hero-cta" onClick={() => setActivePanel('editeur')}>
+              Ouvrir l'éditeur
+            </button>
           </div>
         </div>
 
