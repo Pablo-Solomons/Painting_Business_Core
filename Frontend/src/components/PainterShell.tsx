@@ -1,6 +1,10 @@
+'use client'
+
 import type { ReactNode } from 'react'
-import { NavLink } from 'react-router-dom'
-import { appLogoUrl } from '../data/assets'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { appLogoUrl } from '@/data/assets'
+import { useDemoStore } from '@/context/DemoStoreContext'
 
 type PainterShellProps = {
   children: ReactNode
@@ -19,19 +23,28 @@ const navItems = [
 ]
 
 export function PainterShell({ children, activePanel = 'overview', onNavigate }: PainterShellProps) {
+  const { session, logout } = useDemoStore()
+  const router = useRouter()
+  const initial = session?.name.charAt(0).toUpperCase() ?? 'P'
+
+  function handleLogout() {
+    logout()
+    router.push('/connexion')
+  }
+
   return (
     <div className="painter-shell">
       <aside className="sidebar painter-sidebar">
-        <NavLink to="/dashboard/peintre" className="sidebar-logo">
+        <Link href="/dashboard/peintre" className="sidebar-logo">
           <img src={appLogoUrl} alt="ArtPlastique logo" className="sidebar-logo-img" />
           <span className="sidebar-role-badge">Peintre</span>
-        </NavLink>
+        </Link>
 
         <div className="sidebar-user">
-          <div className="user-avatar">M</div>
+          <div className="user-avatar">{initial}</div>
           <div className="user-info">
-            <div className="user-name">Marie Durand</div>
-            <div className="user-handle">@marie.durand</div>
+            <div className="user-name">{session?.name ?? 'Peintre'}</div>
+            <div className="user-handle">@{session?.handle ?? 'peintre'}</div>
           </div>
         </div>
 
@@ -73,12 +86,15 @@ export function PainterShell({ children, activePanel = 'overview', onNavigate }:
         </nav>
 
         <div className="sidebar-footer">
-          <a href="/dashboard/peintre" className="sidebar-footer-item">
+          <Link href="/dashboard/peintre" className="sidebar-footer-item">
             ⚙ Paramètres
-          </a>
-          <a href="/" className="sidebar-footer-item">
-            ← Quitter l'espace
-          </a>
+          </Link>
+          <Link href="/" className="sidebar-footer-item">
+            ← Site public
+          </Link>
+          <button type="button" className="sidebar-footer-item sidebar-footer-btn" onClick={handleLogout}>
+            ⎋ Déconnexion
+          </button>
         </div>
       </aside>
 

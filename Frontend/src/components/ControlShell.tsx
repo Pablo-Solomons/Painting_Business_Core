@@ -1,6 +1,10 @@
+'use client'
+
 import type { ReactNode } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
-import { appLogoUrl } from '../data/assets'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import { appLogoUrl } from '@/data/assets'
+import { useDemoStore } from '@/context/DemoStoreContext'
 
 type ControlShellProps = {
   children: ReactNode
@@ -33,24 +37,32 @@ const navGroups = [
 ]
 
 export function ControlShell({ children }: ControlShellProps) {
-  const location = useLocation()
-  const isPeintres = location.pathname === '/admin/peintres'
+  const pathname = usePathname()
+  const router = useRouter()
+  const { session, logout } = useDemoStore()
+  const isPeintres = pathname === '/admin/peintres'
   const topbarLabel = isPeintres ? 'Validation des peintres' : "Vue d'ensemble"
   const breadcrumb = isPeintres ? 'Peintres' : 'Dashboard'
+  const initial = session?.name.charAt(0).toUpperCase() ?? 'A'
+
+  function handleLogout() {
+    logout()
+    router.push('/connexion')
+  }
 
   return (
     <div className="admin-shell">
       <aside className="sidebar">
-        <NavLink to="/admin" className="sidebar-logo">
+        <Link href="/admin" className="sidebar-logo">
           <img src={appLogoUrl} alt="ArtPlastique logo" className="sidebar-logo-img" />
           <div className="sidebar-admin-badge">Admin</div>
-        </NavLink>
+        </Link>
 
         <div className="sidebar-user">
-          <div className="user-avatar">A</div>
+          <div className="user-avatar">{initial}</div>
           <div>
-            <div className="user-name">Administrateur</div>
-            <div className="user-role">admin@artplastique.fr</div>
+            <div className="user-name">{session?.name ?? 'Administrateur'}</div>
+            <div className="user-role">{session?.email ?? 'admin@artplastique.demo'}</div>
           </div>
         </div>
 
@@ -59,7 +71,7 @@ export function ControlShell({ children }: ControlShellProps) {
             <div key={group.label}>
               <div className="nav-section-label">{group.label}</div>
               {group.items.map((item) => {
-                const isActive = item.to !== '#' && location.pathname === item.to
+                const isActive = item.to !== '#' && pathname === item.to
                 const className = ['nav-item', isActive ? 'active' : ''].filter(Boolean).join(' ')
                 return item.to === '#' ? (
                   <a key={item.label} className={className} href="#">
@@ -70,13 +82,13 @@ export function ControlShell({ children }: ControlShellProps) {
                     ) : null}
                   </a>
                 ) : (
-                  <NavLink key={item.label} to={item.to} className={className} end={item.to === '/admin'}>
+                  <Link key={item.label} href={item.to} className={className}>
                     <span className="nav-icon">{item.icon}</span>
                     {item.label}
                     {'badge' in item && item.badge ? (
                       <span className={`nav-badge${item.tone === 'warn' ? ' warn' : ''}`}>{item.badge}</span>
                     ) : null}
-                  </NavLink>
+                  </Link>
                 )
               })}
             </div>
@@ -84,12 +96,12 @@ export function ControlShell({ children }: ControlShellProps) {
         </nav>
 
         <div className="sidebar-footer">
-          <a className="sidebar-footer-item" href="/">
+          <Link className="sidebar-footer-item" href="/">
             ← Retour au site public
-          </a>
-          <a className="sidebar-footer-item" href="/connexion">
+          </Link>
+          <button type="button" className="sidebar-footer-item sidebar-footer-btn" onClick={handleLogout}>
             ⎋ Déconnexion
-          </a>
+          </button>
         </div>
       </aside>
 

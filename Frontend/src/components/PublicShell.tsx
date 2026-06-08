@@ -1,36 +1,39 @@
-import { NavLink, useLocation } from 'react-router-dom'
-import { appLogoUrl } from '../data/assets'
-import { publicNav } from '../data/siteContent'
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { appLogoUrl } from '@/data/assets'
+import { publicNav } from '@/data/siteContent'
 
 type PublicShellProps = {
   children: React.ReactNode
 }
 
 export function PublicShell({ children }: PublicShellProps) {
-  const location = useLocation()
+  const pathname = usePathname()
 
-  if (location.pathname === '/') {
+  if (pathname === '/') {
     return <>{children}</>
   }
 
   return (
     <div className="app-shell public-shell">
       <header className="topbar">
-        <NavLink to="/" className="brand">
+        <Link href="/" className="brand">
           <img src={appLogoUrl} alt="ArtPlastique logo" className="brand-img" />
-        </NavLink>
+        </Link>
 
         <nav className="topnav" aria-label="Navigation principale">
           {publicNav.map((item) => (
-            <NavLink key={item.to} to={item.to} className="topnav-link">
+            <Link key={item.to} href={item.to} className="topnav-link">
               {item.label}
-            </NavLink>
+            </Link>
           ))}
         </nav>
 
-        <NavLink to="/connexion" className="cta-link">
+        <Link href="/connexion" className="cta-link">
           Commencer
-        </NavLink>
+        </Link>
       </header>
 
       <main>{children}</main>
@@ -41,9 +44,9 @@ export function PublicShell({ children }: PublicShellProps) {
           <p>Référence pour les fiches techniques, les roadmaps et les espaces peintres.</p>
         </div>
         <div className="footer-links">
-          <NavLink to="/fiches">Fiches</NavLink>
-          <NavLink to="/roadmaps">Roadmaps</NavLink>
-          <NavLink to="/themes">Themes</NavLink>
+          <Link href="/fiches">Fiches</Link>
+          <Link href="/roadmaps">Roadmaps</Link>
+          <Link href="/themes">Themes</Link>
         </div>
       </footer>
     </div>
