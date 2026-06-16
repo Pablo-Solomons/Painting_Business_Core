@@ -1,0 +1,44 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Introduction}{3}{section.0.1}%
+\contentsline {section}{\numberline {2}Analyse fonctionnelle et contraintes}{5}{section.0.2}%
+\contentsline {subsection}{\numberline {2.1}État de l'art des solutions de centralisation de savoirs}{5}{subsection.0.2.1}%
+\contentsline {subsection}{\numberline {2.2}Analyse détaillée des besoins par acteur}{7}{subsection.0.2.2}%
+\contentsline {subsection}{\numberline {2.3}Contraintes techniques et critères de performance}{10}{subsection.0.2.3}%
+\contentsline {subsection}{\numberline {2.4}Justification des choix technologiques de l'instance}{11}{subsection.0.2.4}%
+\contentsline {section}{\numberline {3}Conception architecturale et modélisation }{15}{section.0.3}%
+\contentsline {subsection}{\numberline {3.1}Diagramme des cas d'utilisation}{15}{subsection.0.3.1}%
+\contentsline {subsection}{\numberline {3.2}Diagramme de classes}{16}{subsection.0.3.2}%
+\contentsline {subsection}{\numberline {3.3}Notre rôle en tant que tenant BCaaS}{18}{subsection.0.3.3}%
+\contentsline {subsubsection}{Positionnement dans l'écosystème global}{18}{section*.23}%
+\contentsline {subsubsection}{Marquage et identification du tenant}{19}{section*.25}%
+\contentsline {subsubsection}{Isolation logique du tenant}{20}{section*.26}%
+\contentsline {subsubsection}{Séquence d'entrée dans l'écosystème}{20}{section*.27}%
+\contentsline {section}{\numberline {4}Implémentation frontend et simulation API}{21}{section.0.4}%
+\contentsline {subsection}{\numberline {4.1}Architecture et structure du projet Next.js 15}{21}{subsection.0.4.1}%
+\contentsline {subsection}{\numberline {4.2}Cartographie des routes et des vues réalisées}{21}{subsection.0.4.2}%
+\contentsline {subsection}{\numberline {4.3}Catalogue des composants UI principaux}{22}{subsection.0.4.3}%
+\contentsline {subsection}{\numberline {4.4}Mécanisme d'abstraction et couche API (\texttt {lib/api.ts})}{23}{subsection.0.4.4}%
+\contentsline {subsection}{\numberline {4.5}Présentation des interfaces principales}{28}{subsection.0.4.5}%
+\contentsline {section}{\numberline {5}Stratégies d'intégration et d'observabilité simulées}{30}{section.0.5}%
+\contentsline {subsection}{\numberline {5.1}Isolation et marquage du tenant applicatif}{30}{subsection.0.5.1}%
+\contentsline {subsection}{\numberline {5.2}Déroulement d'un cas métier concret : Publication d'une fiche}{31}{subsection.0.5.2}%
+\contentsline {subsection}{\numberline {5.3}Observabilité métier et gestion de la traçabilité}{32}{subsection.0.5.3}%
+\contentsline {section}{\numberline {6}Validation, métriques et tests}{33}{section.0.6}%
+\contentsline {subsection}{\numberline {6.1}Stratégie de tests unitaires et d'intégration}{33}{subsection.0.6.1}%
+\contentsline {subsection}{\numberline {6.2}Campagne de tests de performance et audits Lighthouse}{36}{subsection.0.6.2}%
+\contentsline {subsection}{\numberline {6.3}Tableau complet des résultats de tests}{37}{subsection.0.6.3}%
+\contentsline {subsection}{\numberline {6.4}Validation des livrables BCaaS (L1 à L5)}{39}{subsection.0.6.4}%
+\contentsline {subsection}{\numberline {6.5}Bilan de la validation et niveau de maturité logicielle}{40}{subsection.0.6.5}%
+\contentsline {section}{\numberline {7}Perspectives de transition et évolutions}{41}{section.0.7}%
+\contentsline {subsection}{\numberline {7.1}Simulation d'erreurs réseau et cas limites}{41}{subsection.0.7.1}%
+\contentsline {subsection}{\numberline {7.2}Tableau de bord de monitoring des échanges simulés}{41}{subsection.0.7.2}%
+\contentsline {subsection}{\numberline {7.3}Sélecteur de rôle interactif pour les tests}{42}{subsection.0.7.3}%
+\contentsline {subsection}{\numberline {7.4}Stratégie de couplage à une API backend physique}{42}{subsection.0.7.4}%
+\contentsline {subsection}{\numberline {7.5}Intégration d'un moteur d'authentification et de rôles étatiques}{43}{subsection.0.7.5}%
+\contentsline {subsection}{\numberline {7.6}Dynamisation géospatiale de la carte interactive}{43}{subsection.0.7.6}%
+\contentsline {section}{\numberline {8}Conclusion}{44}{section.0.8}%
+\contentsline {subsection}{\numberline {8.1}Bilan technique du travail réalisé}{44}{subsection.0.8.1}%
+\contentsline {subsection}{\numberline {8.2}Enseignements conceptuels et personnels}{44}{subsection.0.8.2}%
+\contentsline {section}{\numberline {1}Annexes techniques}{45}{section.Alph0.1}%
+\contentsline {subsection}{\numberline {1.1}Annexe A : Spécifications détaillées des types de l'instance}{45}{subsection.Alph0.1.1}%
+\contentsline {subsection}{\numberline {1.2}Annexe B : Structure du Paquet Métier et Simulation des Échanges API}{46}{subsection.Alph0.1.2}%
