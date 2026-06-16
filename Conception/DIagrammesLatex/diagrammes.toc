@@ -1,0 +1,10 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Créer un Compte}{3}{section.1}%
+\contentsline {section}{\numberline {2}S'authentifier --- Peintre vérifié}{4}{section.2}%
+\contentsline {section}{\numberline {3}Gérer les Comptes --- Admin}{5}{section.3}%
+\contentsline {section}{\numberline {4}Gérer le Contenu --- Admin}{6}{section.4}%
+\contentsline {section}{\numberline {5}Publier Contenu --- Peintre vérifié}{7}{section.5}%
+\contentsline {section}{\numberline {6}Consulter un Contenu}{7}{section.6}%
+\contentsline {section}{\numberline {7}Gérer son Profil --- Peintre vérifié}{8}{section.7}%
+\contentsline {section}{\numberline {8}Modifier son Contenu --- Peintre vérifié}{8}{section.8}%
+\contentsline {section}{\numberline {9}Rechercher du Contenu}{9}{section.9}%
