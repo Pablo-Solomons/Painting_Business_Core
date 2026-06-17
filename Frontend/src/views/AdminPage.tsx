@@ -5,10 +5,22 @@ import { useDemoStore } from '@/context/DemoStoreContext'
 import { statusMeta } from '@/types/content'
 
 const recentRows = [
-  { initials: 'CL', bg: '#d6b189', fg: '#3f2c22', name: 'Claire Lescure', email: 'claire@email.fr', specialites: ['Huile', 'Portrait'], status: 'En attente', statusClass: 'badge-pending', date: 'Il y a 2h' },
-  { initials: 'MR', bg: '#9d6a3b', fg: '#fffdfa', name: 'Marc Renaud', email: 'm.renaud@gmail.com', specialites: ['Aquarelle'], status: 'En attente', statusClass: 'badge-pending', date: 'Il y a 5h' },
-  { initials: 'SD', bg: '#4a7c59', fg: '#fffdfa', name: 'Sophie Dumas', email: 'sophie.d@art.fr', specialites: ['Acrylique', 'Abstrait'], status: 'Actif', statusClass: 'badge-active', date: 'Hier' },
-  { initials: 'TB', bg: '#5b3221', fg: '#d6b089', name: 'Thomas Brel', email: 't.brel@mail.fr', specialites: ['Sculpture'], status: 'Actif', statusClass: 'badge-active', date: 'Il y a 2j' },
+  { initials: 'CL', bg: '#d6b189', fg: '#3f2c22', name: 'Claire Lescure', email: 'claire@email.fr', specialites: ['Huile', 'Portrait'], status: 'En attente', statusClass: 'badge-pending' },
+  { initials: 'MR', bg: '#9d6a3b', fg: '#fffdfa', name: 'Marc Renaud', email: 'm.renaud@gmail.com', specialites: ['Aquarelle'], status: 'En attente', statusClass: 'badge-pending' },
+  { initials: 'SD', bg: '#4a7c59', fg: '#fffdfa', name: 'Sophie Dumas', email: 'sophie.d@art.fr', specialites: ['Acrylique', 'Abstrait'], status: 'Actif', statusClass: 'badge-active' },
+  { initials: 'TB', bg: '#5b3221', fg: '#d6b089', name: 'Thomas Brel', email: 't.brel@mail.fr', specialites: ['Sculpture'], status: 'Actif', statusClass: 'badge-active' },
+]
+
+const alertsList = [
+  { icon: '🚩', text: 'Fiche "Glacis" signalée pour contenu inexact', time: 'Il y a 1h', urgent: true },
+  { icon: '⚠️', text: 'Compte "Marc Renaud" — informations suspectes', time: 'Il y a 3h', urgent: true },
+  { icon: '📋', text: 'Roadmap "Initiation huile" — 3 fiches manquantes', time: 'Hier', urgent: false },
+]
+
+const messagesList = [
+  { from: 'Claire Lescure', text: 'Bonjour, j\'aimerais savoir comment valider mon compte…', time: 'Il y a 2h', unread: true },
+  { from: 'Sophie Dumas', text: 'Merci pour la validation rapide de mes fiches !', time: 'Hier', unread: false },
+  { from: 'Thomas Brel', text: 'Question sur la catégorie "Sculpture"…', time: 'Il y a 3j', unread: false },
 ]
 
 export function AdminPage() {
@@ -42,6 +54,102 @@ export function AdminPage() {
     { label: 'Fiches publiées', value: String(publishedCount), delta: '▲ Données simulées', tone: 'up', icon: '◧' },
     { label: 'Contenus en révision', value: String(totalInReview), delta: 'À modérer', tone: 'neutral', icon: '✎' },
   ]
+
+  const activePanel = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('panel') : null
+
+  if (activePanel === 'alertes') {
+    return (
+      <section className="panel active" id="panel-overview">
+        <div className="greeting-bar" style={{ marginBottom: '1.5rem' }}>
+          <div>
+            <div className="greeting-eyebrow">Modération</div>
+            <h1 className="greeting-title">Alertes <em>et signalements</em></h1>
+          </div>
+        </div>
+        <div className="card">
+          <div className="card-header"><div className="card-title">Signalements récents</div></div>
+          <div className="card-body" style={{ padding: '1.25rem 1.5rem' }}>
+            <div className="moderation-list">
+              {alertsList.map((alert, idx) => (
+                <div key={idx} className="mod-item">
+                  <div className="mod-color-swatch" style={{ background: alert.urgent ? '#8c1a1a' : 'var(--ochre)' }}>{alert.icon}</div>
+                  <div className="mod-info">
+                    <div className="mod-title">{alert.text}</div>
+                    <div className="mod-author">{alert.time}</div>
+                  </div>
+                  <div className="mod-actions">
+                    <button type="button" className="mod-btn approve" title="Traiter">✓</button>
+                    <button type="button" className="mod-btn reject" title="Ignorer">✕</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (activePanel === 'messages') {
+    return (
+      <section className="panel active" id="panel-overview">
+        <div className="greeting-bar" style={{ marginBottom: '1.5rem' }}>
+          <div>
+            <div className="greeting-eyebrow">Communication</div>
+            <h1 className="greeting-title">Messages <em>récents</em></h1>
+          </div>
+        </div>
+        <div className="card">
+          <div className="card-header"><div className="card-title">Boîte de réception</div></div>
+          <div className="card-body" style={{ padding: '1.25rem 1.5rem' }}>
+            <div className="moderation-list">
+              {messagesList.map((msg, idx) => (
+                <div key={idx} className="mod-item">
+                  <div className="mod-color-swatch" style={{ background: msg.unread ? 'var(--ochre)' : 'var(--stroke)' }}>{msg.unread ? '●' : '○'}</div>
+                  <div className="mod-info">
+                    <div className="mod-title">{msg.from}</div>
+                    <div className="mod-author">{msg.text}</div>
+                    <div className="mod-author" style={{ fontSize: '0.68rem' }}>{msg.time}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (activePanel === 'config') {
+    return (
+      <section className="panel active" id="panel-overview">
+        <div className="greeting-bar" style={{ marginBottom: '1.5rem' }}>
+          <div>
+            <div className="greeting-eyebrow">Paramètres</div>
+            <h1 className="greeting-title">Configuration <em>de la plateforme</em></h1>
+          </div>
+        </div>
+        <div className="card">
+          <div className="card-header"><div className="card-title">Paramètres généraux</div></div>
+          <div className="card-body" style={{ padding: '1.5rem' }}>
+            <div className="field-group">
+              <label className="field-label">Nom de la plateforme</label>
+              <input className="field-input" type="text" defaultValue="ArtPlastique" />
+            </div>
+            <div className="field-group">
+              <label className="field-label">Description</label>
+              <textarea className="field-textarea" defaultValue="La référence francophone pour les arts plastiques — fiches de connaissance, roadmaps structurées et communauté de peintres." style={{ minHeight: 80 }} />
+            </div>
+            <div className="field-group">
+              <label className="field-label">Nombre max de fiches par peintre</label>
+              <input className="field-input" type="number" defaultValue="50" />
+            </div>
+            <button type="button" className="topbar-btn" style={{ marginTop: '0.75rem' }}>Enregistrer (simulation)</button>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="panel active" id="panel-overview">
@@ -105,33 +213,34 @@ export function AdminPage() {
               <span className="qa-badge">Urgent</span>
               <div className="qa-arrow" />
             </Link>
-            <a href="#moderation-fiches" className="quick-action-item">
+            <Link href="/admin/fiches" className="quick-action-item">
               <div className="qa-icon">◧</div>
               <div>
                 <div className="qa-label">Modérer les fiches</div>
                 <div className="qa-sub">{moderationQueue.length} soumission{moderationQueue.length > 1 ? 's' : ''}</div>
               </div>
               <div className="qa-arrow" />
-            </a>
-            <a href="#moderation-roadmaps" className="quick-action-item">
+            </Link>
+            <Link href="/admin/roadmaps" className="quick-action-item">
               <div className="qa-icon">🗺</div>
               <div>
                 <div className="qa-label">Modérer les roadmaps</div>
                 <div className="qa-sub">{roadmapModerationQueue.length} soumission{roadmapModerationQueue.length > 1 ? 's' : ''}</div>
               </div>
               <div className="qa-arrow" />
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="bottom-grid">
-        <div className="card">
+        <div className="card" id="peintres-recents">
           <div className="card-header">
             <div>
               <div className="card-label">Dernières inscriptions</div>
               <div className="card-title">Nouveaux peintres</div>
             </div>
+            <Link href="/admin/peintres" className="card-action" style={{ fontFamily: 'DM Mono, monospace', fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ochre)' }}>Voir tout →</Link>
           </div>
           <table className="activity-table">
             <thead>
@@ -139,7 +248,7 @@ export function AdminPage() {
                 <th>Peintre</th>
                 <th>Spécialités</th>
                 <th>Statut</th>
-                <th>Date</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -164,7 +273,14 @@ export function AdminPage() {
                   <td>
                     <span className={`badge ${row.statusClass}`}>{row.status}</span>
                   </td>
-                  <td className="activity-time">{row.date}</td>
+                  <td>
+                    {row.status === 'En attente' && (
+                      <div className="admin-row-actions" style={{ gap: '0.35rem' }}>
+                        <button type="button" className="admin-row-btn approve" title="Valider">✓</button>
+                        <button type="button" className="admin-row-btn reject" title="Rejeter">✕</button>
+                      </div>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -186,10 +302,7 @@ export function AdminPage() {
                 const meta = statusMeta(fiche.status)
                 return (
                   <div key={fiche.slug} className="mod-item">
-                    <div
-                      className="mod-color-swatch"
-                      style={{ background: fiche.swatch?.[1] ?? 'var(--ochre)' }}
-                    />
+                    <div className="mod-color-swatch" style={{ background: fiche.swatch?.[1] ?? 'var(--ochre)' }} />
                     <div className="mod-info">
                       <div className="mod-title">{fiche.title}</div>
                       <div className="mod-author">{fiche.question}</div>
@@ -199,22 +312,8 @@ export function AdminPage() {
                       </div>
                     </div>
                     <div className="mod-actions">
-                      <button
-                        type="button"
-                        className="mod-btn approve"
-                        title="Approuver"
-                        onClick={() => approveFiche(fiche.slug)}
-                      >
-                        ✓
-                      </button>
-                      <button
-                        type="button"
-                        className="mod-btn reject"
-                        title="Rejeter"
-                        onClick={() => rejectFiche(fiche.slug)}
-                      >
-                        ✕
-                      </button>
+                      <button type="button" className="mod-btn approve" title="Approuver" onClick={() => approveFiche(fiche.slug)}>✓</button>
+                      <button type="button" className="mod-btn reject" title="Rejeter" onClick={() => rejectFiche(fiche.slug)}>✕</button>
                     </div>
                   </div>
                 )
@@ -250,22 +349,8 @@ export function AdminPage() {
                     </div>
                   </div>
                   <div className="mod-actions">
-                    <button
-                      type="button"
-                      className="mod-btn approve"
-                      title="Approuver"
-                      onClick={() => approveRoadmap(roadmap.slug)}
-                    >
-                      ✓
-                    </button>
-                    <button
-                      type="button"
-                      className="mod-btn reject"
-                      title="Rejeter"
-                      onClick={() => rejectRoadmap(roadmap.slug)}
-                    >
-                      ✕
-                    </button>
+                    <button type="button" className="mod-btn approve" title="Approuver" onClick={() => approveRoadmap(roadmap.slug)}>✓</button>
+                    <button type="button" className="mod-btn reject" title="Rejeter" onClick={() => rejectRoadmap(roadmap.slug)}>✕</button>
                   </div>
                 </div>
               )

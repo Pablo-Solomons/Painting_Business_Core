@@ -34,7 +34,7 @@ export function PainterShell({ children, activePanel = 'overview', onNavigate }:
 
   return (
     <div className="painter-shell">
-      <aside className="sidebar painter-sidebar">
+      <aside className="sidebar painter-sidebar sidebar--dark">
         <Link href="/dashboard/peintre" className="sidebar-logo">
           <img src={appLogoUrl} alt="ArtPlastique logo" className="sidebar-logo-img" />
           <span className="sidebar-role-badge">Peintre</span>

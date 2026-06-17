@@ -45,6 +45,7 @@ export function AuthPage() {
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     if (!isHydrated || !session) return
@@ -182,7 +183,7 @@ export function AuthPage() {
                   <label htmlFor="login-password">Mot de passe</label>
                   <div className="input-wrap">
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="login-password"
                       placeholder={DEMO_PASSWORD}
                       autoComplete="current-password"
@@ -190,7 +191,17 @@ export function AuthPage() {
                       onChange={(event) => setPassword(event.target.value)}
                       required
                     />
-                    <span className="pwd-toggle" title="Afficher le mot de passe">👁</span>
+                    <span
+                      className="pwd-toggle"
+                      title={showPassword ? "Cacher le mot de passe" : "Afficher le mot de passe"}
+                      onClick={() => setShowPassword(!showPassword)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setShowPassword(!showPassword) }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {showPassword ? '🙈' : '👁'}
+                    </span>
                   </div>
                 </div>
 

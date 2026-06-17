@@ -31,9 +31,6 @@ export function PublicShell({ children }: PublicShellProps) {
           ))}
         </nav>
 
-        <Link href="/connexion" className="cta-link">
-          Commencer
-        </Link>
       </header>
 
       <main>{children}</main>
@@ -41,12 +38,32 @@ export function PublicShell({ children }: PublicShellProps) {
       <footer className="site-footer">
         <div>
           <div className="footer-brand"><img src={appLogoUrl} alt="ArtPlastique logo" style={{ maxWidth: 140 }} /></div>
-          <p>Référence pour les fiches techniques, les roadmaps et les espaces peintres.</p>
+          <p>Référence pour les fiches de connaissance, les roadmaps et les espaces peintres.</p>
         </div>
-        <div className="footer-links">
-          <Link href="/fiches">Fiches</Link>
-          <Link href="/roadmaps">Roadmaps</Link>
-          <Link href="/themes">Themes</Link>
+        <div>
+          <div className="footer-col-title">Apprendre</div>
+          <div className="footer-links">
+            <Link href="/roadmaps">Roadmaps</Link>
+            <Link href="/fiches">Fiches</Link>
+            <Link href="/categories">Catégories</Link>
+            <Link href="/techniques">Techniques</Link>
+          </div>
+        </div>
+        <div>
+          <div className="footer-col-title">Explorer</div>
+          <div className="footer-links">
+            <Link href="/oeuvres">Œuvres</Link>
+            <Link href="/categories">Disciplines</Link>
+            <Link href="/connexion">Contribuer</Link>
+          </div>
+        </div>
+        <div>
+          <div className="footer-col-title">Plateforme</div>
+          <div className="footer-links">
+            <Link href="/connexion">Nous contacter</Link>
+            <Link href="/">À propos</Link>
+            <Link href="/">Mentions légales</Link>
+          </div>
         </div>
       </footer>
     </div>
