@@ -34,6 +34,7 @@ export function AdminPage() {
     fiches,
     roadmaps,
     session,
+    updateProfile,
     resetDemoData,
   } = useDemoStore()
 
@@ -145,6 +146,39 @@ export function AdminPage() {
               <input className="field-input" type="number" defaultValue="50" />
             </div>
             <button type="button" className="topbar-btn" style={{ marginTop: '0.75rem' }}>Enregistrer (simulation)</button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (activePanel === 'profil') {
+    return (
+      <section className="panel active" id="panel-overview">
+        <div className="greeting-bar" style={{ marginBottom: '1.5rem' }}>
+          <div>
+            <div className="greeting-eyebrow">Compte</div>
+            <h1 className="greeting-title">Mon <em>profil</em></h1>
+          </div>
+        </div>
+        <div className="editor-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '1.5rem', marginTop: '1rem' }}>
+          <div>
+            <div className="editor-section">
+              <div className="editor-section-head"><span className="editor-section-label">Informations personnelles</span></div>
+              <div className="editor-section-body">
+                <div className="field-row"><div className="field-group"><label className="field-label">Nom complet</label><input className="field-input" type="text" value={session?.name ?? ''} onChange={(e) => updateProfile({ name: e.target.value })} /></div><div className="field-group"><label className="field-label">Nom d'utilisateur</label><input className="field-input" type="text" value={session?.handle ?? ''} onChange={(e) => updateProfile({ handle: e.target.value })} /></div></div>
+                <div className="field-row"><div className="field-group"><label className="field-label">Email</label><input className="field-input" type="email" value={session?.email ?? ''} onChange={(e) => updateProfile({ email: e.target.value })} /></div><div className="field-group"><label className="field-label">Ville</label><input className="field-input" type="text" value={session?.city ?? ''} onChange={(e) => updateProfile({ city: e.target.value })} /></div></div>
+                <div className="field-group"><label className="field-label">Expertise</label><input className="field-input" type="text" value={session?.expertise ?? ''} onChange={(e) => updateProfile({ expertise: e.target.value })} /></div>
+                <div className="field-group"><label className="field-label">Bio</label><textarea className="field-textarea" value={session?.bio ?? ''} onChange={(e) => updateProfile({ bio: e.target.value })} /></div>
+              </div>
+            </div>
+            <div className="editor-section">
+              <div className="editor-section-head"><span className="editor-section-label">Spécialités</span></div>
+              <div className="editor-section-body"><div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>{(session?.specialties ?? ['📋 Modération']).map((item, idx) => <span key={item} className={`discipline-chip${idx < 2 ? ' selected' : ''}`}>{item}</span>)}</div></div>
+            </div>
+          </div>
+          <div>
+            <div className="sidebar-card"><div className="sidebar-card-head">Sauvegarder</div><div className="sidebar-card-body"><button type="button" className="publish-btn" onClick={() => { /* auto-saved */ }}>✓ Modifications auto-sauvegardées</button></div></div>
           </div>
         </div>
       </section>

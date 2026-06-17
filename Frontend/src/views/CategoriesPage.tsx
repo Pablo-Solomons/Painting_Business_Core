@@ -14,10 +14,9 @@ export function CategoriesPage() {
   return (
     <div className="categories-page">
       <div className="page-header">
-        <div className="page-eyebrow">Taxonomie</div>
         <h1 className="page-title">Catégories <em>de savoirs</em></h1>
         <p className="page-subtitle">
-          Chaque catégorie regroupe des fiches de connaissance par domaine. Selon le rapport BCaaS, les catégories forment une hiérarchie structurante &laquo;&nbsp;$(K, \preceq)$&nbsp;&raquo; — chaque fiche appartient à une catégorie qui la contextualise.
+          Chaque catégorie regroupe des fiches de connaissance par domaine. Chaque fiche appartient à une catégorie qui la contextualise — explorez-les pour découvrir tous les savoirs.
         </p>
       </div>
 

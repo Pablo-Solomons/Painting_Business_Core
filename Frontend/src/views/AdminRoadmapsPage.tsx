@@ -7,7 +7,7 @@ import { statusMeta } from '@/types/content'
 import { countRoadmapFiches } from '@/lib/roadmapUtils'
 
 export function AdminRoadmapsPage() {
-  const { roadmaps, approveRoadmap, rejectRoadmap } = useDemoStore()
+  const { roadmaps, approveRoadmap, rejectRoadmap, deleteRoadmap } = useDemoStore()
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'review' | 'draft' | 'rejected'>('all')
   const [selected, setSelected] = useState<Set<string>>(new Set())
@@ -134,6 +134,7 @@ export function AdminRoadmapsPage() {
                         <button type="button" className="admin-row-btn reject" onClick={() => rejectRoadmap(roadmap.slug)}>✕</button>
                       </>
                     )}
+                    <button type="button" className="admin-row-btn cancel" onClick={() => { if (confirm('Supprimer cette roadmap ?')) deleteRoadmap(roadmap.slug) }}>🗑</button>
                   </div>
                 </td>
               </tr>

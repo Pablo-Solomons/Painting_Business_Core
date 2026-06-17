@@ -40,6 +40,7 @@ const stats = [
 export function DashboardPeintrePage() {
   const {
     session,
+    updateProfile,
     getMyFiches,
     getMyRoadmaps,
     getFicheBySlug,
@@ -195,6 +196,20 @@ export function DashboardPeintrePage() {
     }))
   }
 
+  function addRoadmapStep() {
+    setRoadmapForm((current) => ({
+      ...current,
+      steps: [...current.steps, { title: '', description: '', ficheSlugs: [] }],
+    }))
+  }
+
+  function removeRoadmapStep(index: number) {
+    setRoadmapForm((current) => ({
+      ...current,
+      steps: current.steps.filter((_, i) => i !== index),
+    }))
+  }
+
   function handleSaveRoadmapDraft() {
     const result = saveRoadmapDraft(roadmapForm, editingRoadmapSlug ?? undefined)
     if (!result.ok) {
@@ -232,7 +247,7 @@ export function DashboardPeintrePage() {
             <div className="welcome-text">
               <div className="welcome-eyebrow">Espace peintre</div>
               <h1 className="welcome-title">
-                Bonjour, <em>Marie.</em>
+                Bonjour, <em>{session?.name?.split(' ')[0] ?? 'Peintre'}.</em>
               </h1>
               <div className="welcome-date">Mardi 6 mai 2025 — Voici un aperçu de votre activité</div>
             </div>
@@ -602,6 +617,9 @@ export function DashboardPeintrePage() {
                 <div key={`step-${index}`} className="editor-section">
                   <div className="editor-section-head">
                     <span className="editor-section-label">Étape {index + 1}</span>
+                    {roadmapForm.steps.length > 2 && (
+                      <button type="button" className="row-btn danger" style={{ marginLeft: 'auto', fontSize: '0.7rem' }} onClick={() => removeRoadmapStep(index)}>× Supprimer</button>
+                    )}
                   </div>
                   <div className="editor-section-body">
                     <div className="field-group">
@@ -642,6 +660,7 @@ export function DashboardPeintrePage() {
                   </div>
                 </div>
               ))}
+              <button type="button" className="topbar-btn" style={{ marginTop: '1rem', width: '100%' }} onClick={addRoadmapStep}>+ Ajouter une étape</button>
             </div>
 
             <div className="editor-sidebar">
@@ -714,20 +733,20 @@ export function DashboardPeintrePage() {
             <div className="editor-section">
               <div className="editor-section-head"><span className="editor-section-label">Informations personnelles</span></div>
               <div className="editor-section-body">
-                <div className="field-row"><div className="field-group"><label className="field-label">Prénom</label><input className="field-input" type="text" value="Marie" readOnly /></div><div className="field-group"><label className="field-label">Nom</label><input className="field-input" type="text" value="Durand" readOnly /></div></div>
-                <div className="field-group"><label className="field-label">Nom d'utilisateur</label><input className="field-input" type="text" value="marie.durand" readOnly /></div>
-                <div className="field-group"><label className="field-label">Email</label><input className="field-input" type="email" value="marie.durand@email.com" readOnly /></div>
-                <div className="field-group"><label className="field-label">Bio</label><textarea className="field-textarea" value="Peintre aquarelliste passionnée par les pigments naturels et l'art traditionnel. 15 ans de pratique, enseignante en atelier." readOnly /></div>
+                <div className="field-row"><div className="field-group"><label className="field-label">Nom complet</label><input className="field-input" type="text" value={session?.name ?? ''} onChange={(e) => updateProfile({ name: e.target.value })} /></div><div className="field-group"><label className="field-label">Nom d'utilisateur</label><input className="field-input" type="text" value={session?.handle ?? ''} onChange={(e) => updateProfile({ handle: e.target.value })} /></div></div>
+                <div className="field-row"><div className="field-group"><label className="field-label">Email</label><input className="field-input" type="email" value={session?.email ?? ''} onChange={(e) => updateProfile({ email: e.target.value })} /></div><div className="field-group"><label className="field-label">Ville</label><input className="field-input" type="text" value={session?.city ?? ''} onChange={(e) => updateProfile({ city: e.target.value })} /></div></div>
+                <div className="field-group"><label className="field-label">Expertise</label><input className="field-input" type="text" value={session?.expertise ?? ''} onChange={(e) => updateProfile({ expertise: e.target.value })} /></div>
+                <div className="field-group"><label className="field-label">Bio</label><textarea className="field-textarea" value={session?.bio ?? ''} onChange={(e) => updateProfile({ bio: e.target.value })} /></div>
               </div>
             </div>
             <div className="editor-section">
               <div className="editor-section-head"><span className="editor-section-label">Disciplines</span></div>
-              <div className="editor-section-body"><div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>{['🎨 Peinture', '💧 Aquarelle', '✏️ Dessin', '🗿 Sculpture'].map((item, index) => <button key={item} type="button" className={`discipline-chip${index < 2 ? ' selected' : ''}`}>{item}</button>)}</div></div>
+              <div className="editor-section-body"><div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>{(session?.specialties ?? ['🎨 Peinture', '💧 Aquarelle']).map((item, index) => <button key={item} type="button" className={`discipline-chip${index < 2 ? ' selected' : ''}`}>{item}</button>)}</div></div>
             </div>
           </div>
 
           <div>
-            <div className="sidebar-card"><div className="sidebar-card-head">Sauvegarder</div><div className="sidebar-card-body"><button type="button" className="publish-btn">Enregistrer les modifications</button></div></div>
+            <div className="sidebar-card"><div className="sidebar-card-head">Sauvegarder</div><div className="sidebar-card-body"><button type="button" className="publish-btn" onClick={() => { /* auto-saved */ }}>✓ Modifications auto-sauvegardées</button></div></div>
             <div className="sidebar-card" style={{ background: 'var(--canvas)' }}><div className="sidebar-card-head" style={{ borderColor: 'rgba(248,241,231,0.1)', color: 'var(--ochre-light)' }}>Niveau</div><div className="sidebar-card-body"><div className="progress-score" style={{ fontSize: '2rem' }}>72 pts</div><div className="progress-label" style={{ color: 'rgba(248,241,231,0.4)', fontSize: '0.72rem', marginBottom: '1rem' }}>Artisan — Niveau 3</div><div className="progress-bar-wrap"><div className="progress-bar-fill" /></div><div className="progress-bar-label">28 points pour "Maître"</div></div></div>
           </div>
         </div>

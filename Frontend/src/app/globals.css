@@ -6539,10 +6539,29 @@ tr:hover .row-actions {
 /* Roadmaps catalog */
 .roadmap-layout {
   padding-top: 1rem;
+  grid-template-columns: 260px 1fr;
 }
 
 .roadmap-layout .roadmap-intro {
   padding: 1.5rem;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--stroke);
+  border-radius: 0.5rem;
+  align-self: start;
+  position: sticky;
+  top: 6.5rem;
+}
+
+.roadmap-layout .roadmap-intro h1 {
+  font-size: 1.6rem;
+  line-height: 1.2;
+  margin-top: 0.3rem;
+}
+
+.roadmap-layout .roadmap-intro p {
+  font-size: 0.82rem;
+  color: var(--bone-muted);
+  line-height: 1.5;
 }
 
 .roadmap-layout .catalog-content {

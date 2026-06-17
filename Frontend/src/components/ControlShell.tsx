@@ -37,6 +37,7 @@ const navGroups = [
     label: 'Paramètres',
     items: [
       { label: 'Configuration', to: '/admin?panel=config', icon: '⚙' },
+      { label: 'Mon profil', to: '/admin?panel=profil', icon: '👤' },
     ],
   },
 ]
