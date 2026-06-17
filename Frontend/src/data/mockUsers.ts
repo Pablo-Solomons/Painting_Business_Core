@@ -1,5 +1,15 @@
 export type UserRole = 'peintre' | 'admin'
 
+export type ProfileData = {
+  name: string
+  handle: string
+  email: string
+  bio: string
+  city: string
+  expertise: string
+  specialties: string[]
+}
+
 export type DemoUser = {
   id: string
   email: string
@@ -7,6 +17,10 @@ export type DemoUser = {
   name: string
   handle: string
   role: UserRole
+  bio: string
+  city: string
+  expertise: string
+  specialties: string[]
 }
 
 export type DemoSession = {
@@ -15,28 +29,34 @@ export type DemoSession = {
   name: string
   handle: string
   role: UserRole
+  bio: string
+  city: string
+  expertise: string
+  specialties: string[]
 }
 
 export const DEMO_PASSWORD = 'demo'
 
+const ADMIN_EMAIL = 'admin@artplastique.demo'
+
 export const demoUsers: DemoUser[] = [
   {
-    id: 'marie',
-    email: 'marie@artplastique.demo',
-    password: DEMO_PASSWORD,
-    name: 'Marie Durand',
-    handle: 'marie.durand',
-    role: 'peintre',
-  },
-  {
     id: 'admin',
-    email: 'admin@artplastique.demo',
+    email: ADMIN_EMAIL,
     password: DEMO_PASSWORD,
     name: 'Super Admin',
     handle: 'admin',
     role: 'admin',
+    bio: 'Administrateur de la plateforme ArtPlastique.',
+    city: 'Paris',
+    expertise: 'Gestion de contenu',
+    specialties: ['📋 Modération', '📊 Analytiques', '👥 Communauté'],
   },
 ]
+
+export function isAdminEmail(email: string) {
+  return email.trim().toLowerCase() === ADMIN_EMAIL
+}
 
 export function findDemoUser(email: string) {
   const normalized = email.trim().toLowerCase()
@@ -50,6 +70,25 @@ export function toSession(user: DemoUser): DemoSession {
     name: user.name,
     handle: user.handle,
     role: user.role,
+    bio: user.bio,
+    city: user.city,
+    expertise: user.expertise,
+    specialties: [...user.specialties],
+  }
+}
+
+export function createDefaultSession(name: string, email: string, id: string): DemoSession {
+  const handle = name.toLowerCase().replace(/\s+/g, '.')
+  return {
+    userId: id,
+    email: email.trim().toLowerCase(),
+    name: name.trim(),
+    handle,
+    role: 'peintre',
+    bio: '',
+    city: '',
+    expertise: '',
+    specialties: ['🎨 Peinture'],
   }
 }
 

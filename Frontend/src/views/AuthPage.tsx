@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { appLogoUrl } from '../data/assets'
 import { DEMO_PASSWORD, demoUsers, homePathForRole } from '@/data/mockUsers'
 import { useDemoStore } from '@/context/DemoStoreContext'
+import type { DemoSession } from '@/data/mockUsers'
 
 type AuthTab = 'login' | 'signup'
 
@@ -39,10 +40,13 @@ function GrainCanvas() {
 
 export function AuthPage() {
   const router = useRouter()
-  const { session, isHydrated, login } = useDemoStore()
+  const { session, isHydrated, login, register } = useDemoStore()
   const [activeTab, setActiveTab] = useState<AuthTab>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [registerName, setRegisterName] = useState('')
+  const [registerEmail, setRegisterEmail] = useState('')
+  const [registerPassword, setRegisterPassword] = useState('')
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -56,6 +60,23 @@ export function AuthPage() {
     setEmail(accountEmail)
     setPassword(DEMO_PASSWORD)
     setMessage(null)
+  }
+
+  function handleRegister(event: React.FormEvent) {
+    event.preventDefault()
+    setIsSubmitting(true)
+    setMessage(null)
+
+    const result = register(registerName, registerEmail, registerPassword)
+    setIsSubmitting(false)
+
+    if (!result.ok) {
+      setMessage({ type: 'error', text: result.error })
+      return
+    }
+
+    setMessage({ type: 'success', text: 'Compte créé — redirection…' })
+    router.push(result.redirectTo)
   }
 
   function handleLogin(event: React.FormEvent) {
@@ -225,17 +246,66 @@ export function AuthPage() {
             </div>
 
             <div className={`form-pane ${activeTab === 'signup' ? 'active' : ''}`}>
-              <div className="form-header">
-                <div className="form-eyebrow">Créer un compte peintre</div>
-                <h1 className="form-title">
-                  Rejoindre<br /><em>ArtPlastique</em>
-                </h1>
-                <p className="form-subtitle">Non disponible en mode démo — utilisez la connexion.</p>
-              </div>
+              <form onSubmit={handleRegister}>
+                <div className="form-header">
+                  <div className="form-eyebrow">Créer un compte peintre</div>
+                  <h1 className="form-title">
+                    Rejoindre<br /><em>ArtPlastique</em>
+                  </h1>
+                  <p className="form-subtitle">Inscrivez-vous gratuitement — votre profil est sauvegardé dans ce navigateur.</p>
+                </div>
 
-              <div className="role-lock">
-                <strong>Inscription désactivée</strong> pour cette simulation. Les comptes peintre et admin sont préconfigurés à gauche.
-              </div>
+                {message ? (
+                  <div className={`form-message form-message--${message.type}`} role="alert">
+                    {message.text}
+                  </div>
+                ) : null}
+
+                <div className="form-group">
+                  <label htmlFor="register-name">Nom complet</label>
+                  <input
+                    type="text"
+                    id="register-name"
+                    placeholder="ex. Marie Durand"
+                    autoComplete="name"
+                    value={registerName}
+                    onChange={(e) => setRegisterName(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="register-email">Adresse email</label>
+                  <input
+                    type="email"
+                    id="register-email"
+                    placeholder="vous@email.com"
+                    autoComplete="email"
+                    value={registerEmail}
+                    onChange={(e) => setRegisterEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="register-password">Mot de passe</label>
+                  <input
+                    type="password"
+                    id="register-password"
+                    placeholder="Minimum 3 caractères"
+                    autoComplete="new-password"
+                    value={registerPassword}
+                    onChange={(e) => setRegisterPassword(e.target.value)}
+                    required
+                    minLength={3}
+                  />
+                </div>
+
+                <button type="submit" className="btn-submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Inscription…' : 'Créer mon compte'}
+                  <span className="arrow-icon" />
+                </button>
+              </form>
 
               <div className="auth-switch">
                 Déjà un compte ?{' '}

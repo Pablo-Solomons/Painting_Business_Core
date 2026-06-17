@@ -6,7 +6,7 @@ import { useDemoStore } from '@/context/DemoStoreContext'
 import { statusMeta } from '@/types/content'
 
 export function AdminFichesPage() {
-  const { fiches, approveFiche, rejectFiche } = useDemoStore()
+  const { fiches, approveFiche, rejectFiche, deleteFiche } = useDemoStore()
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'review' | 'draft' | 'rejected'>('all')
   const [selected, setSelected] = useState<Set<string>>(new Set())
@@ -132,6 +132,7 @@ export function AdminFichesPage() {
                         <button type="button" className="admin-row-btn reject" onClick={() => rejectFiche(fiche.slug)}>✕</button>
                       </>
                     )}
+                    <button type="button" className="admin-row-btn cancel" onClick={() => { if (confirm('Supprimer cette fiche ?')) deleteFiche(fiche.slug) }}>🗑</button>
                   </div>
                 </td>
               </tr>

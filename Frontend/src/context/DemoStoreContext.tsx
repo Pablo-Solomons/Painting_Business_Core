@@ -12,20 +12,27 @@ import {
 import { createInitialDemoData, mergeStoredDemoData } from '@/data/demoSeed'
 import {
   DEMO_PASSWORD,
+  createDefaultSession,
   findDemoUser,
   homePathForRole,
+  isAdminEmail,
   toSession,
   type DemoSession,
+  type ProfileData,
   type UserRole,
 } from '@/data/mockUsers'
 import { uniqueSlug } from '@/lib/slugify'
 import {
   clearDemoData,
+  findRegisteredUser,
   loadDemoData,
+  loadRegisteredUsers,
   loadSession,
   saveDemoData,
   saveSession,
   clearSession,
+  seedFictionalPainters,
+  upsertRegisteredUser,
 } from '@/lib/demoStorage'
 import {
   buildRoadmapSteps,
@@ -42,6 +49,10 @@ import {
 
 type LoginResult = { ok: true; redirectTo: string } | { ok: false; error: string }
 
+type RegisterResult = { ok: true; redirectTo: string } | { ok: false; error: string }
+
+type UpdateProfileResult = { ok: true } | { ok: false; error: string }
+
 type DemoStoreContextValue = {
   session: DemoSession | null
   isHydrated: boolean
@@ -51,13 +62,18 @@ type DemoStoreContextValue = {
   publishedRoadmaps: DemoRoadmap[]
   login: (email: string, password: string) => LoginResult
   logout: () => void
+  register: (name: string, email: string, password: string) => RegisterResult
   resetDemoData: () => void
+  updateProfile: (data: Partial<ProfileData>) => UpdateProfileResult
   getFicheBySlug: (slug: string) => DemoFiche | undefined
   getRoadmapBySlug: (slug: string) => DemoRoadmap | undefined
   getMyFiches: (userId: string) => DemoFiche[]
   getMyRoadmaps: (userId: string) => DemoRoadmap[]
   getModerationQueue: () => DemoFiche[]
   getRoadmapModerationQueue: () => DemoRoadmap[]
+  deleteFiche: (slug: string) => boolean
+  deleteRoadmap: (slug: string) => boolean
+  getAllRegisteredUsers: () => DemoSession[]
   saveFicheDraft: (input: FicheFormInput, existingSlug?: string) => SaveContentResult
   submitFicheForReview: (input: FicheFormInput, existingSlug?: string) => SaveContentResult
   approveFiche: (slug: string) => SaveContentResult
@@ -134,6 +150,7 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
+    seedFictionalPainters()
     setSession(loadSession())
     setData(mergeStoredDemoData(loadDemoData()))
     setIsHydrated(true)
@@ -202,21 +219,32 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
   )
 
   const login = useCallback((email: string, password: string): LoginResult => {
-    const user = findDemoUser(email)
-
-    if (!user) {
-      return { ok: false, error: 'Aucun compte de démonstration pour cet email.' }
+    // Check admin first
+    const adminUser = findDemoUser(email)
+    if (adminUser) {
+      if (password !== DEMO_PASSWORD && password !== adminUser.password) {
+        return { ok: false, error: 'Mot de passe incorrect. Utilisez « demo » pour la simulation.' }
+      }
+      const nextSession = toSession(adminUser)
+      saveSession(nextSession)
+      setSession(nextSession)
+      return { ok: true, redirectTo: '/admin' }
     }
 
-    if (password !== DEMO_PASSWORD && password !== user.password) {
+    // Check registered peintres
+    const registeredUser = findRegisteredUser(email)
+    if (!registeredUser) {
+      return { ok: false, error: 'Aucun compte trouvé pour cet email. Créez un compte d\'abord.' }
+    }
+
+    if (password !== DEMO_PASSWORD && password !== registeredUser.password) {
       return { ok: false, error: 'Mot de passe incorrect. Utilisez « demo » pour la simulation.' }
     }
 
-    const nextSession = toSession(user)
+    const nextSession = toSession(registeredUser)
     saveSession(nextSession)
     setSession(nextSession)
-
-    return { ok: true, redirectTo: homePathForRole(user.role) }
+    return { ok: true, redirectTo: '/dashboard/peintre' }
   }, [])
 
   const logout = useCallback(() => {
@@ -224,10 +252,90 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
     setSession(null)
   }, [])
 
+  const register = useCallback((name: string, email: string, password: string): RegisterResult => {
+    const normalizedEmail = email.trim().toLowerCase()
+
+    if (isAdminEmail(normalizedEmail)) {
+      return { ok: false, error: 'Cet email est réservé à l\'administrateur.' }
+    }
+
+    if (!name.trim()) {
+      return { ok: false, error: 'Le nom est obligatoire.' }
+    }
+
+    if (!normalizedEmail || !normalizedEmail.includes('@')) {
+      return { ok: false, error: 'Email invalide.' }
+    }
+
+    if (!password || password.length < 3) {
+      return { ok: false, error: 'Mot de passe trop court (minimum 3 caractères).' }
+    }
+
+    if (findRegisteredUser(normalizedEmail)) {
+      return { ok: false, error: 'Un compte existe déjà avec cet email.' }
+    }
+
+    const id = 'peintre-' + Date.now()
+    const newUser = {
+      id,
+      email: normalizedEmail,
+      password,
+      name: name.trim(),
+      handle: name.trim().toLowerCase().replace(/\s+/g, '.'),
+      role: 'peintre' as const,
+      bio: '',
+      city: '',
+      expertise: '',
+      specialties: ['🎨 Peinture'],
+    }
+
+    upsertRegisteredUser(newUser)
+    const nextSession = toSession(newUser)
+    saveSession(nextSession)
+    setSession(nextSession)
+    return { ok: true, redirectTo: '/dashboard/peintre' }
+  }, [])
+
   const resetDemoData = useCallback(() => {
     clearDemoData()
     persistData(createInitialDemoData())
   }, [persistData])
+
+  const updateProfile = useCallback(
+    (updates: Partial<ProfileData>): UpdateProfileResult => {
+      if (!session) {
+        return { ok: false, error: 'Vous devez être connecté.' }
+      }
+      if (updates.name !== undefined && !updates.name.trim()) {
+        return { ok: false, error: 'Le nom ne peut pas être vide.' }
+      }
+      if (updates.handle !== undefined && !updates.handle.trim()) {
+        return { ok: false, error: 'Le nom d\'utilisateur ne peut pas être vide.' }
+      }
+      const nextSession: DemoSession = { ...session, ...updates }
+      saveSession(nextSession)
+      setSession(nextSession)
+
+      // Sync back to registeredUsers for persistence across logout
+      if (session.role === 'peintre') {
+        const registeredUser = findRegisteredUser(session.email)
+        if (registeredUser) {
+          upsertRegisteredUser({
+            ...registeredUser,
+            name: nextSession.name,
+            handle: nextSession.handle,
+            email: nextSession.email,
+            bio: nextSession.bio,
+            city: nextSession.city,
+            expertise: nextSession.expertise,
+            specialties: [...nextSession.specialties],
+          })
+        }
+      }
+      return { ok: true }
+    },
+    [session],
+  )
 
   const getFicheBySlug = useCallback(
     (slug: string) => data.fiches.find((f) => f.slug === slug),
@@ -331,6 +439,29 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
     [data, persistData],
   )
 
+  const deleteFiche = useCallback(
+    (slug: string): boolean => {
+      if (!data.fiches.find((f) => f.slug === slug)) return false
+      persistData({ ...data, fiches: data.fiches.filter((f) => f.slug !== slug) })
+      return true
+    },
+    [data, persistData],
+  )
+
+  const deleteRoadmap = useCallback(
+    (slug: string): boolean => {
+      if (!data.roadmaps.find((r) => r.slug === slug)) return false
+      persistData({ ...data, roadmaps: data.roadmaps.filter((r) => r.slug !== slug) })
+      return true
+    },
+    [data, persistData],
+  )
+
+  const getAllRegisteredUsers = useCallback((): DemoSession[] => {
+    const users = loadRegisteredUsers()
+    return users.map((user) => toSession(user))
+  }, [])
+
   const publishedFiches = useMemo(
     () => data.fiches.filter((f) => f.status === 'published'),
     [data.fiches],
@@ -351,13 +482,18 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       publishedRoadmaps,
       login,
       logout,
+      register,
       resetDemoData,
+      updateProfile,
       getFicheBySlug,
       getRoadmapBySlug,
       getMyFiches,
       getMyRoadmaps,
       getModerationQueue,
       getRoadmapModerationQueue,
+      deleteFiche,
+      deleteRoadmap,
+      getAllRegisteredUsers,
       saveFicheDraft,
       submitFicheForReview,
       approveFiche,
@@ -376,13 +512,18 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       publishedRoadmaps,
       login,
       logout,
+      register,
       resetDemoData,
+      updateProfile,
       getFicheBySlug,
       getRoadmapBySlug,
       getMyFiches,
       getMyRoadmaps,
       getModerationQueue,
       getRoadmapModerationQueue,
+      deleteFiche,
+      deleteRoadmap,
+      getAllRegisteredUsers,
       saveFicheDraft,
       submitFicheForReview,
       approveFiche,

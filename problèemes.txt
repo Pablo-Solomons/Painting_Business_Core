@@ -1,0 +1,27 @@
+Améliore la page des roadmaps de l'acceuil. Le pane qui à gauche entre dans celui du mileu. 
+Tu peux un peu retoucher les roadmaps aussi.
+
+
+1. C'est quoi lib/api.ts, middleware.ts, c'est quoi le middleWare interception 
+2. C'est quoi leaflet et est ce que il y a ça dans notre projet
+3. Explique l'injection des en tête contextuel Bcaas
+4. Explique les endpoints de notre app et comment ça fonctionne et aussi les fonctions getFiche(), recherchez (),getActeurs(),etc ou les fonctions équivalent  a ca
+5. Explique moi next js 15, pourquoi choisir ça, c'est quoi ? Différence entre next js 14 et 15 ? 
+6. Vue qu'on a pas de Bd, dans quoi est ce que on stock des données 
+7. Qu'es ce qui, en next js nous permet de faire des simulations avec les mock data
+8. C'est quoi exactement le rendu hybride SSR/SSG/ISR
+9. Qu'es ce qui gère la gestion native des impôts dynamique (définie d'abord ce que c'est)
+
+
+1. C'est quoi lib/api.ts, middleware.ts, c'est quoi le middleWare interception 
+2. C'est quoi leaflet et est ce que il y a ça dans notre projet
+3. Explique l'injection des en tête contextuel Bcaas
+4. Explique les endpoints de notre app et comment ça fonctionne et aussi les fonctions getFiche(), recherchez (),getActeurs(),etc ou les fonctions équivalent  a ca
+5. Explique moi next js 15, pourquoi choisir ça, c'est quoi ? Différence entre next js 14 et 15 ? 
+6. Vue qu'on a pas de Bd, dans quoi est ce que on stock des données 
+7. Qu'es ce qui, en next js nous permet de faire des simulations avec les mock data
+8. C'est quoi exactement le rendu hybride SSR/SSG/ISR
+9. Qu'es ce qui gère la gestion native des impôts dynamique (définie d'abord ce que c'est)
+
+
+Si ça n'existe pas donne l'équivalent selon le rapport  @"/Conception/rapport final/v2/latex/main.tex"
