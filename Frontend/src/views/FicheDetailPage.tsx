@@ -96,9 +96,9 @@ export function FicheDetailPage({ slug }: FicheDetailPageProps) {
           </div>
         )}
         <div className="hero-meta">
-          <div className="hero-eyebrow">{fiche.category} · {fiche.tool}</div>
+          <div className="hero-eyebrow">Unité de connaissance · lisible indépendamment</div>
           <h1 className="hero-title">{fiche.title}</h1>
-          <p className="hero-question">{fiche.question}</p>
+          <p className="hero-question">❓ {fiche.question}</p>
           {fiche.pigmentCode ? (
             <div className="hero-code">{fiche.pigmentCode}</div>
           ) : null}
@@ -115,8 +115,8 @@ export function FicheDetailPage({ slug }: FicheDetailPageProps) {
       <div className="fiche-body">
         <div className="fiche-left">
           <div className="content-section content-section--lead">
-            <span className="section-label">Résumé</span>
-            <h2>En bref</h2>
+            <span className="section-label">Cette fiche répond à la question</span>
+            <h2 className="fiche-question-highlight">{fiche.question}</h2>
             <p className="lead-paragraph">{fiche.summary}</p>
           </div>
 

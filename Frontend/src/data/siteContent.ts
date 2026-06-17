@@ -47,7 +47,9 @@ export const publicNav = [
   { label: 'Accueil', to: '/' },
   { label: 'Fiches', to: '/fiches' },
   { label: 'Roadmaps', to: '/roadmaps' },
-  { label: 'Themes', to: '/themes' },
+  { label: 'Catégories', to: '/categories' },
+  { label: 'Techniques', to: '/techniques' },
+  { label: 'Œuvres', to: '/oeuvres' },
   { label: 'Connexion', to: '/connexion' },
 ]
 

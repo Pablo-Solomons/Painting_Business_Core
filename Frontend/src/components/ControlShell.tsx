@@ -16,22 +16,27 @@ const navGroups = [
     items: [
       { label: "Vue d'ensemble", to: '/admin', icon: '◈' },
       { label: 'Peintres', to: '/admin/peintres', icon: '👤', badge: '7' },
-      { label: 'Fiches techniques', to: '/fiches', icon: '◧', badge: '3', tone: 'warn' },
-      { label: 'Roadmaps', to: '/roadmaps', icon: '⬡' },
+    ],
+  },
+  {
+    label: 'Contenu',
+    items: [
+      { label: 'Fiches techniques', to: '/admin/fiches', icon: '◧', badge: '3', tone: 'warn' },
+      { label: 'Roadmaps', to: '/admin/roadmaps', icon: '⬡' },
+      { label: 'Catégories', to: '/admin/categories', icon: '◑' },
     ],
   },
   {
     label: 'Modération',
     items: [
-      { label: 'Alertes', to: '/admin', icon: '⚑', badge: '2' },
-      { label: 'Messages', to: '/admin', icon: '✉' },
+      { label: 'Alertes', to: '/admin?panel=alertes', icon: '⚑', badge: '2' },
+      { label: 'Messages', to: '/admin?panel=messages', icon: '✉' },
     ],
   },
   {
     label: 'Paramètres',
     items: [
-      { label: 'Configuration', to: '/admin', icon: '⚙' },
-      { label: 'Catégories', to: '/themes', icon: '◑' },
+      { label: 'Configuration', to: '/admin?panel=config', icon: '⚙' },
     ],
   },
 ]
@@ -78,7 +83,7 @@ export function ControlShell({ children }: ControlShellProps) {
                     <span className="nav-icon">{item.icon}</span>
                     {item.label}
                     {'badge' in item && item.badge ? (
-                      <span className={`nav-badge${item.tone === 'warn' ? ' warn' : ''}`}>{item.badge}</span>
+                      <span className={`nav-badge${'tone' in item && item.tone === 'warn' ? ' warn' : ''}`}>{item.badge}</span>
                     ) : null}
                   </a>
                 ) : (
@@ -86,7 +91,7 @@ export function ControlShell({ children }: ControlShellProps) {
                     <span className="nav-icon">{item.icon}</span>
                     {item.label}
                     {'badge' in item && item.badge ? (
-                      <span className={`nav-badge${item.tone === 'warn' ? ' warn' : ''}`}>{item.badge}</span>
+                      <span className={`nav-badge${'tone' in item && item.tone === 'warn' ? ' warn' : ''}`}>{item.badge}</span>
                     ) : null}
                   </Link>
                 )

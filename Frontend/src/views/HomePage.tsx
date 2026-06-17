@@ -59,13 +59,13 @@ export function HomePage() {
           <img src={appLogoUrl} alt="ArtPlastique logo" />
         </Link>
         <ul className="nav-links">
-          <li><Link href="/themes">Catégories</Link></li>
+          <li><Link href="/categories">Catégories</Link></li>
           <li><Link href="/roadmaps">Roadmap</Link></li>
           <li><Link href="/fiches">Fiches</Link></li>
-          <li><Link href="/themes">Techniques</Link></li>
-          <li><Link href="/connexion">Communauté</Link></li>
+          <li><Link href="/techniques">Techniques</Link></li>
+          <li><Link href="/oeuvres">Œuvres</Link></li>
         </ul>
-        <Link href="/connexion" className="nav-cta">Commencer</Link>
+        <Link href="/connexion" className="nav-cta">👤 Se connecter</Link>
       </nav>
 
       <section className="hero">
@@ -107,7 +107,7 @@ export function HomePage() {
             <div className="section-label">Explorer</div>
             <h2 className="section-title">Toutes les <em>disciplines</em></h2>
           </div>
-          <Link href="/themes" className="see-all">Voir tout</Link>
+          <Link href="/categories" className="see-all">Voir tout</Link>
         </div>
 
         <div className="cat-grid">
@@ -119,7 +119,7 @@ export function HomePage() {
             <span className="cat-count">84 fiches</span>
             <div className="cat-arrow" />
           </Link>
-          <Link href="/themes" className="cat-card">
+          <Link href="/categories" className="cat-card">
             <div className="cat-num">02</div>
             <span className="cat-icon">✏️</span>
             <div className="cat-name">Dessin</div>
@@ -142,7 +142,7 @@ export function HomePage() {
             <span className="cat-count">28 fiches</span>
             <div className="cat-arrow" />
           </Link>
-          <Link href="/themes" className="cat-card">
+          <Link href="/categories" className="cat-card">
             <div className="cat-num">05</div>
             <span className="cat-icon">🖌️</span>
             <div className="cat-name">Mixed Media</div>
@@ -159,7 +159,7 @@ export function HomePage() {
           <div>
             <div className="section-label">Progresser</div>
             <h2 className="section-title">Roadmaps<br /><em>structurées</em></h2>
-            <p className="roadmap-lead">
+            <p className="roadmap-lead" style={{ color: 'var(--bone)' }}>
               Des parcours ordonnés qui référencent des fiches indépendantes — suivez-les dans l’ordre pour atteindre un objectif.
             </p>
 
@@ -209,7 +209,7 @@ export function HomePage() {
         </div>
 
         <div className="fiches-scroll">
-          {recentFiches.map((fiche, index) => (
+          {recentFiches.map((fiche) => (
             <Link key={fiche.slug} href={`/fiches/${fiche.slug}`} className="fiche-card">
               {fiche.swatch ? (
                 <div className="fiche-swatch"><FicheSwatch id={`swatch-${fiche.slug}`} colors={fiche.swatch} /></div>
@@ -217,12 +217,14 @@ export function HomePage() {
                 <div className="fiche-swatch fiche-swatch-text" data-category={fiche.category}><span>{fiche.category}</span></div>
               )}
               <div className="fiche-card-name">{fiche.title}</div>
+              <div className="fiche-card-question">❓ {fiche.question}</div>
               <div className="fiche-card-sub">{fiche.category} · {fiche.tool}</div>
               <div className="fiche-tags">
                 {fiche.tags.slice(0, 3).map((tag) => (
                   <span key={tag} className="tag">{tag}</span>
                 ))}
               </div>
+              <span className="fiche-card-badge">Unité de connaissance</span>
             </Link>
           ))}
         </div>
@@ -238,24 +240,24 @@ export function HomePage() {
       <footer className="home-footer">
         <div className="footer-brand">
           <Link href="/" className="nav-logo"><img src={appLogoUrl} alt="ArtPlastique logo" style={{ maxWidth: 140 }} /></Link>
-          <p className="footer-desc">La référence francophone pour les arts plastiques — technique, pratique, accessible.</p>
+          <p className="footer-desc">La référence francophone pour les arts plastiques — fiches de connaissance, roadmaps structurées et communauté de peintres.</p>
         </div>
         <div>
           <div className="footer-col-title">Apprendre</div>
           <ul className="footer-links">
             <li><Link href="/roadmaps">Roadmaps</Link></li>
-            <li><Link href="/fiches">Fiches techniques</Link></li>
-            <li><Link href="/themes">Guides débutants</Link></li>
-            <li><Link href="/themes">Glossaire</Link></li>
+            <li><Link href="/fiches">Fiches de connaissance</Link></li>
+            <li><Link href="/categories">Catégories</Link></li>
+            <li><Link href="/techniques">Techniques</Link></li>
           </ul>
         </div>
         <div>
           <div className="footer-col-title">Explorer</div>
           <ul className="footer-links">
-            <li><Link href="/themes">Catégories</Link></li>
+            <li><Link href="/oeuvres">Œuvres</Link></li>
             <li><Link href="/fiches/blanc-titane">Pigments</Link></li>
             <li><Link href="/fiches/huile-de-lin">Médiums</Link></li>
-            <li><Link href="/themes">Supports</Link></li>
+            <li><Link href="/categories">Supports</Link></li>
           </ul>
         </div>
         <div>
@@ -263,16 +265,11 @@ export function HomePage() {
           <ul className="footer-links">
             <li><Link href="/">À propos</Link></li>
             <li><Link href="/connexion">Contribuer</Link></li>
-            <li><Link href="/connexion">Contact</Link></li>
+            <li><Link href="/connexion">Nous contacter</Link></li>
             <li><Link href="/">Mentions légales</Link></li>
           </ul>
         </div>
       </footer>
-
-      <div className="footer-bottom">
-        <span className="footer-copy">© 2025 ArtPlastique — Tous droits réservés</span>
-        <span className="footer-copy">Fait avec passion pour les artistes</span>
-      </div>
     </div>
   )
 }

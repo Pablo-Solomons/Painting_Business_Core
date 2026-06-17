@@ -1,0 +1,2045 @@
+\documentclass[12pt,a4paper]{report}
+
+% ============================================================
+%  ENCODAGE ET LANGUE
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ============================================================
+%  MISE EN PAGE
+% ============================================================
+\usepackage[top=2.5cm,bottom=2.5cm,left=3cm,right=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{enumitem}
+
+% ============================================================
+%  TYPOGRAPHIE
+% ============================================================
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ============================================================
+%  COULEURS ET BOÎTES
+% ============================================================
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable, theorems}
+
+% ============================================================
+%  TABLEAUX
+% ============================================================
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{float}
+
+% ============================================================
+%  GRAPHIQUES
+% ============================================================
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+% ============================================================
+%  EN-TÊTES ET PIEDS DE PAGE
+% ============================================================
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Painting Business Core Instance — Rapport Final}}
+\fancyhead[R]{\small\textit{3\textsuperscript{e} Année Génie Informatique}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ============================================================
+%  LIENS
+% ============================================================
+\usepackage[hidelinks, colorlinks=false]{hyperref}
+
+% ============================================================
+%  LISTINGS
+% ============================================================
+\usepackage{listings}
+\usepackage{caption}
+
+% ============================================================
+%  SOULIGNEMENT
+% ============================================================
+\usepackage{ulem}
+
+% ============================================================
+%  PALETTE DE COULEURS DU PROJET
+% ============================================================
+\definecolor{PBCBlue}{RGB}{31, 78, 121}
+\definecolor{PBCLightBlue}{RGB}{189, 215, 238}
+\definecolor{PBCGreen}{RGB}{0, 112, 63}
+\definecolor{PBCLightGreen}{RGB}{198, 224, 180}
+\definecolor{PBCOrange}{RGB}{197, 90, 17}
+\definecolor{PBCLightOrange}{RGB}{252, 228, 214}
+\definecolor{PBCGray}{RGB}{64, 64, 64}
+\definecolor{PBCLightGray}{RGB}{242, 242, 242}
+\definecolor{PBCRed}{RGB}{192, 0, 0}
+\definecolor{HeaderBg}{RGB}{31, 78, 121}
+\definecolor{violetTitre}{RGB}{80,0,120}
+\definecolor{violetFonce}{RGB}{45,0,90}
+\definecolor{bleuPrimaire}{RGB}{0,60,120}
+\definecolor{bleuClair}{RGB}{100,150,200}
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{codeframe}{RGB}{200,200,200}
+\definecolor{kwcolor}{RGB}{0,0,200}
+\definecolor{strcolor}{RGB}{163,21,21}
+\definecolor{cmtcolor}{RGB}{0,128,0}
+\definecolor{numcolor}{RGB}{128,128,128}
+
+% ============================================================
+%  BOÎTES THÉMATIQUES
+% ============================================================
+\newtcolorbox{insightbox}[1][]{
+  enhanced, breakable,
+  colback=PBCLightBlue!40, colframe=PBCBlue,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=PBCBlue},
+  title={#1},
+  left=4mm, right=4mm, top=4mm, bottom=4mm
+}
+
+\newtcolorbox{warnbox}[1][]{
+  enhanced, breakable,
+  colback=PBCLightOrange!50, colframe=PBCOrange,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=PBCOrange},
+  title={#1},
+  left=4mm, right=4mm, top=4mm, bottom=4mm
+}
+
+\newtcolorbox{successbox}[1][]{
+  enhanced, breakable,
+  colback=PBCLightGreen!50, colframe=PBCGreen,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=PBCGreen},
+  title={#1},
+  left=4mm, right=4mm, top=4mm, bottom=4mm
+}
+
+% ============================================================
+%  STYLE DES TABLEAUX
+% ============================================================
+\newcommand{\tableheader}[1]{%
+  \cellcolor{HeaderBg}\textbf{\color{white}#1}}
+
+% ============================================================
+%  STYLE DES LISTINGS
+% ============================================================
+\lstdefinelanguage{TypeScript}{
+  keywords={const, let, var, function, return, if, else, async, await,
+            export, default, import, from, new, true, false, null,
+            undefined, string, number, boolean, void, type, interface,
+            extends, implements, class, public, private, protected,
+            readonly, static, enum, namespace, declare, module,
+            HeadersInit, NextRequest, NextResponse, Props},
+  keywordstyle=\color{kwcolor}\bfseries,
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{cmtcolor}\itshape,
+  stringstyle=\color{strcolor},
+  morestring=[b]',
+  morestring=[b]",
+  morestring=[b]`
+}
+
+\lstset{
+  language=TypeScript,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  rulecolor=\color{codeframe},
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  breakatwhitespace=true,
+  showstringspaces=false,
+  tabsize=2,
+  captionpos=b,
+  numbers=left,
+  numberstyle=\tiny\color{numcolor},
+  numbersep=8pt,
+  xleftmargin=2em,
+  framexleftmargin=2em,
+  inputencoding=utf8,
+  extendedchars=true,
+  literate=
+    {é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {ë}{{\"e}}1
+    {à}{{\`a}}1 {â}{{\^a}}1 {ù}{{\`u}}1 {û}{{\^u}}1
+    {î}{{\^i}}1 {ï}{{\"i}}1 {ô}{{\^o}}1 {ç}{{\c{c}}}1
+    {É}{{\'E}}1 {È}{{\`E}}1 {Ê}{{\^E}}1
+    {À}{{\`A}}1 {Â}{{\^A}}1 {Ç}{{\c{C}}}1
+    {<=}{{$\leq$}}2 {>=}{{$\geq$}}2
+}
+
+% ============================================================
+%  NUMÉROTATION DES SECTIONS
+% ============================================================
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+
+% ============================================================
+%  DÉBUT DU DOCUMENT
+% ============================================================
+\begin{document}
+
+% ============================================================
+%  TITRE
+% ============================================================
+\begin{center}
+    {\LARGE\textbf{Painting Business Core Instance}}\\[0.3cm]
+    {\Large\textit{<< Plateforme de centralisation des savoirs du métier de peintre\\ Instance métier et Simulation d'Architecture  >>}}\\[1cm]
+\end{center}
+
+% ============================================================
+%  TABLE DES MATIÈRES
+% ============================================================
+\tableofcontents
+\newpage
+
+% ============================================================
+%  INTRODUCTION
+% ============================================================
+\section{Introduction}
+
+Dans le cadre du projet \textbf{BCaaS} (\textit{Business Core as a Service}), notre groupe a pris en charge la conception et l'implémentation de l'\textbf{instance métier dédiée au domaine de la peinture} : \textit{Painting Business Core}. Il est essentiel de préciser d'emblée notre positionnement architectural : nous ne sommes pas les concepteurs de l'infrastructure BCaaS globale, mais des \textbf{tenants consommateurs} de ce socle commun. Notre rôle consiste à implémenter la couche applicative supérieure (Couche~5 --- \textit{Business capabilities}) en respectant les contrats d'interface imposés par la pile protocolaire générale définie par l'équipe transverse.
+
+Le développement se concentre sur le \textbf{frontend Next.js~15}, accompagné d'une simulation rigoureuse des mécanismes d'échange. Ce document présente la logique métier modélisée, notre positionnement en tant que tenant dans l'écosystème BCaaS, ainsi que le détail de l'implémentation des vues. C'est dans ce sens que nous allons faire intervenir les différents diagrammes UML pour illustrer la structure et les interactions de notre application.
+
+\newpage
+% ============================================================
+%  SECTION 2 — CAHIER DES CHARGES
+% ============================================================
+\section{Cahier des charges}
+
+Ce chapitre présente une synthèse formelle du cahier des charges du projet Painting Business Core. Il constitue le document fondateur qui encadre l'ensemble des décisions techniques et fonctionnelles exposées dans les sections ultérieures.
+
+% ============================================================
+\subsection{Contexte et problématique}
+% ============================================================
+\subsection*{Contexte général}
+
+Le secteur de la peinture englobe un ensemble vaste et hétérogène de pratiques professionnelles, de traditions artisanales et de techniques industrielles. C'est le cas de la peinture artistique (création d'œuvres, maîtrise des pigments, techniques sur toile) qui est un sous-domaine reposant sur un corpus de savoirs fondamentaux partagés tels que l'étude de la colorimétrie, la chimie des liants, la préparation des supports et les règles strictes d'hygiène et de sécurité, tout en conservant des spécificités marquées en termes de formation, de réglementation technique et de débouchés économiques.
+
+Malgré la valeur patrimoniale et économique de ces compétences, la transmission et la centralisation de ces connaissances souffrent d'un manque d'uniformisation. Les professionnels de la peinture et les structures de formation ne disposent pas d'un espace applicatif centralisé facilitant la co-construction et l'accessibilité de ces savoirs.
+
+\subsection*{Problématique}
+
+L'information relative aux métiers de la peinture est aujourd'hui fragmentée, dispersée et parfois peu fiable. Un apprenant, un artisan en reconversion ou un professionnel confirmé se trouve confronté à une multiplication de sources documentaires hétérogènes : sites institutionnels, forums d'amateurs, documentations de fabricants de produits, ou blogs personnels. Cette fragmentation induit une opacité dans les parcours de formation et ralentit la veille réglementaire ou technique. La problématique centrale de ce projet consiste à concevoir une interface unique et structurée, capable de fédérer ces connaissances métiers. Comment concevoir un point d'entrée unique favorisant la recherche, l'apprentissage structuré à travers des roadmaps, et la validation des savoirs par des pairs qualifiés, tout en s'assurant de la légèreté et de la portabilité de l'application dans un contexte de démonstration ?
+
+\subsection*{Objectifs du projet et livrables}
+
+L'objectif majeur du projet est de développer la version de démonstration de la plateforme Painting Business Core Instance. Afin de garantir une indépendance technique totale et de valider les concepts d'interface et d'échange, l'application exclut toute implémentation de serveur de base de données physique ou de logique backend centralisée. Le système s'appuie sur une simulation logicielle de pointe intégrée au sein du framework Next.js 15.
+
+Les livrables applicatifs et conceptuels du projet comprennent :
+\begin{itemize}
+    \item Une application web moderne, responsive et performante construite sous Next.js 15 en utilisant l'App Router.
+    \item Un moteur de simulation API (\texttt{lib/api.ts}) asynchrone modélisant un comportement client/serveur réaliste (délais réseaux, codes de statut HTTP, pagination).
+    \item Un jeu complet de données métiers simulées (mock data JSON) couvrant les fiches, les peintres, les catégories et les roadmaps.
+    \item Une modélisation structurelle du domaine à travers un diagramme de classes complet réclamé par le corps professoral.
+    \item La mise en conformité de l'application avec les standards PWA (Progressive Web App) pour permettre un usage en mode déconnecté.
+\end{itemize}
+
+% ============================================================
+\subsection{Périmètre du projet}
+% ============================================================
+
+\subsubsection*{Ce qui est dans le périmètre}
+
+Le projet consiste à créer une plateforme web centralisant les savoirs des métiers de la peinture : techniques, formations, outils, réglementation, et profils de peintres. Elle est accessible librement à tous les visiteurs, enrichie par des peintres inscrits et validés, et modérée par un ou plusieurs administrateurs.
+
+\textbf{Bénéficiaires principaux} :
+\begin{itemize}
+  \item Étudiants en arts et candidats à la formation
+  \item Peintres professionnels et artisans
+  \item Amateurs d'art et passionnés
+\end{itemize}
+
+\textbf{Acteurs impliqués} :
+\begin{itemize}
+  \item Visiteurs de la plateforme (lecture libre, non authentifiés)
+  \item Peintres contributeurs (créateurs de contenus, authentifiés et validés)
+  \item Administrateurs (modération et gestion)
+\end{itemize}
+
+Le périmètre fonctionnel commence par la consultation libre des fiches métier et s'arrête à la publication et la modération des contenus par les peintres et l'administrateur.
+
+\subsubsection*{Hors périmètre}
+
+Les aspects suivants sont explicitement \textbf{exclus} du projet :
+
+\begin{itemize}
+  \item Galerie marchande et vente d'œuvres d'art
+  \item Système de devis et de commandes
+  \item Gestion des chantiers et suivi de projets
+  \item Messagerie instantanée client-peintre
+  \item Notation publique des prestations artistiques ou commerciales
+  \item Facturation et transactions commerciales
+\end{itemize}
+
+% ============================================================
+\subsection{Analyse fonctionnelle}
+% ============================================================
+\noindent
+Cette section constitue le socle analytique du projet \textit{Painting Business Core Instance}. Elle rassemble l'état de l'art des solutions existantes, la modélisation détaillée des besoins de chaque acteur, les contraintes techniques mesurables encadrant le développement et la justification rigoureuse des choix technologiques retenus. L'ensemble de ces éléments forme le référentiel fonctionnel indispensable à la bonne compréhension des décisions d'architecture exposées dans les sections ultérieures.
+\subsubsection*{État de l'art des solutions de centralisation de savoirs}
+% ============================================================
+
+\noindent
+Avant de définir le positionnement précis de \textit{Painting Business Core Instance}, il est essentiel de conduire une analyse comparative rigoureuse des plateformes numériques existantes susceptibles de répondre, partiellement ou totalement, à la problématique de centralisation des savoirs métiers dans le secteur de la peinture. Deux grandes typologies d'outils ont été identifiées, étudiées et confrontées aux besoins spécifiques de notre cible.
+
+\paragraph{Les wikis collaboratifs généralistes}
+
+\noindent
+Les plateformes de type wiki (Wikipédia, Fandom, wikis d'entreprise) reposent sur le principe de la contribution ouverte : tout utilisateur enregistré peut créer ou modifier un article. Si ce modèle favorise indéniablement la richesse encyclopédique et la réactivité de mise à jour, il présente des lacunes structurelles majeures pour un usage métier professionnel :
+
+\begin{itemize}[leftmargin=1.5cm, itemsep=4pt]
+    \item \textbf{Absence de structuration par compétences :} aucun mécanisme natif ne permet d'ordonner les connaissances en parcours d'apprentissage progressifs (roadmaps). Un apprenant souhaitant maîtriser la peinture à l'huile ou la peinture à la chaux ne dispose d'aucun guide séquencé indiquant les prérequis et les étapes à valider.
+    \item \textbf{Processus de validation non sélectif :} la modération communautaire ouverte n'offre aucune garantie quant à la certification professionnelle des contributeurs, exposant les utilisateurs à des informations erronées ou obsolètes, particulièrement problématiques dans les domaines réglementaires.
+    \item \textbf{Granularité sémantique insuffisante :} le modèle de balisage wiki ne permet pas d'exprimer des relations métier complexes telles que « cette technique requiert ce matériau, conforme à cette norme, applicable sur ce type de support ».
+\end{itemize}
+
+\paragraph{Les plateformes de formation en ligne (LMS)}
+
+\noindent
+Les systèmes de gestion d'apprentissage commerciaux (OpenClassrooms, Skillshare, Udemy) ont considérablement démocratisé l'accès à la formation. Toutefois, leur modèle économique et leur architecture présentent des incompatibilités fondamentales avec les objectifs de \textit{Painting Business Core Instance} :
+
+\begin{itemize}[leftmargin=1.5cm, itemsep=4pt]
+    \item \textbf{Modèle descendant et fermé :} le contenu est exclusivement produit par des formateurs certifiés par la plateforme, selon des grilles tarifaires imposées. Ce modèle exclut la co-construction horizontale par une communauté d'artisans de terrain, dont le savoir empirique constitue pourtant une ressource irremplaçable.
+    \item \textbf{Barrière financière à l'accès :} la majorité des contenus spécialisés sont soumis à abonnement mensuel, créant une inéquité d'accès pour les petits artisans indépendants, les apprentis en formation initiale ou les structures artisanales de pays à faible revenu.
+\end{itemize}
+
+% Tableau comparatif
+\vspace{0.8em}
+\begin{insightbox}[Synthèse comparative — Positionnement de \textit{Painting Business Core}]
+Le tableau ci-dessous synthétise l'analyse comparative sur les critères fonctionnels déterminants pour notre domaine métier. Une évaluation de 1 (inadapté) à 3 (adapté) est attribuée pour chaque critère.
+\end{insightbox}
+
+\vspace{0.5em}
+\begin{table}[H]
+\centering
+\caption{Analyse comparative des typologies de plateformes existantes}
+\label{tab:comparatif_etat_art}
+\renewcommand{\arraystretch}{1.4}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.0cm}
+                >{\centering\arraybackslash}p{1.8cm}
+                >{\centering\arraybackslash}p{2.0cm}
+                >{\centering\arraybackslash}p{2.2cm}
+                >{\centering\arraybackslash}p{2.3cm}}
+\toprule
+\tableheader{Critère fonctionnel} &
+\tableheader{Wiki généraliste} &
+\tableheader{LMS commercial} &
+\tableheader{PBC (cible)} \\
+\midrule
+\rowcolor{PBCLightGray}
+Structuration par compétences (roadmaps) & 1 & 3 & 3 \\
+Validation par pairs professionnels & 2 & 1 & 3 \\
+\rowcolor{PBCLightGray}
+Accès libre et ouvert & 3 & 1 & 3 \\
+Géolocalisation des artisans & 1 & 1 & 3 \\
+\rowcolor{PBCLightGray}
+Co-construction de contenus & 3 & 1 & 3 \\
+Richesse sémantique (tags, catégories) & 2 & 2 & 3 \\
+\rowcolor{PBCLightGray}
+Portabilité (PWA / mode hors-ligne) & 1 & 2 & 3 \\
+Indépendance de l'infrastructure & 2 & 1 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{warnbox}[Lacune identifiée — Justification de l'originalité du projet]
+L'analyse comparative révèle qu'aucune solution existante ne couvre simultanément l'ensemble des huit critères fonctionnels essentiels au domaine de la peinture. C'est précisément cette lacune — la combinaison unique d'une co-construction ouverte de savoirs, d'une validation professionnelle rigoureuse — qui fonde la légitimité et l'originalité de \textit{Painting Business Core Instance} en tant que projet académique à forte pertinence industrielle.
+\end{warnbox}
+
+% ============================================================
+\subsubsection*{Analyse détaillée des besoins par acteur}
+% ============================================================
+
+\noindent
+La modélisation des besoins utilisateurs constitue une étape fondamentale de l'ingénierie logicielle. Elle garantit que les décisions architecturales sont guidées par des exigences fonctionnelles réelles et non par de simples présupposés technologiques. Trois profils d'acteurs ont été identifiés et modélisés à travers une analyse en profondeur de leurs objectifs, de leurs interactions et de leurs contraintes propres.
+
+\subsubsection*{Le Visiteur — Acteur non authentifié}
+
+\noindent
+Le visiteur représente le profil d'entrée dans l'écosystème de la plateforme. Il peut s'agir d'un étudiant en formation initiale en peinture bâtiment, d'un artisan en reconversion professionnelle souhaitant explorer de nouvelles techniques décoratives, ou d'un particulier cherchant à comprendre les métiers de la peinture avant de solliciter un professionnel. Ce profil est caractérisé par une \textbf{asymétrie d'information forte} : l'utilisateur arrive sans connaissance préalable structurée du domaine et doit être guidé efficacement.
+
+\vspace{0.5em}
+\textbf{Besoins fonctionnels détaillés :}
+
+\begin{enumerate}[leftmargin=1.5cm, label=\textbf{BF-\arabic*.}, itemsep=5pt]
+    \item \textbf{Recherche et découverte de contenus :} Consulter, rechercher et filtrer librement les fiches métiers par thématique ou par mots-clés (tags). Le moteur de recherche doit supporter la saisie approximative et proposer des suggestions en temps réel via un mécanisme de \textit{debouncing} pour ne pas surcharger le système de filtrage.
+    \item \textbf{Navigation par parcours d'apprentissage :} Accéder aux roadmaps pédagogiques structurées permettant de visualiser les prérequis et la progression recommandée pour l'acquisition d'une compétence métier spécifique, depuis les notions fondamentales jusqu'aux techniques avancées.
+    \item \textbf{Accès sans friction :} Consulter l'intégralité des ressources publiques sans création de compte préalable, afin de supprimer toute barrière à l'entrée pouvant décourager les utilisateurs les moins familiarisés avec les outils numériques.
+\end{enumerate}
+
+\subsubsection*{Le Peintre Contributeur — Acteur authentifié et validé}
+
+\noindent
+Le peintre contributeur constitue la colonne vertébrale éditoriale de la plateforme. Il s'agit d'un professionnel dont le compte a été préalablement validé par le super administrateur, garantissant ainsi la légitimité et la traçabilité des contenus publiés. Ce profil peut couvrir un artisan expérimenté en peinture artistique souhaitant transmettre son savoir-faire, un artiste plasticien partageant ses techniques de création sur toile.
+
+\vspace{0.5em}
+\textbf{Besoins fonctionnels détaillés :}
+
+\begin{enumerate}[leftmargin=1.5cm, label=\textbf{BF-\arabic*.}, itemsep=5pt]
+    \item \textbf{Gestion du profil professionnel :} Administrer une page de présentation mettant en avant sa biographie, ses spécialités techniques, son portfolio en ligne. Ce profil sert à la fois de vitrine professionnelle et de garant de l'authenticité des fiches publiées.
+    \item \textbf{Publication de fiches documentaires :} Créer, éditer, archiver et supprimer des fiches techniques structurées selon un modèle éditorial normalisé (titre, corps de contenu riche, catégorie, tags, médias illustratifs). Chaque fiche soumise est placée en statut « En attente de modération » avant publication définitive.
+    \item \textbf{Construction de roadmaps pédagogiques :} Structurer des parcours d'apprentissage autonomes en ordonnant séquentiellement des fiches existantes, en définissant les prérequis de chaque étape et en rédigeant un descriptif pédagogique global du parcours.
+    \item \textbf{Suivi statistique des contributions :} Consulter des indicateurs de performance synthétiques sur ses publications (nombre de consultations simulées, statut de modération de chaque fiche, évolution de la visibilité du profil) depuis son tableau de bord personnel.
+    \item \textbf{Gestion du contenu multimédia :} Associer à chaque fiche des ressources visuelles (photographies de réalisations, schémas techniques) dans les formats légers supportés (JPG, PNG, WebP), en respectant la contrainte de taille maximale de 10 Mo par fichier imposée par le cahier des charges.
+\end{enumerate}
+
+\subsubsection*{Le Super Administrateur de la plateforme}
+
+\noindent
+Le Super Administrateur exerce une fonction de régulation et de garantie qualité de l'ensemble de l'écosystème documentaire. Il possède un accès complet à toutes les entités du système et est le seul acteur habilité à modifier les statuts de compte des peintres et à intervenir sur les contenus de manière définitive. Ce rôle est typiquement tenu par l'équipe de direction éditoriale de la plateforme ou par un binôme de professionnels référents du secteur.
+
+\vspace{0.5em}
+\textbf{Besoins fonctionnels détaillés :}
+
+\begin{enumerate}[leftmargin=1.5cm, label=\textbf{BF-\arabic*.}, itemsep=5pt]
+    \item \textbf{Validation des comptes professionnels :} Auditer les demandes d'inscription des peintres, vérifier la cohérence des informations de profil soumises (spécialité, portfolio) et basculer le statut du compte entre les états suivants : \texttt{EN\_ATTENTE} $\rightarrow$ \texttt{VALIDE} ou \texttt{SUSPENDU}.
+    \item \textbf{Modération du catalogue de contenus :} Intervenir sur les fiches ou commentaires non conformes à la charte éditoriale (contenu inexact, médias inappropriés, violation des règles de propriété intellectuelle) en les archivant ou les supprimant définitivement.
+    \item \textbf{Gestion de la taxonomie :} Créer, renommer et hiérarchiser les catégories et les tags structurant l'ensemble du catalogue documentaire, assurant la cohérence sémantique de l'arborescence à long terme.
+    \item \textbf{Supervision des indicateurs clés :} Consulter les KPI métiers consolidés sur le tableau de bord d'administration : nombre de fiches publiées par catégorie, taux de validation des comptes.
+    \item \textbf{Traçabilité des actions :} Bénéficier d'un journal d'audit structuré (consultable via la console de débogage dans la version démo) retraçant l'ensemble des opérations de modération effectuées, avec horodatage.
+\end{enumerate}
+
+\vspace{0.5em}
+% Tableau de synthèse des besoins fonctionnels par acteur
+\begin{table}[H]
+\centering
+\caption{Matrice des besoins fonctionnels prioritaires par acteur}
+\label{tab:matrice_besoins}
+\renewcommand{\arraystretch}{1.5}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{5.5cm}
+                >{\centering\arraybackslash}p{2.0cm}
+                >{\centering\arraybackslash}p{2.2cm}
+                >{\centering\arraybackslash}p{2.5cm}}
+\toprule
+\tableheader{Fonctionnalité} &
+\tableheader{Visiteur} &
+\tableheader{Peintre} &
+\tableheader{Super Administrateur} \\
+\midrule
+\rowcolor{PBCLightGray}
+Consultation des fiches & \textcolor{PBCGreen}{\textbf{Oui}} & \textcolor{PBCGreen}{\textbf{Oui}} & \textcolor{PBCGreen}{\textbf{Oui}} \\
+Recherche et filtrage dynamique & \textcolor{PBCGreen}{\textbf{Oui}} & \textcolor{PBCGreen}{\textbf{Oui}} & \textcolor{PBCGreen}{\textbf{Oui}} \\
+\rowcolor{PBCLightGray}
+Carte géographique interactive & \textcolor{PBCGreen}{\textbf{Oui}} & \textcolor{PBCGreen}{\textbf{Oui}} & \textcolor{PBCGreen}{\textbf{Oui}} \\
+Création et édition de fiches & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCGreen}{\textbf{Oui}} & \textcolor{PBCGreen}{\textbf{Oui}} \\
+\rowcolor{PBCLightGray}
+Construction de roadmaps & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCGreen}{\textbf{Oui}} & \textcolor{PBCGreen}{\textbf{Oui}} \\
+Gestion du profil professionnel & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCGreen}{\textbf{Oui}} & \textcolor{PBCGreen}{\textbf{Oui (tous)}} \\
+\rowcolor{PBCLightGray}
+Tableau de bord de contributions & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCGreen}{\textbf{Oui}} & \textcolor{PBCGreen}{\textbf{Oui}} \\
+Validation de comptes peintres & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCGreen}{\textbf{Oui}} \\
+\rowcolor{PBCLightGray}
+Modération des contenus & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCGreen}{\textbf{Oui}} \\
+Gestion de la taxonomie & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCGreen}{\textbf{Oui}} \\
+\rowcolor{PBCLightGray}
+Consultation des KPI globaux & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCRed}{\textbf{Non}} & \textcolor{PBCGreen}{\textbf{Oui}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\subsection{Spécifications techniques}
+% ============================================================
+
+\subsubsection{Contraintes techniques et critères de performance}
+
+L'application est assujettie à un cahier des charges rigoureux visant à garantir une expérience utilisateur fluide, une sécurité forte côté client et une portabilité maximale :
+
+\begin{itemize}
+    \item \textbf{Performance de chargement :} Le temps d'affichage initial (LCP - Largest Contentful Paint) doit rester inférieur à 2 secondes sur un réseau mobile 4G.
+    \item \textbf{Audit automatisé :} L'application doit obtenir un score minimal de 90 sur l'outil Google Lighthouse pour les volets Performance, Accessibilité, Bonnes pratiques et PWA.
+    \item \textbf{Sécurité des en-têtes :} Simulation de la présence des politiques de sécurité HTTP essentielles (CSP - Content Security Policy, HSTS, X-Frame-Options) au niveau des métadonnées de l'application Next.js.
+    \item \textbf{Formats et volumes de fichiers :} Les médias intégrés dans les fiches (images, tutoriels vidéo courts) doivent être limités à 10 Mo par fichier et restreints aux formats légers (JPG, PNG, WebP, MP4).
+\end{itemize}
+
+% ============================================================
+\subsubsection{Justification des choix technologiques de l'instance}
+% ============================================================
+
+\noindent
+La pile technologique de \textit{Painting Business Core} a été soigneusement rationalisée pour répondre simultanément à trois impératifs : l'indépendance totale vis-à-vis d'une infrastructure backend physique dans le cadre de la démonstration, la préparation de l'interopérabilité future avec l'écosystème BCaaS global, et la conformité avec les standards de qualité mesurés par les audits Lighthouse. Chaque choix technologique est justifié ci-après selon une analyse structurée.
+
+\paragraph{Framework principal : Next.js 15 (App Router)}
+
+\noindent
+Next.js 15 a été retenu comme socle unique du frontend en raison de la convergence exceptionnelle de ses capacités avec nos contraintes architecturales :
+
+\begin{itemize}[leftmargin=1.5cm, itemsep=5pt]
+    \item \textbf{Rendu hybride (SSR / SSG / ISR) :} L'App Router permet de définir au niveau de chaque page ou segment de route la stratégie de rendu optimale. Le catalogue des fiches bénéficie d'une génération statique (SSG) pour maximiser les performances et le référencement, tandis que les tableaux de bord des utilisateurs s'appuient sur un rendu côté serveur (SSR) pour garantir la fraîcheur des données.
+    \item \textbf{Optimisation SEO native :} La génération de métadonnées structurées (Open Graph, balises canoniques) directement depuis les Server Components permet d'assurer l'indexabilité de chaque fiche métier par les moteurs de recherche, augmentant significativement la visibilité organique de la plateforme.
+    \item \textbf{Middleware d'interception :} Le fichier \texttt{middleware.ts} permet d'intercepter chaque requête entrante pour y appliquer les règles de routage linguistique (\texttt{locale: fr-CM}) et les simulations d'en-têtes contextuels BCaaS, sans modifier les composants graphiques.
+    \item \textbf{Gestion native des imports dynamiques :} Le mécanisme \texttt{dynamic(() => import(...))} permet d'exclure du bundle SSR les composants dépendants d'APIs exclusivement disponibles dans le navigateur (comme \texttt{Leaflet.js}), évitant ainsi les erreurs de rendu serveur.
+\end{itemize}
+
+\paragraph{Couche de persistance : Mock Data (Fichiers JSON structurés)}
+
+\noindent
+L'absence délibérée d'un serveur de base de données physique (PostgreSQL, MongoDB) dans cette version de démonstration est compensée par une couche de simulation architecturalement rigoureuse. Les fichiers JSON du répertoire \texttt{data/} reproduisent fidèlement la structure des tables relationnelles qui seront utilisées en production, avec les mêmes noms de champs, les mêmes types de données et les mêmes relations d'association (clés étrangères simulées par des tableaux d'identifiants).
+
+\noindent
+Cette approche présente un double avantage stratégique : elle permet de valider l'intégralité des interfaces de données sans dépendance logistique (aucun serveur à déployer, aucune migration à exécuter), et elle facilite le remplacement ultérieur de ces fichiers JSON par de véritables appels \texttt{fetch()} vers l'API Gateway BCaaS, grâce à l'étanchéité de la couche d'abstraction \texttt{lib/api.ts}.
+
+\paragraph{Moteur d'abstraction API : \texttt{lib/api.ts}}
+
+\noindent
+Ce composant constitue la pièce maîtresse de l'architecture de démonstration. En exposant uniquement des fonctions asynchrones retournant des \texttt{Promise<T>}, il impose à tous les composants React d'interagir avec les données selon le même protocole qu'ils adopteraient face à un serveur backend distant. Les mécanismes intégrés couvrent :
+
+\begin{itemize}[leftmargin=1.5cm, itemsep=5pt]
+    \item \textbf{Simulation de latence réseau :} Un \texttt{setTimeout} configurable (entre 300 et 600ms) force l'interface à gérer nativement les états de chargement (\texttt{loading states}) et les composants \texttt{Skeleton}, produisant une UX authentique et prévisible.
+    \item \textbf{Encapsulation des paquets métiers :} Chaque réponse est enrichie d'une structure d'en-têtes contextuels (\texttt{X-Tenant-Id}, \texttt{trace\_id}, \texttt{role\_scope}, \texttt{locale}) conforme aux spécifications BCaaS.
+    \item \textbf{Génération de traceurs UUID v4 :} Chaque appel de fonction produit un identifiant de corrélation unique, activant la traçabilité complète des transactions dans les journaux de la console du navigateur.
+    \item \textbf{Simulation des codes de statut HTTP :} Les fonctions renvoient des objets incluant un champ \texttt{status} (200, 201, 404, 403) permettant aux composants de gérer les cas d'erreur de manière réaliste et normalisée.
+\end{itemize}
+
+% Tableau récapitulatif des choix technologiques
+\vspace{0.5em}
+\begin{table}[H]
+\centering
+\caption{Tableau récapitulatif des choix technologiques de l'instance}
+\label{tab:techno}
+\renewcommand{\arraystretch}{1.6}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm}
+                >{\raggedright\arraybackslash}p{3.5cm}
+                >{\raggedright\arraybackslash}p{3.2cm}
+                >{\raggedright\arraybackslash}p{3.2cm}}
+\toprule
+\tableheader{Composant} &
+\tableheader{Technologie retenue} &
+\tableheader{Justification principale} &
+\tableheader{Avantage pour la phase 2} \\
+\midrule
+\rowcolor{PBCLightGray}
+Framework global & Next.js 14 (App Router) & Rendu hybride SSR/SSG, SEO natif, middleware & Compatibilité totale avec les API Gateway REST \\
+Couche de persistance & Mock Data (fichiers JSON) & Indépendance backend, simulation structurelle des tables & Remplacement transparent par \texttt{fetch()} vers l'API réelle \\
+\rowcolor{PBCLightGray}
+Moteur d'abstraction API & \texttt{lib/api.ts} (Async JS) & Étanchéité architecturale, simulation BCaaS complète & Fonctions réutilisables sans modification des composants UI \\
+Cartographie & Leaflet.js (Client) & Légèreté, open source, import dynamique SSR-safe & Connexion aux requêtes PostGIS pour géoloc temps réel \\
+\rowcolor{PBCLightGray}
+Cache et session & React Context + LocalStorage & Simulation de sessions JWT et états hors-ligne & Migration vers OAuth2 + JWT signés côté serveur \\
+Conformité PWA & Service Worker + manifest.json & Score PWA 92, installation mobile, mode hors-ligne & Stratégies de cache avancées pour les contenus dynamiques \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{insightbox}[Bilan analytique — Cohérence de la pile technologique]
+La cohérence de la pile technologique retenue réside dans sa capacité à répondre simultanément aux exigences contradictoires apparentes d'un projet de démonstration : \textbf{légèreté et autonomie} (aucune dépendance à un serveur physique) \textbf{d'une part}, et \textbf{rigueur architecturale et préparation à l'échelle industrielle} (contrats d'interface BCaaS, simulation des paquets métiers, conformité aux standards Web) \textbf{d'autre part}. Cette dualité constitue la signature intellectuelle du projet et démontre la maîtrise des concepts d'ingénierie logicielle distribués dans un contexte académique de troisième année de cycle ingénieur.
+\end{insightbox}
+
+% ============================================================
+\subsection{Analogie réseau et approche BCaaS}
+% ============================================================
+
+Conformément aux attendus du cours de Réseaux, la plateforme applique les concepts fondamentaux des réseaux de communication et s'inscrit dans l'approche \textbf{BCaaS} (\textit{Business Core as a Service}).
+
+\subsubsection*{Correspondance émetteur / récepteur / protocole}
+
+\begin{table}[H]
+\centering
+\caption{Analogie réseau --- Correspondance avec Painting Business Core}
+\label{tab:network_analogy}
+\small
+\begin{tabular}{|p{0.25\textwidth}|p{0.68\textwidth}|}
+\hline
+\textbf{Concept réseau} & \textbf{Équivalent métier (Painting Business Core)} \\
+\hline
+\textbf{Émetteur} (source) & Peintre contributeur (publie son savoir, ses fiches, ses roadmaps) \\
+\hline
+\textbf{Récepteur} (destination) & Visiteur ou peintre consultant (reçoit et consomme l'information) \\
+\hline
+\textbf{Canal} & Plateforme web Painting Business Core \\
+\hline
+\textbf{Protocole} & Règles métier : validation des comptes, format des fiches, modération \\
+\hline
+\textbf{Message} & Fiche métier, roadmap, tutoriel, profil de peintre \\
+\hline
+\textbf{Adressage} & URL canonique de chaque fiche + géolocalisation (latitude/longitude) des peintres \\
+\hline
+\textbf{Routage} & Moteur de recherche full-text + carte interactive (Leaflet.js) \\
+\hline
+\textbf{Bruit} & Contenu non valide, spam ou hors sujet (filtré par modération admin) \\
+\hline
+\textbf{Accusé de réception} & Validation du compte peintre par l'administrateur \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection*{Pile protocolaire métier (5 couches)}
+
+Inspirée du modèle OSI/TCP-IP et de l'approche BCaaS, la plateforme est architecturalement structurée en 5 couches. Chaque couche offre des services à la couche supérieure et cache sa complexité à la couche inférieure.
+
+\begin{table}[H]
+\centering
+\caption{Pile protocolaire métier --- 5 couches BCaaS appliquées à Painting Business Core}
+\label{tab:protocol_stack}
+\small
+\begin{tabular}{|p{0.12\textwidth}|p{0.18\textwidth}|p{0.22\textwidth}|p{0.42\textwidth}|}
+\hline
+\textbf{Niveau} & \textbf{Couche} & \textbf{Rôle} & \textbf{Implémentation dans Painting BC} \\
+\hline
+\textbf{5} & Business capabilities & Acteurs, ressources, opérations métier & Peintre (émetteur), Visiteur (récepteur), Admin (régulateur), Fiches, Roadmaps, Catégories \\
+\hline
+\textbf{4} & Context \& policy & Identité, permissions, règles métier & Validation des comptes, modération des contenus, rôles (VISITOR / PAINTER / ADMIN) \\
+\hline
+\textbf{3} & Tenant \& routing & Résolution du tenant, routage logique & Isolation de l'instance « Painting » au sein du BCaaS global, routage des requêtes par role\_scope \\
+\hline
+\textbf{2} & Transport \& messaging & Synchronisation, asynchronisme, timeout, idempotence & API REST (Spring Boot en Phase 2), JWT, gestion des sessions, délais réseau simulés \\
+\hline
+\textbf{1} & Infrastructure & Stockage persistant, cache, résilience & PostgreSQL + PostGIS, Redis, MinIO, Docker, mock data JSON (Phase 1) \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection*{Le « paquet métier » (encapsulation BCaaS)}
+
+Conformément à l'approche BCaaS, chaque requête API embarque des \textbf{en-têtes contextuels} séparés du contenu métier (payload). Cette séparation garantit la traçabilité, l'isolation des tenants et la conformité avec les politiques transverses.
+
+\begin{table}[H]
+\centering
+\caption{Structure du paquet métier --- En-têtes contextuels BCaaS}
+\label{tab:metadata_headers}
+\small
+\begin{tabular}{|p{0.15\textwidth}|p{0.20\textwidth}|p{0.58\textwidth}|}
+\hline
+\textbf{En-tête} & \textbf{Exemple} & \textbf{Rôle / Signification} \\
+\hline
+\texttt{X-Tenant-Id} & \texttt{painting} & Identifie l'instance métier (iso tenant). Permet au routeur central du BCaaS d'orienter vers le bon schéma de BD isolé. \\
+\hline
+\texttt{actor\_id} & \texttt{painter-007} & Identifie l'émetteur (peintre, visiteur, admin). Utilisé pour la traçabilité et l'audit. \\
+\hline
+\texttt{role\_scope} & \texttt{PAINTER} & Définit les droits applicables : VISITOR (lecture), PAINTER (création), ADMIN (modération). \\
+\hline
+\texttt{trace\_id} & \texttt{9b1deb4d-\ldots} & UUID unique v4 généré à chaque requête. Permet le suivi bout en bout des transactions dans les logs et observabilité. \\
+\hline
+\texttt{locale} & \texttt{fr-CM} & Langue et région (code ISO 639-1 + ISO 3166-1 alpha-2). Support i18n multi-devises. \\
+\hline
+\end{tabular}
+\end{table}
+
+Cette séparation entre les en-têtes contextuels et le payload métier garantit que chaque service de la pile BCaaS ne traite que les responsabilités qui lui incombent, sans connaître la logique complète de l'application. C'est le fondement de la découplabilité et de la scalabilité.
+
+\newpage
+
+% ============================================================
+\section{Modèle Mathématique}
+% ============================================================
+
+Ce chapitre formalise mathématiquement l'architecture et les mécanismes fonctionnels
+de la plateforme \textbf{Painting Business Core Instance(PBCI)}. L'objectif est de décrire de manière
+rigoureuse les entités du domaine, les flux de données inter-couches, la politique de
+contrôle d'accès, les performances du système de recherche, et la gestion des transactions
+distribuées dans le modèle BCaaS.
+
+\subsection*{Notation de base}
+
+Tout au long de ce modèle, les conventions suivantes sont adoptées :
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{ll}
+\toprule
+\textbf{Symbole} & \textbf{Signification} \\
+\midrule
+$\mathbb{N}, \mathbb{R}$ & Ensembles des entiers naturels et des réels \\
+$\mathcal{P}(E)$ & Ensemble des parties de $E$ \\
+$|E|$ & Cardinal de l'ensemble $E$ \\
+$f : A \to B$ & Fonction de $A$ dans $B$ \\
+$\exists, \forall$ & Quantificateurs existentiel et universel \\
+$\land, \lor, \lnot$ & Connecteurs logiques ET, OU, NON \\
+$\mathbb{1}[\cdot]$ & Fonction indicatrice \\
+$\lambda$ & Taux d'arrivée (file d'attente) \\
+$\mu$ & Taux de service (file d'attente) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\subsection{Modélisation algébrique du domaine métier}
+% ============================================================
+
+\subsubsection*{Définition formelle des entités}
+
+\begin{definition}[Espace utilisateur]
+L'ensemble des utilisateurs du système est défini par :
+\[
+\mathcal{U} = \mathcal{V} \cup \mathcal{P} \cup \mathcal{A}
+\]
+où $\mathcal{V}$ est l'ensemble des \emph{Visiteurs}, $\mathcal{P}$ l'ensemble des \emph{Peintres contributeurs}
+et $\mathcal{A}$ l'ensemble des \emph{Super Administrateurs}, avec $\mathcal{V} \cap \mathcal{P} = \emptyset$,
+$\mathcal{P} \cap \mathcal{A} = \emptyset$ et $\mathcal{V} \cap \mathcal{A} = \emptyset$.
+\end{definition}
+
+\begin{definition}[Entité Peintre]
+Un peintre $p \in \mathcal{P}$ est un 7-uplet :
+\[
+p = (id_p,\; nom_p,\; email_p,\; \sigma_p,\; t_{ins},\; t_{val},\; \mathcal{F}_p)
+\]
+où :
+\begin{itemize}
+  \item $id_p \in \mathbb{N}^*$ est l'identifiant unique,
+  \item $nom_p, email_p \in \Sigma^*$ sont des chaînes de caractères,
+  \item $\sigma_p \in \{EN\_ATTENTE, VALIDE, SUSPENDU\}$ est le statut du compte,
+  \item $t_{ins}, t_{val} \in \mathbb{R}_{\geq 0}$ sont les horodatages d'inscription et de validation,
+  \item $\mathcal{F}_p \subseteq \mathcal{F}$ est l'ensemble des fiches publiées par $p$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Fiche de savoir]
+Une fiche $f \in \mathcal{F}$ est un 9-uplet :
+\[
+f = (id_f,\; titre_f,\; \nu_f,\; \kappa_f,\; \tau_f,\; \mathcal{T}_f,\; \mathcal{M}_f,\; s_f,\; \omega_f)
+\]
+où :
+\begin{itemize}
+  \item $id_f \in \mathbb{N}^*$,
+  \item $\nu_f \in \{DEBUTANT, INTERMEDIAIRE, AVANCE\}$ est le niveau,
+  \item $\kappa_f \in \mathcal{K}$ est la catégorie (peinture à l'huile, à la chaux, décorative\ldots),
+  \item $\tau_f \in \mathcal{P}(\mathcal{G})$ est l'ensemble des tags associés ($\mathcal{G}$ = vocabulaire contrôlé),
+  \item $\mathcal{T}_f \subseteq \Sigma^*$ est l'ensemble des techniques listées,
+  \item $\mathcal{M}_f$ est l'ensemble des médias attachés,
+  \item $s_f \in \{EN\_ATTENTE, PUBLIE, ARCHIVE\}$ est le statut de la fiche,
+  \item $\omega_f \in \mathbb{N}$ est le compteur de vues.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[RoadMap pédagogique]
+Une roadmap $r \in \mathcal{R}$ est définie par :
+\[
+r = (id_r,\; titre_r,\; \nu_r,\; s_r,\; E_r)
+\]
+où $E_r = (e_1, e_2, \ldots, e_k)$ est une séquence ordonnée d'étapes, chaque étape $e_i$
+étant un triplet :
+\[
+e_i = (rang_i,\; f_i,\; prereq_i) \quad \text{avec } f_i \in \mathcal{F},\; prereq_i \subseteq \{e_1, \ldots, e_{i-1}\}
+\]
+\end{definition}
+
+\subsubsection*{Taxonomie et structure hiérarchique des catégories}
+
+L'ensemble des catégories $\mathcal{K}$ est muni d'une relation d'ordre partiel $\preceq$ :
+\[
+\mathcal{K} = (K, \preceq)
+\]
+définissant une hiérarchie (treillis partiel). Pour deux catégories $\kappa_1, \kappa_2 \in K$ :
+\[
+\kappa_1 \preceq \kappa_2 \iff \kappa_1 \text{ est une sous-catégorie de } \kappa_2
+\]
+
+La profondeur maximale de la hiérarchie est bornée par $D_{max} \in \mathbb{N}$. L'ensemble
+des catégories feuilles (sans enfant) est :
+\[
+K_{feuilles} = \{\kappa \in K \mid \nexists\, \kappa' \in K : \kappa' \prec \kappa\}
+\]
+
+% ============================================================
+\subsection{Modèle de contrôle d'accès basé sur les rôles (RBAC)}
+% ============================================================
+
+\subsubsection*{Formalisation RBAC}
+
+Le système d'autorisation de PBC est formalisé par un quadruplet :
+\[
+\text{RBAC} = (\mathcal{U},\; \mathcal{R\!O},\; \mathcal{O\!P},\; \Pi)
+\]
+où $\mathcal{R\!O}$ est l'ensemble des rôles, $\mathcal{O\!P}$ l'ensemble des opérations, et
+$\Pi : \mathcal{R\!O} \to \mathcal{P}(\mathcal{O\!P})$ est la fonction de permissions.
+
+\begin{definition}[Ensemble des rôles]
+\[
+\mathcal{R\!O} = \{VISITOR,\; PAINTER,\; ADMIN\}
+\]
+avec l'ordre hiérarchique $VISITOR \subset PAINTER \subset ADMIN$ (héritage des droits).
+\end{definition}
+
+\begin{definition}[Fonction d'affectation de rôle]
+La fonction $\rho : \mathcal{U} \to \mathcal{R\!O}$ associe à chaque utilisateur son rôle :
+\[
+\rho(u) =
+\begin{cases}
+VISITOR & \text{si } u \in \mathcal{V} \\
+PAINTER & \text{si } u \in \mathcal{P} \text{ et } \sigma_u = VALIDE \\
+ADMIN   & \text{si } u \in \mathcal{A}
+\end{cases}
+\]
+\end{definition}
+
+\subsubsection*{Matrice d'autorisation}
+
+La politique de permissions est représentée par la matrice $\Pi \in \{0,1\}^{|\mathcal{R\!O}| \times |\mathcal{O\!P}|}$ :
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Opération} & \textbf{VISITOR} & \textbf{PAINTER} & \textbf{ADMIN} \\
+\midrule
+Consulter les fiches           & 1 & 1 & 1 \\
+Rechercher et filtrer          & 1 & 1 & 1 \\
+Accéder à la carte             & 1 & 1 & 1 \\
+Créer une fiche                & 0 & 1 & 1 \\
+Modifier sa propre fiche       & 0 & 1 & 1 \\
+Archiver sa fiche              & 0 & 1 & 1 \\
+Créer une roadmap              & 0 & 1 & 1 \\
+Valider un compte peintre      & 0 & 0 & 1 \\
+Supprimer tout contenu         & 0 & 0 & 1 \\
+Gérer la taxonomie             & 0 & 0 & 1 \\
+Consulter les KPI globaux      & 0 & 0 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{Prédicat d'autorisation}
+
+Pour une requête d'un utilisateur $u$ demandant à exécuter l'opération $op$ sur
+la ressource $x$, la décision d'autorisation est :
+
+\[
+\text{autoriser}(u, op, x) \iff \Pi(\rho(u), op) = 1 \;\land\; \text{proprio}(u, op, x)
+\]
+
+où le prédicat de propriété est défini par :
+\[
+\text{proprio}(u, op, x) \iff
+\begin{cases}
+auteur(x) = u & \text{si } op \in \{MODIFIER, ARCHIVER\} \text{ et } \rho(u) = PAINTER \\
+\top            & \text{si } \rho(u) = ADMIN
+\end{cases}
+\]
+
+% ============================================================
+\subsection{Modèle du paquet métier BCaaS}
+% ============================================================
+
+\subsubsection*{Structure formelle du paquet}
+
+Conformément à la pile protocolaire BCaaS à 5 couches, chaque paquet émis par
+l'instance PBC est un couple :
+\[
+\mathbf{P} = (\mathbf{H}, \mathbf{D})
+\]
+où $\mathbf{H}$ est le vecteur d'en-têtes contextuels et $\mathbf{D}$ le payload fonctionnel.
+
+\begin{definition}[Vecteur d'en-têtes]
+\[
+\mathbf{H} = (tenant\_id,\; actor\_id,\; role\_scope,\; trace\_id,\; locale,\; t_{emit})
+\]
+avec :
+\begin{itemize}
+  \item $tenant\_id \in \{"painting"\}$ (constante de l'instance),
+  \item $actor\_id \in \mathcal{U}_{id}$ (identifiant de l'émetteur),
+  \item $role\_scope \in \mathcal{R\!O}$,
+  \item $trace\_id \in \{0,1\}^{128}$ généré par UUID v4 (espace de $2^{128}$ valeurs distinctes),
+  \item $locale = "fr\text{-}CM"$,
+  \item $t_{emit} \in \mathbb{R}_{\geq 0}$ horodatage UNIX d'émission.
+\end{itemize}
+\end{definition}
+
+\subsubsection*{Probabilité de collision des trace\_id}
+
+Les identifiants $trace\_id$ sont générés selon une loi uniforme sur $\{0,1\}^{128}$.
+Pour $n$ requêtes simultanées, la probabilité de collision (anniversaire) est :
+\[
+P_{collision}(n) = 1 - \prod_{k=0}^{n-1}\left(1 - \frac{k}{2^{128}}\right) \approx 1 - e^{-\frac{n(n-1)}{2 \cdot 2^{128}}}
+\]
+
+Pour $n = 10^9$ requêtes par jour :
+\[
+P_{collision}(10^9) \approx 1 - e^{-\frac{(10^9)^2}{2 \cdot 2^{128}}} \approx 1.47 \times 10^{-21}
+\]
+
+Ce résultat confirme que la génération UUID v4 garantit une traçabilité sans collision
+pratique pour toute charge raisonnable de la plateforme.
+
+% ============================================================
+\subsection{Modèle de recherche et filtrage multicritères}
+% ============================================================
+
+\subsubsection*{Espace de recherche}
+
+Soit $\mathcal{C} = \mathcal{F} \cup \mathcal{P} \cup \mathcal{R}$ le corpus documentaire total. Une requête
+utilisateur est modélisée par un triplet :
+\[
+q = (q_{text},\; q_{cat},\; q_{zone})
+\]
+où $q_{text} \in \Sigma^*$ est la requête textuelle, $q_{cat} \in \mathcal{K} \cup \{\emptyset\}$
+le filtre de catégorie, et $q_{zone} \in (\mathbb{R}^2 \times \mathbb{R}_+) \cup \{\emptyset\}$
+le filtre géospatial (centre et rayon).
+
+\subsubsection*{Fonction de score de pertinence}
+
+Pour une fiche $f \in \mathcal{F}$ et une requête $q$, le score de pertinence est défini par :
+
+\[
+\text{score}(f, q) = \alpha \cdot \text{TF-IDF}(f, q_{text}) + \beta \cdot \mathbb{1}[\kappa_f \preceq q_{cat}] + \gamma \cdot \text{geo}(f, q_{zone}) + \delta \cdot \log(1 + \omega_f)
+\]
+
+avec $\alpha + \beta + \gamma + \delta = 1$, $\alpha, \beta, \gamma, \delta \in [0,1]$.
+
+\paragraph{Composante TF-IDF.} Pour un terme $t$ dans la fiche $f$ :
+\[
+\text{TF-IDF}(f, q_{text}) = \sum_{t \in q_{text}} tf(t, f) \cdot idf(t)
+\]
+\[
+tf(t, f) = \frac{n_{t,f}}{\sum_{t' \in f} n_{t',f}}, \qquad idf(t) = \log\frac{|\mathcal{F}|}{|\{f' \in \mathcal{F} : t \in f'\}| + 1}
+\]
+
+\paragraph{Composante géospatiale.} Pour un peintre $p$ de coordonnées $(\phi_p, \lambda_p)$
+et un filtre $q_{zone} = ((\phi_c, \lambda_c), R)$, la distance haversine est :
+\[
+d(p, q_{zone}) = 2R_T \arcsin\left(\sqrt{\sin^2\!\left(\frac{\phi_p - \phi_c}{2}\right) + \cos(\phi_p)\cos(\phi_c)\sin^2\!\left(\frac{\lambda_p - \lambda_c}{2}\right)}\right)
+\]
+\[
+\text{geo}(f, q_{zone}) = \mathbb{1}[d(auteur(f), q_{zone}) \leq R] \cdot \left(1 - \frac{d(auteur(f), q_{zone})}{R}\right)
+\]
+où $R_T = 6371$ km est le rayon moyen de la Terre.
+
+\subsubsection*{Mécanisme de debounce}
+
+La barre de recherche applique un délai de debounce $\delta_d = 400$ ms. Soit $\{k_1, k_2, \ldots, k_n\}$
+les instants de frappe, l'appel API n'est déclenché qu'à l'instant :
+\[
+t_{appel} = k_n + \delta_d \quad \text{si } k_n - k_{n-1} \geq \delta_d
+\]
+
+La réduction du nombre d'appels pour une saisie de $n$ caractères en $T$ secondes est :
+\[
+\text{ratio\_appels} = \frac{\lceil T / \delta_d \rceil}{n} \leq \frac{T}{n \cdot \delta_d}
+\]
+
+% ============================================================
+\subsection{Modélisation des performances et de la latence}
+% ============================================================
+
+\subsubsection*{Modèle de file d'attente M/M/1}
+
+Le serveur de l'API BCaaS est modélisé par une file d'attente M/M/1 :
+\begin{itemize}
+  \item Arrivées de requêtes selon un processus de Poisson de taux $\lambda$ (requêtes/s),
+  \item Temps de service distribué exponentiellement de taux $\mu$ (requêtes/s).
+\end{itemize}
+
+La condition de stabilité du système est : $\rho = \dfrac{\lambda}{\mu} < 1$.
+
+Les indicateurs de performance sont :
+\[
+L = \frac{\rho}{1 - \rho}, \quad L_q = \frac{\rho^2}{1 - \rho}, \quad W = \frac{1}{\mu - \lambda}, \quad W_q = \frac{\rho}{\mu - \lambda}
+\]
+où $L$ est le nombre moyen de requêtes dans le système, $L_q$ en file d'attente,
+$W$ le temps moyen de séjour et $W_q$ le temps moyen d'attente.
+
+\subsubsection*{Simulation de latence réseau dans lib/api.ts}
+
+La latence simulée par la couche d'abstraction est modélisée par une variable aléatoire
+uniforme :
+\[
+\Delta t \sim \mathcal{U}([t_{min}, t_{max}]) = \mathcal{U}([300\text{ ms}, 600\text{ ms}])
+\]
+
+L'espérance et la variance de ce délai sont :
+\[
+\mathbb{E}[\Delta t] = \frac{t_{min} + t_{max}}{2} = 450 \text{ ms}, \qquad
+\mathrm{Var}(\Delta t) = \frac{(t_{max} - t_{min})^2}{12} = \frac{(300)^2}{12} = 7500 \text{ ms}^2
+\]
+
+\subsubsection*{Modèle de performance LCP}
+
+Le Largest Contentful Paint est modélisé par :
+\[
+LCP = t_{TTFB} + t_{parse} + t_{render}
+\]
+
+Pour une page SSG (Static Site Generation) :
+\[
+t_{TTFB} \approx \frac{S_{HTML}}{B_{net}} + RTT, \quad t_{parse} = O(|DOM|), \quad t_{render} = \sum_{i} t_{image_i}
+\]
+
+La contrainte du cahier des charges impose :
+\[
+LCP \leq 2000 \text{ ms} \quad (\text{réseau 4G : } B_{net} = 4 \text{ Mbit/s})
+\]
+
+La valeur mesurée $LCP = 1400$ ms offre une marge de sécurité :
+\[
+\eta = 1 - \frac{LCP_{mesure}}{LCP_{cible}} = 1 - \frac{1400}{2000} = 30\%
+\]
+
+% ============================================================
+\subsection{Cycle de vie des états et transitions}
+% ============================================================
+
+\subsubsection*{Automate des états d'une fiche}
+
+Le cycle de vie d'une fiche est formalisé par un automate fini déterministe :
+\[
+\mathcal{A}_f = (S_f, \Sigma_f, \delta_f, s_0, S_f^{acc})
+\]
+où :
+\begin{itemize}
+  \item $S_f = \{EN\_ATTENTE, PUBLIE, ARCHIVE\}$,
+  \item $\Sigma_f = \{soumettre, publier, rejeter, archiver, restaurer\}$,
+  \item $s_0 = EN\_ATTENTE$ (état initial),
+  \item $S_f^{acc} = \{PUBLIE\}$.
+\end{itemize}
+
+La fonction de transition $\delta_f$ est définie par :
+\[
+\delta_f =
+\begin{cases}
+EN\_ATTENTE \xrightarrow{publier} PUBLIE \\
+EN\_ATTENTE \xrightarrow{rejeter} ARCHIVE \\
+PUBLIE \xrightarrow{archiver} ARCHIVE \\
+ARCHIVE \xrightarrow{restaurer} EN\_ATTENTE
+\end{cases}
+\]
+
+\subsubsection*{Automate des états d'un compte peintre}
+
+De manière analogue, le statut d'un peintre $\sigma_p$ suit l'automate :
+\[
+\delta_p =
+\begin{cases}
+EN\_ATTENTE \xrightarrow{valider} VALIDE \\
+EN\_ATTENTE \xrightarrow{rejeter} SUSPENDU \\
+VALIDE \xrightarrow{suspendre} SUSPENDU \\
+SUSPENDU \xrightarrow{reactiver} VALIDE
+\end{cases}
+\]
+
+% ============================================================
+\subsection{Modèle de cohérence et d'isolation multi-tenant}
+% ============================================================
+
+\subsubsection*{Isolation logique des données}
+
+Soit $\mathcal{T}$ l'ensemble de tous les tenants de l'infrastructure BCaaS partagée. Chaque
+entité de données $d$ appartient exactement à un tenant $t_d \in \mathcal{T}$.
+
+\begin{definition}[Prédicat d'isolation]
+Le système garantit l'isolation si et seulement si :
+\[
+\forall u \in \mathcal{U},\; \forall d \in \mathcal{D} : \text{accès}(u, d) \implies tenant(d) = tenant\_id(u)
+\]
+où $tenant\_id(u) = "painting"$ pour tout utilisateur de la plateforme PBC.
+\end{definition}
+
+\subsubsection*{Garanties transactionnelles (propriétés ACID simplifiées)}
+
+Dans le contexte de la démo (état local simulé), les propriétés suivantes sont assurées :
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lll}
+\toprule
+\textbf{Propriété} & \textbf{Définition formelle} & \textbf{Mécanisme PBC} \\
+\midrule
+Atomicité    & $\forall T : T$ réussit en totalité $\lor$ T est annulée & Try/catch JS \\
+Cohérence    & $\text{état}(D)$ valide avant $\implies$ valide après & Schéma TypeScript \\
+Isolation    & $T_i \cap T_j = \emptyset$ pour transactions concurrentes & État React Context \\
+Durabilité   & $T$ validée $\implies$ persiste & LocalStorage / JSON \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\subsection{Métriques de qualité et indicateurs KPI}
+% ============================================================
+
+\subsubsection*{Taux de couverture de test}
+
+Soit $\mathcal{C}_{code}$ l'ensemble des lignes de code et $\mathcal{C}_{test}$ les lignes couvertes
+par les tests. Le taux de couverture est :
+\[
+\tau_{couv} = \frac{|\mathcal{C}_{test}|}{|\mathcal{C}_{code}|} \times 100\%
+\]
+
+Pour la validation des 5 scénarios d'intégration (SI-01 à SI-05), couvrant les 3 rôles
+et les 5 couches BCaaS, le taux de couverture fonctionnelle est :
+\[
+\tau_{fonc} = \frac{|\text{cas de test CONFORME}|}{|\text{cas de test total}|} = \frac{15}{15} = 100\%
+\]
+
+\subsubsection*{Score de conformité BCaaS}
+
+Le score global de conformité BCaaS est calculé comme la moyenne pondérée des
+scores par couche :
+\[
+S_{BCaaS} = \sum_{i=1}^{5} w_i \cdot s_i
+\]
+où $w_i$ est le poids de la couche $i$ et $s_i \in [0, 1]$ son score de conformité.
+Avec $w_i = 0.2$ pour toutes les couches et $s_i = 1$ pour chaque couche validée :
+\[
+S_{BCaaS} = 0.2 \times (1 + 1 + 1 + 1 + 1) = 1.0 \quad (100\%)
+\]
+
+\subsubsection*{Indice de maturité logicielle}
+
+L'indice de maturité du système est évalué selon cinq dimensions :
+\[
+IMaturite = \frac{1}{5}\sum_{k=1}^{5} m_k, \quad m_k \in \{0, 0.25, 0.5, 0.75, 1\}
+\]
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Dimension} & \textbf{Score $m_k$} & \textbf{Justification} \\
+\midrule
+Couverture fonctionnelle  & 1.00 & 100\% des cas de test CONFORME \\
+Performance ($LCP$)       & 0.75 & 1400 ms $<$ 2000 ms, marge 30\% \\
+Conformité BCaaS          & 1.00 & 5/5 livrables VALIDÉS \\
+Sécurité (CSP, HSTS)      & 0.75 & Simulation des en-têtes \\
+Portabilité (PWA)         & 1.00 & Score Lighthouse 92/100 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\[
+IMaturite = \frac{1.00 + 0.75 + 1.00 + 0.75 + 1.00}{5} = \frac{4.50}{5} = 0.90 \quad (90\%)
+\]
+
+% ============================================================
+\subsection{Synthèse et perspectives}
+% ============================================================
+
+Le modèle mathématique développé dans ce chapitre couvre de manière complète et
+rigoureuse les six dimensions fondamentales de la plateforme Painting Business Core :
+
+\begin{enumerate}
+  \item \textbf{Algèbre du domaine} : définition formelle en $n$-uplets des entités $\mathcal{U}$, $\mathcal{F}$, $\mathcal{R}$
+    et de leur taxonomie hiérarchique.
+  \item \textbf{Contrôle d'accès RBAC} : formalisation de la politique d'autorisation par
+    matrice $\Pi$ et prédicat de propriété.
+  \item \textbf{Protocole BCaaS} : structure du paquet métier, génération UUID et
+    démonstration probabiliste de la robustesse anti-collision ($P_{collision} < 10^{-21}$).
+  \item \textbf{Moteur de recherche} : score TF-IDF multicritère enrichi d'une composante
+    géospatiale haversine et d'un bonus de popularité.
+  \item \textbf{Performance} : modèle M/M/1 pour la charge serveur, loi uniforme pour
+    la latence simulée, et bilan LCP avec marge de sécurité de 30\%.
+  \item \textbf{Qualité logicielle} : indice de maturité à 90\% attestant la viabilité de
+    l'architecture pour une transition en production.
+\end{enumerate}
+
+Ces formalisations valident que la plateforme PBC ne se limite pas à une interface
+graphique, mais implémente une architecture distribuée rigoureuse, directement
+transposable à un système de production multi-tenant de niveau industriel.
+\newpage
+
+%---------------------------------------------------
+\section{Conception architecturale et modélisation }
+
+Dans le cadre du projet \textbf{BCaaS} (\textit{Business Core as a Service}), notre groupe a pris en charge la conception et l'implémentation de l'\textbf{instance métier dédiée au domaine de la peinture} : \textit{Painting Business Core}. Il est essentiel de préciser d'emblée notre positionnement architectural : nous ne sommes pas les concepteurs de l'infrastructure BCaaS globale, mais des \textbf{tenants consommateurs} de ce socle commun. Notre rôle consiste à implémenter la couche applicative supérieure (Couche~5 --- \textit{Business capabilities}) en respectant les contrats d'interface imposés par la pile protocolaire générale définie par l'équipe transverse.
+
+Le développement se concentre sur le \textbf{frontend Next.js~15}, accompagné d'une simulation rigoureuse des mécanismes d'échange. Cette section présente la logique métier modélisée, notre positionnement en tant que tenant dans l'écosystème BCaaS, ainsi que le détail de l'implémentation des vues. C'est dans ce sens que nous allons faire intervenir les différents diagrammes UML pour illustrer la structure et les interactions de notre application.
+
+% ============================================================
+\subsection{Diagramme des cas d'utilisation}
+% ============================================================
+
+Le diagramme des cas d'utilisation met en évidence les interactions entre les différents acteurs de la plateforme et le système.
+
+\subsubsection*{Acteurs}
+
+Trois acteurs principaux interagissent avec le système :
+\begin{itemize}
+    \item \textbf{Visiteur} : Un utilisateur non authentifié qui explore la plateforme librement.
+    \item \textbf{Peintre vérifié} : Un créateur de contenu authentifié et reconnu par la plateforme, capable de publier des fiches et des roadmaps.
+    \item \textbf{Super Administrateur} : Le gestionnaire de la plateforme, chargé de la modération et de la validation des comptes.
+\end{itemize}
+
+\subsubsection*{Cas d'utilisation principaux}
+
+\begin{itemize}
+    \item \textbf{Pour le visiteur :} Il peut rechercher et filtrer du contenu, consulter les \textit{roadmaps} ou fiches de peinture.
+    \item \textbf{Pour le Peintre vérifié :} En plus des actions du visiteur, il peut gérer son profil, modifier son contenu, et publier de nouveaux contenus (fiches, roadmaps). Ces actions requièrent explicitement de \textit{S'authentifier}.
+    \item \textbf{Pour le Super Administrateur :} Il a la charge de gérer les comptes (ce qui étend la vérification de comptes demandés par les visiteurs) et de gérer le contenu global de la plateforme. L'accès à ces fonctionnalités nécessite également de \textit{S'authentifier}.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{useCase.jpeg}
+    \caption{Diagramme des cas d'utilisation}
+    \label{fig:use_case}
+\end{figure}
+
+% ============================================================
+\subsection{Diagramme de classes}
+% ============================================================
+
+Le diagramme de classes détaille la structure des données manipulées par le frontend et reflète les entités métier de l'application, telles qu'elles sont définies dans les types TypeScript du projet (\texttt{src/types/content.ts}).
+
+\subsubsection*{Entités Principales}
+
+\begin{itemize}
+    \item \textbf{UTILISATEUR} : Classe mère abstraite contenant les propriétés communes (\texttt{id}, \texttt{nom}, \texttt{email}, \texttt{motDePasse}) et les méthodes de base (\texttt{seConnecter()}, \texttt{modifierProfil()}).
+    \item \textbf{PEINTRE} : Hérite d'UTILISATEUR. Il possède des dates d'inscription et de validation. Un peintre peut publier ou supprimer des fiches et des \textit{roadmaps}.
+    \item \textbf{Super Administrateur} : Hérite d'UTILISATEUR. Il possède la capacité de valider les comptes des peintres via \texttt{validerCompte()}.
+    \item \textbf{FICHE\_PEINTURE} : Contient les informations relatives aux publications (titre, résumé, contenu, techniques, matériaux, etc.). Cette entité peut être publiée, archivée, et voir son nombre de vues incrémenté.
+    \item \textbf{RoadMap} : Structurée en étapes (\textit{List<Etape>}), elle permet aux peintres de créer des parcours d'apprentissage ou des guides pas à pas pour la peinture.
+    \item \textbf{MEDIA} : Gère les ressources multimédias (images, vidéos) attachées aux fiches de peinture.
+    \item \textbf{AUDIT\_LOG} : Garde une trace des actions effectuées par les utilisateurs (anciennes valeurs, nouvelles valeurs, entité modifiée).
+\end{itemize}
+
+\subsubsection*{Relations}
+
+\begin{itemize}
+    \item Un \textbf{Super Administrateur} valide des \textbf{PEINTRE}s (Relation $1..n \rightarrow 0..n$).
+    \item Un \textbf{UTILISATEUR} génère un ou plusieurs \textbf{AUDIT\_LOG}s.
+    \item Un \textbf{PEINTRE} crée des \textbf{RoadMap}s et rédige des \textbf{FICHE\_PEINTURE}s.
+    \item Une \textbf{FICHE\_PEINTURE} possède des \textbf{MEDIA}s (Relation $1 \rightarrow 0..n$).
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{classes.jpeg}
+    \caption{Diagramme de classes}
+    \label{fig:class_diagram}
+\end{figure}
+
+\subsection{Diagrammes de séquence système }
+% ============================================================================
+\paragraph{Créer un Compte}
+% ============================================================================
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{media/DSSCréerUnCompte.jpg}
+    \caption{Diagramme de séquence: Créer un compte}
+    \label{fig:creer_compte}
+\end{figure}
+
+% ============================================================================
+\paragraph{S'authentifier --- Peintre vérifié}
+% ============================================================================
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{media/DSSSauthentifier.jpeg}
+    \caption{Diagramme de séquence: S'authentifier --- Peintre vérifié}
+    \label{fig:authentifier}
+\end{figure}
+
+% ============================================================================
+\paragraph{Gérer les Comptes --- Super Admin}
+% ============================================================================
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{media/DSSGererLesComptes.jpeg}
+    \caption{Diagramme de séquence: Gérer les comptes (Admin)}
+    \label{fig:gerer_comptes}
+\end{figure}
+
+% ============================================================================
+\paragraph{Gérer le Contenu --- Super Admin}
+% ============================================================================
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{media/GererLeContenu.jpeg}
+    \caption{Diagramme de séquence: Gérer le contenu (Admin)}
+    \label{fig:gerer_contenu}
+\end{figure}
+
+% ============================================================================
+\paragraph{Publier Contenu --- Peintre vérifié}
+% ============================================================================
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{media/DSSPublierContenu.jpeg}
+    \caption{Diagramme de séquence: Publier contenu --- Peintre vérifié}
+    \label{fig:publier_contenu}
+\end{figure}
+
+% ============================================================================
+\paragraph{Consulter un Contenu}
+% ============================================================================
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{media/DSSConsulterContenu.jpeg}
+    \caption{Diagramme de séquence: Consulter un contenu}
+    \label{fig:consulter_contenu}
+\end{figure}
+
+% ============================================================================
+\paragraph{Gérer son Profil --- Peintre vérifié}
+% ============================================================================
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{media/DSSGérerSonProfil.jpeg}
+    \caption{Diagramme de séquence: Gérer son profil --- Peintre vérifié}
+    \label{fig:gerer_profil}
+\end{figure}
+
+% ============================================================================
+\paragraph{Modifier son Contenu --- Peintre vérifié}
+% ============================================================================
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{media/DSSModifierSonContenu.jpeg}
+    \caption{Diagramme de séquence: Modifier son contenu --- Peintre vérifié}
+    \label{fig:modifier_contenu}
+\end{figure}
+
+% ============================================================================
+\paragraph{Rechercher du Contenu}
+% ============================================================================
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{media/DSSRechercherContenu.jpeg}
+    \caption{Diagramme de séquence: Rechercher du contenu}
+    \label{fig:rechercher_contenu}
+\end{figure}
+
+\subsection{Notre rôle en tant que tenant BCaaS}
+
+% ============================================================
+\subsubsection{Positionnement dans l'écosystème global}
+% ============================================================
+
+L'architecture BCaaS repose sur le principe de \textbf{mutualisation} : un socle commun générique (géré par une équipe transverse) fournit les couches d'infrastructure, de transport et de routage multi-tenant, sur lesquelles viennent se greffer des \textbf{instances métiers} autonomes. Notre projet, \textit{Painting Business Core}, est précisément l'une de ces instances.
+
+En reprenant la pile protocolaire en cinq couches, notre périmètre d'action se situe exclusivement à la \textbf{Couche~5 --- Business capabilities}. Nous consommons les services offerts par les couches inférieures sans en redéfinir le fonctionnement. Le schéma~\ref{fig:bcas_layers} illustre ce positionnement.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{BCaaS.png}
+    \caption{Pile Protocolaire}
+    \label{fig:bcas_layers}
+\end{figure}
+
+% ============================================================
+\subsubsection{Marquage et identification du tenant}
+% ============================================================
+
+Pour s'intégrer dans l'écosystème BCaaS, chaque requête émise par notre instance doit être \textbf{encapsulée} dans un paquet métier standardisé, conformément au schéma d'en-têtes contextuels défini par l'architecture globale. Dans notre implémentation de démonstration (gérée par \texttt{src/lib/demoStorage.ts}), ce mécanisme est simulé : chaque transaction porte les métadonnées suivantes.
+
+\begin{itemize}
+    \item \texttt{X-Tenant-Id: "painting"} --- identifie notre instance de manière déterministe au sein de l'infrastructure mutualisée.
+    \item \texttt{actor\_id} --- identifiant de l'utilisateur émetteur (ex. : \texttt{"painter-102"}, \texttt{"visitor-anon"}).
+    \item \texttt{role\_scope} --- périmètre de droits de l'acteur : \texttt{VISITOR}, \texttt{PAINTER} ou \texttt{ADMIN}.
+    \item \texttt{trace\_id} --- UUID v4 généré dynamiquement pour la traçabilité de bout en bout.
+\end{itemize}
+
+% ============================================================
+\subsubsection{Isolation logique du tenant}
+% ============================================================
+
+À l'image d'un VLAN dans un réseau physique, notre instance est \textbf{logiquement isolée} des autres tenants qui partageraient la même infrastructure BCaaS. En phase de démonstration, cette isolation est simulée par le marquage systématique de l'en-tête \texttt{X-Tenant-Id} dans toutes les interactions asynchrones orchestrées par la couche \texttt{demoStorage}. Lors du passage en production, ce marquage permettra au routeur central de diriger les flux vers le schéma de base de données PostgreSQL isolé dédié à notre domaine, sans aucune modification des composants graphiques.
+
+% ============================================================
+\subsubsection{Séquence d'entrée dans l'écosystème}
+% ============================================================
+
+Le schéma ci-dessous résume la séquence par laquelle notre instance s'insère dans la pile BCaaS lors d'une opération métier (ex. : publication d'une fiche) :
+
+\begin{enumerate}
+    \item \textbf{Saisie \& Soumission} --- Le peintre valide le formulaire dans l'interface Next.js (Couche~5).
+    \item \textbf{Encapsulation} --- La couche \texttt{demoStorage.ts} construit le paquet métier : payload + en-têtes contextuels (Couche~5 $\rightarrow$ Couche~4).
+    \item \textbf{Injection du contexte} --- Génération du \texttt{trace\_id}, affectation du \texttt{role\_scope} et du \texttt{X-Tenant-Id} (Couche~4).
+    \item \textbf{Routage simulé} --- Le middleware Next.js applique les règles linguistiques et simule la latence réseau (Couche~3).
+    \item \textbf{Persistance} --- Écriture dans l'état local simulant la base de données (Couche~1).
+\end{enumerate}
+
+En phase de production, les étapes~3 à~5 seraient prises en charge par l'API Gateway de l'équipe transverse, sans que nos composants React aient à évoluer.
+
+% ============================================================
+%  SECTION 4 — IMPLÉMENTATION FRONTEND ET SIMULATION API
+% ============================================================
+\newpage
+\section{Implémentation frontend et simulation API}
+
+% ────────────────────────────────────────────────────────────────────────────
+\subsection{Architecture et structure du projet Next.js 15}
+
+Le frontend de \textit{Painting Business Core} est développé avec Next.js~15,
+un framework React qui offre un rendu côté serveur (SSR), une optimisation SEO
+native et un support intégré de l'internationalisation (i18n). Ces
+caractéristiques en font un choix adapté à une plateforme publique où la
+lisibilité par les moteurs de recherche est un enjeu important.
+
+Le projet est structuré selon les conventions de l'App Router de Next.js~15,
+qui organise les pages à travers un répertoire \texttt{app/} où chaque dossier
+correspond à une route. Cette approche permet une séparation claire entre les
+composants serveur et les composants client, optimisant ainsi les performances
+de chargement.
+
+La structure générale du projet suit le schéma suivant~:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{struct.jpeg}
+  \caption{Structure du projet \textit{Painting Business Core}}
+  \label{fig:arborescence}
+\end{figure}
+% ────────────────────────────────────────────────────────────────────────────
+\subsection{Cartographie des routes et des vues réalisées}
+
+Les routes du frontend correspondent directement aux fonctionnalités définies
+dans le cahier des charges, en distinguant les vues \textbf{publiques}
+(accessibles sans compte) et les vues \textbf{protégées} (réservées aux
+peintres connectés et validés).
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{>{\ttfamily}l l >{\centering\arraybackslash}X}
+\toprule
+\normalfont\textbf{Route} & \textbf{Vue} & \textbf{Accès} \\
+\midrule
+/                          & Page d'accueil avec liste des fiches récentes           & Public  \\
+/fiches                    & Liste paginée des fiches par catégorie                  & Public  \\
+/fiches/[id]               & Détail d'une fiche (description, médias, tags)          & Public  \\
+/peintres                  & Liste des peintres actifs                               & Public  \\
+/peintres/[id]             & Profil public d'un peintre                              & Public  \\
+/recherche                 & Recherche full-text                                     & Public  \\
+/auth/login                & Formulaire de connexion                                 & Public  \\
+/auth/register             & Formulaire d'inscription peintre                        & Public  \\
+/dashboard                 & Tableau de bord du peintre connecté                     & Peintre \\
+/dashboard/fiches/nouvelle & Création d'une fiche métier                             & Peintre \\
+/dashboard/roadmaps        & Gestion des roadmaps                                    & Peintre \\
+/super admin               & Interface d'administration                              & Super Admin   \\
+\bottomrule
+\end{tabularx}
+\caption{Cartographie des routes et des vues}
+\end{table}
+
+% ────────────────────────────────────────────────────────────────────────────
+\subsection{Catalogue des composants UI principaux}
+
+Les composants sont organisés dans le répertoire \texttt{components/} et
+couvrent l'ensemble des besoins d'affichage de la plateforme. On distingue
+deux catégories~: les \textbf{composants de mise en page} et les
+\textbf{composants métier}.
+
+\subsubsection*{Composants de mise en page}
+
+\begin{itemize}
+  \item \textbf{Navbar}~: barre de navigation principale avec liens
+    contextuels selon le rôle de l'utilisateur (visiteur, peintre, admin)
+    et gestion de la déconnexion.
+
+  \item \textbf{Footer}~: pied de page avec liens institutionnels.
+
+  \item \textbf{ProtectedRoute}~: composant enveloppeur qui redirige vers
+    \texttt{/auth/login} si l'utilisateur n'est pas authentifié.
+\end{itemize}
+
+\subsubsection*{Composants métier}
+
+\begin{itemize}
+  \item \textbf{FicheCard}~: carte de prévisualisation d'une fiche métier
+    affichant le titre, le niveau, la catégorie et le nom de l'auteur.
+    Utilisée dans les listes paginées.
+
+  \item \textbf{FicheDetail}~: vue complète d'une fiche avec description,
+    galerie média, tags et techniques associées.
+
+  \item \textbf{PeintreCard}~: carte de profil peintre avec nom,
+    spécialités et lien vers le profil complet.
+
+  \item \textbf{SearchBar}~: barre de recherche avec saisie libre
+    (full-text) et options de filtrage géographique (latitude, longitude,
+    rayon).
+
+  \item \textbf{MapView}~: composant carte interactive basé sur Leaflet.js
+    affichant les peintres géolocalisés.
+
+  \item \textbf{FicheForm}~: formulaire de création et de modification
+    d'une fiche métier avec validation côté client (titre, niveau,
+    catégorie, description).
+
+  \item \textbf{MediaUpload}~: composant d'upload d'images avec aperçu et
+    validation du type MIME et de la taille (max 10~Mo, formats
+    JPG/PNG/WebP).
+
+  \item \textbf{Pagination}~: composant générique de pagination utilisé sur
+    les listes de fiches et de peintres.
+\end{itemize}
+
+\subsection{Mécanisme d'abstraction et couche API (\texttt{lib/api.ts})}
+
+\subsubsection*{Principe architectural}
+
+Le fichier \texttt{lib/api.ts} constitue la couche d'abstraction centrale
+entre les composants React et le backend BCaaS. Son rôle dépasse la simple
+gestion des requêtes HTTP : il matérialise côté frontend la \textbf{couche
+2 (Transport \& Messaging)} de la pile protocolaire BCaaS. Concrètement,
+c'est lui qui injecte automatiquement les en-têtes contextuels standardisés
+dans chaque requête sortante, garantissant que notre instance Painting
+respecte le contrat d'interface imposé par le socle commun.
+
+Toute communication avec le backend transite obligatoirement par ce fichier.
+Aucun composant React n'effectue directement un appel \texttt{fetch} — ils
+délèguent tous à \texttt{lib/api.ts}. Cette décision d'architecture repose
+sur le \textbf{pattern Adapter} : si demain l'URL du backend change, si le
+format des en-têtes évolue, ou si la vraie API BCaaS remplace les mock data,
+une seule modification dans ce fichier suffit. Les 11 pages et tous les
+composants UI restent intacts.
+
+\subsubsection*{Injection des en-têtes BCaaS}
+
+La contribution la plus importante de cette couche est l'injection
+automatique des en-têtes contextuels définis par le protocole BCaaS dans
+chaque requête. Ces en-têtes ne sont pas de simples métadonnées techniques
+— ils constituent le \textbf{paquet métier} tel que défini dans le document
+BCaaS de l'enseignant : ils séparent le contexte d'acheminement du contenu
+métier (payload), permettant à chaque service de la pile de traiter sa
+responsabilité sans connaître l'application entière.
+
+\begin{lstlisting}[caption={\texttt{lib/api.ts} --- injection des en-têtes contextuels BCaaS}]
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
+
+function getBCaaSHeaders(authenticated = false): HeadersInit {
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    'X-Tenant-Id':  'painting',          // identifie notre instance dans le BCaaS
+    'X-Locale':     'fr-CM',             // internationalisation et contexte regional
+    'X-Trace-Id':   crypto.randomUUID(), // tracabilite bout en bout (livrable L5)
+  };
+  if (authenticated) {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+      // X-Actor-Id est extrait du JWT par le backend via JwtService
+    }
+  }
+  return headers;
+}
+\end{lstlisting}
+
+Chaque requête envoyée au backend embarque donc \texttt{X-Tenant-Id:
+painting}, ce qui permet au \texttt{TenantResolver} côté Spring Boot (couche
+3 --- Tenant \& Routing) d'identifier automatiquement notre instance et de
+filtrer les données en conséquence. Le \texttt{X-Trace-Id} généré
+aléatoirement à chaque appel est journalisé par l'\texttt{AuditService}
+backend, ce qui réalise le livrable L5 (observabilité) de l'architecture
+BCaaS.
+
+% ────────────────────────────────────────────────────────────────────────────
+\subsection*{Les endpoints consommés}
+
+Notre frontend consomme les endpoints génériques de l'API BCaaS, spécialisés
+pour l'instance Painting via le \texttt{tenant\_id}. Le tableau
+ci-dessous présente les appels les plus structurants.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\small
+\begin{tabularx}{\textwidth}{>{\ttfamily\footnotesize}l
+                              >{\footnotesize}X
+                              >{\footnotesize}l
+                              >{\footnotesize}X}
+\toprule
+\normalfont\textbf{Fonction} &
+\textbf{Méthode + Endpoint BCaaS} &
+\textbf{Droits requis} &
+\textbf{Rôle dans la plateforme} \\
+\midrule
+getFiches()      & GET /api/v1/ressources          & Public — VISITOR              & Alimente \texttt{/fiches} et la page d'accueil \\
+getFicheById()   & GET /api/v1/ressources/\{id\}   & Public — VISITOR              & Alimente \texttt{/fiches/[id]} \\
+creerFiche()     & POST /api/v1/ressources         & Authentifié — PAINTER         & Formulaire de publication du dashboard \\
+modifierFiche()  & PUT /api/v1/ressources/\{id\}   & Authentifié — PAINTER (prop.) & Éditeur du dashboard \\
+rechercher()     & GET /api/v1/search?q=           & Public — VISITOR              & Alimente \texttt{/search} avec full-text PostgreSQL \\
+getRoadmaps()    & GET /api/v1/roadmaps            & Public — VISITOR              & Alimente \texttt{/roadmaps} \\
+getRoadmapById() & GET /api/v1/roadmaps/\{id\}     & Public — VISITOR              & Alimente \texttt{/roadmaps/[id]} \\
+login()          & POST /api/v1/auth/login         & Public                        & Retourne JWT --- stocké pour les requêtes suivantes \\
+register()       & POST /api/v1/auth/register      & Public                        & Crée un compte EN\_ATTENTE \\
+getActeurs()     & GET /api/v1/actors              & Public — VISITOR              & Liste des peintres actifs \\
+validerCompte()  & PUT /api/v1/actors/\{id\}/valider & Authentifié — ADMIN         & Validation des inscriptions \\
+\bottomrule
+\end{tabularx}
+\caption{Endpoints BCaaS consommés par \texttt{lib/api.ts}}
+\end{table}
+
+% ────────────────────────────────────────────────────────────────────────────
+\subsection*{Simulation asynchrone pendant le développement}
+
+Pendant la phase où le backend BCaaS n'est pas encore disponible, les
+fonctions de \texttt{lib/api.ts} sont remplacées par des versions simulées
+qui respectent exactement la même signature de retour. Cette discipline est
+fondamentale : les composants React ne distinguent pas une vraie réponse API
+d'une réponse simulée, ce qui valide l'interface utilisateur avant même
+l'intégration.
+
+\begin{lstlisting}[caption={\texttt{lib/api.ts} --- version simulée de \texttt{getFiches()}}]
+// Meme signature que la version reelle — les composants ne changent pas
+export async function getFiches(page = 0, categorieId?: number) {
+  await new Promise(resolve => setTimeout(resolve, 300)); // simule latence reseau
+  return {
+    content: MOCK_FICHES.filter(f =>
+      categorieId ? f.categorie.id === categorieId : true
+    ).slice(page * 10, (page + 1) * 10),
+    totalPages: Math.ceil(MOCK_FICHES.length / 10),
+    number: page,
+    totalElements: MOCK_FICHES.length,
+  };
+}
+\end{lstlisting}
+
+La structure de retour --- \texttt{content}, \texttt{totalPages},
+\texttt{number}, \texttt{totalElements} --- reproduit exactement le format
+\texttt{Page<T>} que Spring Boot retourne nativement pour les réponses
+paginées. Quand le backend sera disponible, supprimer le \texttt{setTimeout}
+et remplacer \texttt{MOCK\_FICHES} par un appel \texttt{fetch} réel suffit.
+Aucune page, aucun composant ne change.
+
+% ────────────────────────────────────────────────────────────────────────────
+\subsection*{Parties du code frontend les plus significatives}
+
+Au-delà de \texttt{lib/api.ts}, trois autres éléments du code frontend
+méritent d'être mis en avant pour leur pertinence architecturale.
+
+\subsubsection*{Le middleware Next.js (\texttt{middleware.ts})}
+
+Il implémente côté frontend la \textbf{couche 4 (Context \& Policy)} de la
+pile BCaaS. Il intercepte chaque navigation et vérifie la présence d'un
+token valide avant d'autoriser l'accès aux routes protégées. Si un visiteur
+tente d'accéder à \texttt{/dashboard} sans être connecté, il est redirigé
+vers \texttt{/auth/login} avant que la page ne soit rendue. C'est
+l'équivalent frontend du \texttt{JwtAuthFilter} de Spring Security.
+
+\begin{lstlisting}[caption={\texttt{middleware.ts} --- protection des routes (couche 4 côté frontend)}]
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get('accessToken')?.value;
+  const isProtected = request.nextUrl.pathname.startsWith('/dashboard')
+                   || request.nextUrl.pathname.startsWith('/admin');
+  if (isProtected && !token) {
+    return NextResponse.redirect(new URL('/auth/login', request.url));
+  }
+  // Injection du tenant dans les headers de chaque requete sortante SSR
+  const headers = new Headers(request.headers);
+  headers.set('X-Tenant-Id', 'painting');
+  return NextResponse.next({ request: { headers } });
+}
+\end{lstlisting}
+
+\subsubsection*{Les pages SSR avec \texttt{async/await}
+(\texttt{app/fiches/[id]/page.tsx})}
+
+C'est le mécanisme central qui justifie le choix de Next.js pour une
+plateforme d'information. La page de détail d'une fiche est rendue côté
+serveur : Next.js appelle \texttt{getFicheById()} avant d'envoyer le HTML
+au navigateur. Google reçoit donc une page complète avec tout le contenu
+--- titre, description, techniques, matériaux --- directement dans le HTML,
+sans avoir besoin d'exécuter JavaScript. C'est le fondement du SEO de la
+plateforme.
+
+\begin{lstlisting}[caption={\texttt{app/fiches/[id]/page.tsx} --- rendu SSR pour le SEO (couche 3 côté frontend)}]
+export async function generateMetadata({ params }: Props) {
+  const fiche = await getFicheById(Number(params.id));
+  return {
+    title: `${fiche.titre} — Painting Business Core`,
+    description: fiche.resume,
+    openGraph: { title: fiche.titre, description: fiche.resume },
+  };
+}
+
+export default async function FicheDetailPage({ params }: Props) {
+  // appel serveur — pas de fetch cote client
+  const fiche = await getFicheById(Number(params.id));
+  return <FicheDetail fiche={fiche} />;
+}
+\end{lstlisting}
+
+\subsubsection*{La recherche avec debounce
+(\texttt{components/BarreRecherche.tsx})}
+
+Elle illustre la gestion des interactions temps réel côté client. Sans
+debounce, chaque frappe clavier déclencherait un appel API. Le debounce
+retarde l'appel de 400\,ms après la dernière frappe, réduisant drastiquement
+la charge sur le backend et améliorant l'expérience utilisateur.
+
+\begin{lstlisting}[caption={\texttt{components/BarreRecherche.tsx} --- debounce sur la recherche}]
+const [query, setQuery] = useState('');
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    if (query.length >= 2) router.push(`/search?q=${encodeURIComponent(query)}`);
+  }, 400); // attend 400ms apres la derniere frappe
+  return () => clearTimeout(timer); // annule si l'utilisateur tape encore
+}, [query]);
+\end{lstlisting}
+
+\subsection{Présentation des interfaces principales}
+
+\textbf{Page d’accueil}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{home.jpeg}
+  \caption{Capture de l’accueil}
+  \label{fig:home}
+\end{figure}
+
+La page d’accueil présente l’identité  de la plateforme, une introduction aux services et des appels à l’action pour se connecter ou découvrir l’espace peintre. Elle sert de porte d’entrée pour les utilisateurs et reflète l’univers artistique du projet.
+
+\textbf{Page de connexion}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{login.png}
+  \caption{Capture de la page de connexion}
+  \label{fig:connexion}
+\end{figure}
+
+La page de connexion permet aux utilisateurs de se connecter avec des comptes de démonstration. Elle propose un formulaire d’email et de mot de passe, des boutons pour remplir automatiquement les comptes démo, et un message indiquant que l’inscription est désactivée en mode démonstration.
+
+\textbf{Dashboard peintre}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{peintre.png}
+  \caption{Capture du dashboard peintre}
+  \label{fig:dashboard-peintre}
+\end{figure}
+
+Le dashboard peintre affiche les informations personnelles du peintre, ses fiches, ses roadmaps et des indicateurs de son activité. Cette page est réservée aux utilisateurs avec le rôle \texttt{peintre}.
+
+\textbf{Dashboard du Superadministrateur}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{admin.png}
+  \caption{Capture du dashboard admin}
+  \label{fig:dashboard-admin}
+\end{figure}
+
+Le dashboard du superadmin propose une interface de gestion avec un menu de contrôle, des pages de supervision et la gestion des peintres. Cette page est réservée aux utilisateurs avec le rôle \texttt{Superadmin}.
+% ============================================================
+%  SECTION 5 — STRATÉGIES D'INTÉGRATION ET D'OBSERVABILITÉ SIMULÉES
+% ============================================================
+\newpage
+\section{Stratégies d'intégration et d'observabilité simulées}
+
+% ============================================================
+\subsection{Isolation et marquage du tenant applicatif}
+% ============================================================
+
+Conformément aux directives de l'architecture BCaaS globale fournies par l'équipe transverse, notre instance doit impérativement assurer l'isolation de ses données pour interdire toute fuite contextuelle vers d'autres tenants (tels que des instances gérant la logistique ou le commerce). Dans notre application Next.js, cette isolation est simulée au niveau du fichier \texttt{middleware.ts} et de la couche d'abstraction API.
+
+Chaque paquet de données généré se voit marqué par l'en-tête \texttt{X-Tenant-Id: painting}. Cette stratégie garantit que lors du passage à la phase 2, le routeur central de la plateforme BCaaS décodera cet en-tête pour orienter de manière déterministe le flux vers le conteneur et le schéma de base de données PostgreSQL isolés, empêchant toute collision logique au sein de l'infrastructure mutualisée.
+
+% ============================================================
+\subsection{Déroulement d'un cas métier concret : Publication d'une fiche}
+% ============================================================
+
+Pour illustrer de manière pragmatique le fonctionnement de notre instance et sa conformité avec les réflexes de l'ingénierie de protocoles, nous détaillons ci-dessous le cycle de vie complet d'une transaction métier : la création d'une fiche de savoir par un peintre.
+
+\begin{table}[H]
+\centering
+\caption{Cycle de vie d'une transaction métier : Publication d'une fiche}
+\label{tab:transaction_flow}
+\renewcommand{\arraystretch}{1.5}
+\small
+\begin{tabular}{|p{0.25\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
+\hline
+\textbf{Étape du flux} & \textbf{Action exécutée dans l'instance démo} & \textbf{Couche logique BCaaS ciblée} \\
+\hline
+1. Saisie \& Soumission & Le peintre valide le formulaire enrichi de sa fiche technique dans l'interface graphique Next.js. & Couche 5 : Business capabilities \\
+\hline
+2. Encapsulation initiale & La couche \texttt{lib/api.ts} intercepte le payload fonctionnel et instancie la structure du paquet métier. & Couche 5 : Business capabilities \\
+\hline
+3. Injection du contexte & Génération automatique du \texttt{trace\_id} (UUID), affectation du \texttt{role\_scope} (PAINTER) et injection du \texttt{X-Tenant-Id}. & Couche 4 : Context \& Policy \\
+\hline
+4. Routage \& Délais simulés & Le middleware applique les règles linguistiques (fr-CM) et simule une latence réseau de 450ms. & Couche 3 : Tenant \& Routing \\
+\hline
+5. Persistance fonctionnelle & Écriture de la nouvelle fiche au sein de l'état local persistant de l'application (Simulant l'accès DB). & Couche 1 : Infrastructure \\
+\hline
+\end{tabular}
+\end{table}
+
+% ============================================================
+\subsection{Observabilité métier et gestion de la traçabilité}
+% ============================================================
+
+L'observabilité est une composante essentielle de la modélisation basée sur les concepts réseaux. Dans notre instance, bien qu'il n'y ait pas de serveur de logs centralisé (comme une pile ELK ou Grafana), la traçabilité est rigoureusement simulée à l'aide de l'injection systématique du \texttt{trace\_id}. Chaque fois qu'une fonction de \texttt{lib/api.ts} est sollicitée, les messages de débogage générés dans la console d'exécution du navigateur adoptent un format JSON structuré contenant les champs : \texttt{\{ timestamp, tenant\_id: 'painting', trace\_id, actor\_id, operation, status \}}.
+
+Cette approche garantit qu'un auditeur peut suivre le déroulement pas à pas d'une transaction au sein des flux asynchrones du frontend. Les indicateurs clés de performance métiers (KPI), tels que le taux de fiches publiées par catégorie ou le nombre de peintres actifs, sont consolidés au sein d'un état global de l'application exposé sur l'interface d'administration.
+
+============================================================
+%  SECTION 6 — SIMULATION DE LA PILE PROTOCOLAIRE ET CAS MÉTIER
+% ============================================================
+\newpage
+\section{Validation, métriques et tests}
+
+Notre groupe de travail occupe la \textbf{couche 5 (Business capabilities)} de la pile protocolaire BCaaS. Les couches inférieures (4~--~Context \& Policy, 3~--~Tenant \& Routing, 2~--~Transport \& Messaging, 1~--~Infrastructure) sont prises en charge par d'autres équipes de l'écosystème mutualisé et ne sont, à ce stade du projet, pas physiquement déployées. Pour autant, notre instance ne peut pas se permettre de développer une couche 5 isolée et incohérente : elle doit anticiper précisément la forme, le contenu et le comportement des échanges qu'elle aura avec les couches sous-jacentes une fois celles-ci raccordées. Cette section détaille la stratégie de simulation mise en place pour combler cette absence temporaire, ainsi que le déroulement complet d'un cas métier représentatif traversant l'ensemble des couches simulées.
+
+% ============================================================
+\subsection{Principe général de la simulation des couches 1 à 4}
+% ============================================================
+
+L'absence physique des couches 1 à 4 ne doit pas empêcher la validation fonctionnelle de notre instance. Nous avons donc adopté une stratégie de \textbf{mock data contractuel} : plutôt que de simplement renvoyer des données statiques sans structure, chaque réponse simulée respecte scrupuleusement le format de paquet métier défini par le protocole BCaaS (en-têtes contextuels~+ payload), de sorte que le remplacement ultérieur des mocks par de véritables appels réseau soit transparent pour le reste de l'application.
+
+Cette simulation est entièrement concentrée dans la couche d'abstraction \texttt{lib/api.ts}, qui agit comme une \textbf{façade}~: les composants React n'ont jamais conscience qu'ils dialoguent avec des données simulées plutôt qu'avec un backend réel. Le tableau ci-dessous synthétise la manière dont chaque couche absente est imitée côté frontend.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\small
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{0.18\textwidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Couche simulée} & \textbf{Comportement attendu en production} & \textbf{Mécanisme de mock adopté} \\
+\midrule
+4 --- Context \& Policy & Authentification JWT, vérification des rôles, application des règles SLA & Vérification du \texttt{role\_scope} stocké en état local et garde de routes dans \texttt{middleware.ts} \\
+3 --- Tenant \& Routing & Résolution du tenant par le \texttt{TenantResolver}, partitionnement de la base de données & En-tête \texttt{X-Tenant-Id: painting} injecté systématiquement et filtrage simulé sur le jeu de données JSON \\
+2 --- Transport \& Messaging & Appels REST/gRPC réels, gestion des délais réseau, retries et idempotence & Fonctions \texttt{async/await} avec \texttt{setTimeout} simulant la latence, structure de retour identique à celle de Spring Data \texttt{Page<T>} \\
+1 --- Infrastructure & Persistance en base PostgreSQL, cache Redis, bus d'événements, stockage objet & Tableaux \texttt{MOCK\_FICHES}, \texttt{MOCK\_PEINTRES}, \texttt{MOCK\_ROADMAPS} chargés en mémoire, modifiés directement par les fonctions de \texttt{lib/api.ts} \\
+\bottomrule
+\end{tabularx}
+\caption{Stratégie de simulation des couches 1 à 4 depuis le frontend}
+\label{tab:simulation_couches}
+\end{table}
+
+% ============================================================
+\subsection{Construction et organisation des données mockées}
+% ============================================================
+
+L'ensemble du jeu de données simulées est centralisé dans le répertoire \texttt{data/}, sous forme de constantes TypeScript fortement typées (\texttt{MOCK\_FICHES: FicheMetier[]}, \texttt{MOCK\_PEINTRES: Peintre[]}, etc.), plutôt que de simples fichiers JSON bruts. Ce choix garantit que toute incohérence de structure est détectée à la compilation et non à l'exécution, ce qui est essentiel puisque ces données tiennent temporairement lieu de couche d'infrastructure.
+
+Trois principes ont guidé la construction de ce jeu de données~:
+
+\begin{itemize}
+    \item \textbf{Réalisme métier}~: les fiches, peintres et roadmaps mockés couvrent des cas représentatifs du domaine (plusieurs catégories de techniques picturales, plusieurs niveaux de roadmap, des profils de peintres aux spécialités variées), afin que les écrans développés soient éprouvés face à une diversité de contenus comparable à celle attendue en production.
+
+    \item \textbf{Cohérence référentielle}~: les identifiants croisés entre entités (\texttt{auteurId} d'une fiche pointant vers un \texttt{Peintre} existant, \texttt{fichesPublieesIds} d'un peintre correspondant à des fiches réellement présentes dans \texttt{MOCK\_FICHES}) sont maintenus manuellement, simulant les contraintes d'intégrité référentielle qu'imposerait normalement la base de données relationnelle de la couche 1.
+
+    \item \textbf{Mutabilité contrôlée}~: les tableaux mockés ne sont pas figés en lecture seule. Les opérations d'écriture (\texttt{creerFiche()}, \texttt{modifierFiche()}) poussent ou modifient directement les entrées du tableau en mémoire, ce qui permet à l'interface de refléter immédiatement les actions de l'utilisateur (par exemple, une nouvelle fiche publiée apparaît instantanément dans la liste), exactement comme le ferait une vraie transaction persistée.
+\end{itemize}
+
+\begin{lstlisting}[caption={\texttt{data/mockFiches.ts} --- extrait du jeu de données simulant la couche 1 (Infrastructure)}]
+export const MOCK_FICHES: FicheMetier[] = [
+  {
+    id: 'fiche-001',
+    titre: 'Application des Enduits Traditionnels a la Chaux',
+    slug: 'enduits-traditionnels-chaux',
+    categorieId: 'cat-decorative',
+    corpsContenu: 'Le stuc a la chaux s appliquer en trois passes successives...',
+    tags: ['chaux', 'enduit', 'decoratif'],
+    auteurId: 'painter-007',
+    datePublication: '2026-02-14',
+    mediaUrls: ['/media/fiche-001-1.jpg', '/media/fiche-001-2.jpg'],
+  },
+  // ... autres fiches mockees
+];
+
+// Operation d'ecriture simulant la couche 1 (persistance)
+export function pushFiche(fiche: FicheMetier): void {
+  MOCK_FICHES.unshift(fiche); // simule un INSERT en tete de table
+}
+\end{lstlisting}
+
+% ============================================================
+\subsection{Déroulement concret d'un cas métier : la publication d'une fiche}
+% ============================================================
+
+Afin de valider que l'empilement simulé des couches 1 à 4 se comporte de manière cohérente sous la responsabilité de notre couche 5, nous détaillons ci-dessous le cheminement complet d'une transaction représentative~: un peintre authentifié publie une nouvelle fiche technique depuis son tableau de bord.
+
+\subsubsection*{Étape 1 --- Saisie et validation côté client (Couche 5)}
+
+Le peintre remplit le composant \texttt{FicheForm} (titre, catégorie, corps de texte, tags, médias). Une validation côté client (champs obligatoires, taille des médias) s'exécute avant tout appel réseau, évitant de solliciter inutilement les couches inférieures pour un paquet invalide.
+
+\subsubsection*{Étape 2 --- Encapsulation du paquet métier (Couche 5 vers Couche 4)}
+
+La fonction \texttt{creerFiche(payload)} de \texttt{lib/api.ts} est invoquée. Elle enveloppe le contenu fonctionnel saisi par l'utilisateur dans la structure standardisée du paquet métier BCaaS, séparant explicitement les en-têtes contextuels du payload applicatif.
+
+\subsubsection*{Étape 3 --- Vérification du contexte et de la politique d'accès (Couche 4 simulée)}
+
+Avant l'écriture, \texttt{creerFiche()} vérifie que le \texttt{role\_scope} courant correspond bien à \texttt{PAINTER}. Si tel n'est pas le cas, une exception simulant une réponse \texttt{403 Forbidden} est levée. Le \texttt{trace\_id} (UUID v4) est généré à cet instant et restera identique pour toute la durée de la transaction, simulant la traçabilité bout en bout exigée par le livrable~L5.
+
+\subsubsection*{Étape 4 --- Résolution du tenant et acheminement simulé (Couches 3 et 2)}
+
+L'en-tête \texttt{X-Tenant-Id: painting} est injecté, simulant la résolution effectuée par le \texttt{TenantResolver} de la couche 3. La fonction marque ensuite une pause artificielle via \texttt{setTimeout} (latence réseau simulée d'environ 400 à 500\,ms), reproduisant le comportement d'un appel REST réel transitant par la couche 2, avant de retourner un résultat dont la forme imite fidèlement celle d'une réponse Spring Boot.
+
+\subsubsection*{Étape 5 --- Persistance simulée (Couche 1)}
+
+La fonction \texttt{pushFiche()} insère la nouvelle entrée en tête du tableau \texttt{MOCK\_FICHES} chargé en mémoire, simulant un \texttt{INSERT} en base PostgreSQL. L'identifiant \texttt{fichesPublieesIds} du peintre auteur est mis à jour en parallèle, simulant la cohérence transactionnelle qu'assurerait normalement un mécanisme ACID réel.
+
+\subsubsection*{Étape 6 --- Retour et mise à jour de l'interface (Couche 5)}
+
+Le paquet de réponse, structurellement identique à celui qu'enverrait le vrai backend, remonte jusqu'au composant appelant. Le tableau de bord du peintre se met à jour immédiatement, la nouvelle fiche apparaît dans sa liste personnelle et devient consultable publiquement sur \texttt{/fiches/[id]} et \texttt{/fiches}.
+
+\begin{lstlisting}[caption={\texttt{lib/api.ts} --- \texttt{creerFiche()}, traversée simulée des couches 4 à 1}]
+export async function creerFiche(
+  payload: Omit<FicheMetier, 'id' | 'datePublication'>
+): Promise<FicheMetier> {
+  // Couche 4 simulee : verification de la politique d'acces
+  if (getCurrentRoleScope() !== 'PAINTER') {
+    throw new ApiError(403, 'Forbidden: role_scope insuffisant');
+  }
+
+  const traceId = crypto.randomUUID(); // observabilite bout en bout (L5)
+  const headers = getBCaaSHeaders(true); // X-Tenant-Id, X-Trace-Id, etc.
+
+  // Couches 3 et 2 simulees : routage tenant + latence reseau
+  await new Promise(resolve => setTimeout(resolve, 450));
+
+  // Couche 1 simulee : persistance en memoire
+  const nouvelleFiche: FicheMetier = {
+    ...payload,
+    id: `fiche-${crypto.randomUUID().slice(0, 8)}`,
+    datePublication: new Date().toISOString(),
+  };
+  pushFiche(nouvelleFiche);
+
+  console.log(JSON.stringify({
+    trace_id: traceId,
+    tenant_id: headers['X-Tenant-Id'],
+    operation: 'creerFiche',
+    status: 'success',
+  }));
+
+  return nouvelleFiche; // remonte vers la couche 5 (composant React)
+}
+\end{lstlisting}
+
+% ============================================================
+\subsection{Limites de la simulation et fidélité au protocole}
+% ============================================================
+
+Cette stratégie de simulation, bien que rigoureuse, demeure une approximation volontaire. Elle ne reproduit ni la latence variable d'un réseau réel, ni les défaillances partielles (perte de paquet, timeout серveur), ni les contraintes de concurrence d'accès propres à une base de données partagée par plusieurs tenants. Sa valeur réside avant tout dans le fait qu'elle impose, dès la phase de conception frontend, le respect strict du contrat d'interface défini par le socle BCaaS~: format du paquet métier, nomenclature des en-têtes contextuels, structure des réponses paginées. Ce respect du contrat garantit que le basculement vers les couches 1 à 4 réellement déployées ne nécessitera, comme détaillé en section~\ref{sec:perspectives}, qu'une substitution localisée des mocks par de véritables appels réseau, sans aucune répercussion sur la couche 5 développée par notre groupe.
+% ============================================================
+%  SECTION 7 — PERSPECTIVES DE TRANSITION ET ÉVOLUTIONS
+% ============================================================
+\newpage
+\section{Perspectives de transition et évolutions}
+
+La version de démonstration de Painting Business Core a été conçue dès l'origine selon un principe de \textbf{découplage strict} entre la couche de présentation (composants React/Next.js) et la couche de persistance (actuellement simulée par des fichiers JSON locaux). Si l'application remplit déjà l'intégralité des exigences fonctionnelles définies dans le cahier des charges, plusieurs axes d'amélioration purement frontend ont été identifiés pour renforcer la robustesse, la lisibilité et l'expérience utilisateur de l'instance de démonstration, sans nécessiter le moindre raccordement à un backend physique.
+
+% ============================================================
+\subsection{Simulation d'erreurs réseau et cas limites}
+% ============================================================
+
+Dans l'état actuel, la couche \texttt{lib/api.ts} retourne systématiquement des réponses positives, ce qui ne reflète pas fidèlement le comportement d'un système réel. Une amélioration naturelle consiste à enrichir le moteur de simulation en introduisant des scénarios d'échec contrôlés :
+
+\begin{itemize}
+    \item \textbf{Simulation de codes d'erreur HTTP} : certaines fonctions asynchrones pourraient, selon une probabilité configurable ou un identifiant inexistant, retourner des exceptions typées simulant une erreur \texttt{404 Not Found} (fiche ou peintre introuvable), une erreur \texttt{403 Forbidden} (accès refusé selon le \texttt{role\_scope}) ou une erreur \texttt{500 Internal Server Error} (défaillance générique du service).
+    
+    \item \textbf{Simulation de timeout réseau} : en augmentant ponctuellement le délai du \texttt{setTimeout} au-delà d'un seuil critique (par exemple 5~secondes), on peut vérifier que l'interface gère correctement les états de chargement prolongés sans se bloquer ni perdre de données saisies par l'utilisateur.
+    
+    \item \textbf{Renforcement des fallbacks UI} : chaque composant consommateur (\texttt{<FicheCard />}, \texttt{<MapView />}, etc.) serait ainsi systématiquement éprouvé face à des données manquantes ou des réponses d'erreur, garantissant une robustesse visuelle totale avant toute connexion au backend réel.
+\end{itemize}
+
+% ============================================================
+\subsection{Tableau de bord de monitoring des échanges simulés}
+% ============================================================
+
+Actuellement, les messages de traçabilité générés par \texttt{lib/api.ts} (contenant \texttt{timestamp}, \texttt{trace\_id}, \texttt{operation}, \texttt{status}, etc.) sont uniquement visibles dans la console du navigateur, ce qui les rend inaccessibles à un utilisateur non-développeur. Une évolution cohérente consiste à les exposer directement dans l'interface d'administration :
+
+\begin{itemize}
+    \item \textbf{Collecte en mémoire} : chaque appel à une fonction de \texttt{lib/api.ts} alimenterait un tableau d'état global (via un contexte Next dédié) conservant les \textit{N} dernières entrées de journal au format JSON structuré.
+    
+    \item \textbf{Vue dédiée dans l'espace \texttt{/super admin}} : un nouveau panneau « Journal des échanges » afficherait en temps réel la liste des opérations effectuées, leur \texttt{trace\_id}, leur durée simulée et leur statut (succès ou erreur), sans nécessiter l'ouverture des outils de développement du navigateur.
+    
+    \item \textbf{Valeur pour l'équipe backend} : ce journal constituerait un document de référence concret, permettant à l'équipe en charge du backend de visualiser exactement la structure et la fréquence des échanges attendus, facilitant ainsi l'implémentation des endpoints réels correspondants.
+\end{itemize}
+
+% ============================================================
+\subsection{Sélecteur de rôle interactif pour les tests}
+% ============================================================
+
+Dans la version actuelle, le rôle actif (\texttt{VISITOR}, \texttt{PAINTER} ou \texttt{SUPER ADMIN}) est défini statiquement dans l'état local de l'application. Pour tester le comportement de l'interface selon chaque profil, il est nécessaire de modifier le code source directement. Un sélecteur de rôle interactif éliminerait cette contrainte :
+
+\begin{itemize}
+    \item \textbf{Composant de bascule} : un sélecteur discret, affiché dans la barre de navigation uniquement en mode démonstration, permettrait de passer instantanément d'un rôle à l'autre sans rechargement de la page ni intervention dans le code.
+    
+    \item \textbf{Mise à jour dynamique des droits d'accès} : le changement de rôle mettrait à jour le contexte Next global (\texttt{role\_scope}), déclenchant automatiquement l'affichage ou le masquage des routes protégées (\texttt{app/(auth)/}), des boutons d'action réservés aux contributeurs, et des panneaux de modération réservés aux administrateurs.
+    
+    \item \textbf{Cohérence avec les en-têtes simulés} : le \texttt{role\_scope} injecté dans les paquets métier par \texttt{lib/api.ts} serait mis à jour en conséquence, garantissant que les échanges simulés restent conformes au rôle sélectionné, comme l'exigerait un système réel basé sur des jetons JWT.
+\end{itemize}
+
+Cette fonctionnalité accélérerait considérablement les cycles de validation de l'interface par l'ensemble des membres du groupe, chacun pouvant explorer les trois profils utilisateurs sans configuration préalable.
+
+% ============================================================
+\subsection{Stratégie de couplage à une API backend physique}
+% ============================================================
+
+Grâce à l'étanchéité stricte introduite par notre couche d'abstraction, la transition depuis cette version de démonstration vers une application connectée à une infrastructure backend de production s'effectuera sans aucune refonte des composants graphiques. Les signatures des fonctions exposées au sein de \texttt{lib/api.ts} resteront rigoureusement inchangées.
+
+L'évolution consistera uniquement à substituer les blocs de lecture des fichiers JSON locaux par des requêtes réseau directes faisant appel à la fonction \texttt{fetch()} orientée vers l'URL de l'API Gateway de l'écosystème BCaaS global. La logique d'encapsulation déjà développée servira de base pour alimenter les en-têtes HTTP réels attendus par les services de routage centraux.
+
+% ============================================================
+\subsection{Intégration d'un moteur d'authentification et de rôles étatiques}
+% ============================================================
+
+Actuellement, les rôles (VISITOR, PAINTER, ADMIN) et les privilèges d'accès sont gérés via un état local simulé. La bascule en production prévoit d'intégrer le support des jetons JWT (JSON Web Tokens) signés de manière cryptographique par un serveur d'authentification centralisé de type OAuth2. Le middleware Next.js de notre instance évoluera pour intercepter ces jetons réels, valider leur date d'expiration, et extraire de manière sécurisée le périmètre de droits (\texttt{role\_scope}) indispensable à la sécurisation des routes privées.
+
+% ============================================================
+\subsection{Dynamisation géospatiale de la carte interactive}
+% ============================================================
+
+La carte interactive Leaflet.js de notre instance exploite un ensemble figé de coordonnées géographiques stockées en JSON. L'évolution naturelle du système consistera à lier ce composant client à des requêtes spatiales dynamiques. Lors de la connexion future au backend global, l'application transmettra les coordonnées de cadrage de l'écran du visiteur pour permettre au serveur d'exécuter des requêtes géospatiales de proximité (via l'extension PostGIS d'une base de données), optimisant ainsi le volume de données transférées et affichant en temps réel les artisans peintres implantés à l'échelle régionale ou nationale.
+
+% ============================================================
+%  SECTION 8 — CONCLUSION
+% ============================================================
+\newpage
+\section{Conclusion}
+
+L'objectif initial de ce projet était de répondre à la problématique de fragmentation de l'information dans le secteur de la peinture en concevant un point d'entrée unique, structuré et fiable, permettant à tout acteur — étudiant, amateur ou professionnel — d'accéder facilement à des savoirs centralisés et enrichis par les praticiens eux-mêmes. Pour ce faire, nous avons développé \textit{Painting Business Core Instance}, une plateforme web de démonstration qui centralise les fiches métiers, les roadmaps pédagogiques et les profils de peintres, tout en instaurant un mécanisme de validation par des pairs qualifiés.
+
+Pour mener à bien cette réalisation, nous avons mis en œuvre une architecture frontend moderne basée sur Next.js 15 (App Router), associée à une couche d'abstraction API asynchrone (\texttt{lib/api.ts}) simulant de manière rigoureuse les échanges client-serveur avec latence réseau, traçabilité par identifiants uniques et encapsulation des paquets métier. L'application respecte les standards PWA, garantissant une expérience fluide même en mode déconnecté, et s'intègre dans l'écosystème BCaaS (\textit{Business Core as a Service}) en tant que tenant spécialisé, conforme à la pile protocolaire en cinq couches (Business capabilities, Context \& policy, Tenant \& routing, Transport \& messaging, Infrastructure).
+
+Les livrables produits comprennent une application web responsive, un moteur de simulation API complet, un jeu de données métiers simulées (fiches, peintres, catégories, roadmaps), ainsi qu'une modélisation UML du domaine. La campagne de validation, menée via des tests unitaires, d'intégration et des audits Google Lighthouse, atteste de la robustesse de l'interface, du respect des contraintes de performance (LCP de 1,4 s, score Performance de 94, score PWA de 92) et de la conformité avec les cinq livrables BCaaS (L1 à L5).
+
+
+
+\textit{Painting Business Core Instance} s'inscrit naturellement dans le socle commun BCaaS comme une instance métier autonome, au même titre que les instances dédiées au commerce, à l'assurance ou au tourisme. Elle apporte une valeur spécifique au domaine de la peinture en proposant une structuration des savoirs par fiches techniques et roadmaps pédagogiques, une validation professionnelle des contenus par des pairs. Cette instance démontre la flexibilité et la scalabilité de l'approche BCaaS : en respectant les contrats d'interface imposés par l'infrastructure mutualisée (en-têtes contextuels standardisés, isolation multi-tenant, traçabilité des transactions), elle peut être raccordée à terme à un backend physique (Spring Boot, PostgreSQL, Redis, MinIO) sans aucune refonte des composants graphiques, et ainsi basculer en production industrielle. \textit{Painting Business Core Instance} constitue donc un cas d'usage concret et opérationnel de l'approche BCaaS, démontrant sa pertinence pour structurer des applications métiers spécialisées au sein d'un écosystème mutualisé.
+
+% ============================================================
+%  RÉFÉRENCES BIBLIOGRAPHIQUES
+% ============================================================
+\addcontentsline{toc}{section}{Références bibliographiques}
+
+\begin{thebibliography}{99}
+
+\bibitem{bcaas}
+Prof. Thomas Djotio Ndié, \textit{BCaaS : Approche de modélisation Basée sur les Concepts des Réseaux}, Document de cours, 2025-2026.
+
+\bibitem{reseaux}
+Prof. Thomas Djotio Ndié, \textit{Introduction aux Réseaux Locaux}, Document de cours, 2026.
+
+\bibitem{nextjs}
+Vercel Inc., \textit{Next.js 15 Documentation — App Router}, \url{https://nextjs.org/docs}, 2025.
+
+\bibitem{react}
+Meta Platforms Inc., \textit{React 18 Documentation}, \url{https://react.dev/}, 2025.
+
+\bibitem{typescript}
+Microsoft Corporation, \textit{TypeScript 5 Documentation}, \url{https://www.typescriptlang.org/docs/}, 2025.
+
+\bibitem{leaflet}
+Vladimir Agafonkin, \textit{Leaflet.js 1.9 Documentation}, \url{https://leafletjs.com/reference.html}, 2025.
+
+\bibitem{pwa}
+W3C Consortium, \textit{Progressive Web Apps — Manifeste d'Application}, \url{https://www.w3.org/TR/appmanifest/}, 2024.
+
+\bibitem{jwt}
+IETF, \textit{RFC 7519 — JSON Web Token (JWT)}, \url{https://tools.ietf.org/html/rfc7519}, 2015.
+
+\bibitem{owasp}
+OWASP Foundation, \textit{OWASP Top Ten 2021}, \url{https://owasp.org/www-project-top-ten/}, 2021.
+
+\end{thebibliography}
+\end{document}

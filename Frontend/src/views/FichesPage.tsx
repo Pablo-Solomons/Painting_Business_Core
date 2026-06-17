@@ -107,9 +107,10 @@ export function FichesPage() {
                   </div>
                 )}
                 <div className="fiche-card-body">
-                  <div className="fiche-code">{fiche.category} · {fiche.tool}</div>
+                  <div className="fiche-card-badge fiche-card-badge--knowledge">Unité de connaissance</div>
                   <div className="fiche-card-name">{fiche.title}</div>
-                  <div className="fiche-card-summary">{fiche.question}</div>
+                  <div className="fiche-card-question-fiche">❓ {fiche.question}</div>
+                  <div className="fiche-code">{fiche.category} · {fiche.tool}</div>
                   <div className="fiche-tags">
                     {fiche.tags.slice(0, 3).map((tag) => (
                       <span key={tag} className="tag">{tag}</span>
