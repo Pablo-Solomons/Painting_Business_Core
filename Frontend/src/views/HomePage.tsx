@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { appLogoUrl } from '../data/assets'
 import { useDemoStore } from '@/context/DemoStoreContext'
+import BarreRecherche from '@/components/BarreRecherche'
 
 function FicheSwatch({ id, colors }: { id: string; colors: string[] }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -77,6 +78,13 @@ export function HomePage() {
         <Link href="/" className="nav-logo" aria-label="ArtPlastique">
           <img src={appLogoUrl} alt="ArtPlastique logo" />
         </Link>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '0 1rem' }}>
+          <BarreRecherche
+            fiches={publishedFiches}
+            roadmaps={publishedRoadmaps}
+            placeholder="Rechercher…"
+          />
+        </div>
         <ul className="nav-links">
           <li><Link href="/categories">Catégories</Link></li>
           <li><Link href="/roadmaps">Roadmap</Link></li>

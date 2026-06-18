@@ -1,10 +1,27 @@
 'use client'
 
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useDemoStore } from '@/context/DemoStoreContext'
 
 export function RoadmapsPage() {
   const { publishedRoadmaps, isHydrated } = useDemoStore()
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filtered = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase()
+    if (!q) return publishedRoadmaps
+
+    return publishedRoadmaps.filter((r) => {
+      let match = false
+      match ||= r.title.toLowerCase().includes(q)
+      match ||= r.summary.toLowerCase().includes(q)
+      match ||= r.steps.some(
+        (s) => s.title.toLowerCase().includes(q) || s.description.toLowerCase().includes(q),
+      )
+      return match
+    })
+  }, [publishedRoadmaps, searchQuery])
 
   if (!isHydrated) {
     return (
@@ -33,16 +50,25 @@ export function RoadmapsPage() {
       <div className="catalog-content">
         <div className="search-bar-wrap">
           <div className="search-bar">
-            <input type="text" placeholder="Rechercher une roadmap..." defaultValue="" />
-            <button type="button">Rechercher</button>
+            <input
+              type="text"
+              placeholder="Rechercher une roadmap..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button type="button" onClick={() => {}}>Rechercher</button>
           </div>
         </div>
 
         <div className="roadmap-grid-cards">
-          {publishedRoadmaps.length === 0 ? (
-            <p className="step-empty">Aucune roadmap publiée pour le moment.</p>
+          {filtered.length === 0 ? (
+            <p className="step-empty">
+              {searchQuery.trim()
+                ? 'Aucune roadmap ne correspond à votre recherche.'
+                : 'Aucune roadmap publiée pour le moment.'}
+            </p>
           ) : (
-            publishedRoadmaps.map((roadmap, index) => (
+            filtered.map((roadmap, index) => (
               <Link key={roadmap.slug} href={`/roadmaps/${roadmap.slug}`} className="roadmap-card-item">
                 <div className="roadmap-card-num">{String(index + 1).padStart(2, '0')}</div>
                 <div>
