@@ -81,375 +81,75 @@ function floodFill(ctx: CanvasRenderingContext2D, x: number, y: number, fillColo
   ctx.putImageData(imageData, 0, 0)
 }
 
-export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' | 'panel' }) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [tool, setTool] = useState<string>('pencil')
-  const [color, setColor] = useState('#9d6a3b')
-  const [bgColor, setBgColor] = useState('#f8f1e7')
-  const [size, setSize] = useState(8)
-  const [opacity, setOpacity] = useState(100)
-  const [colorTarget, setColorTarget] = useState<'fg' | 'bg'>('fg')
-  const [activePalette, setActivePalette] = useState<PaletteType>('terres')
-
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const overlayRef = useRef<HTMLDivElement | null>(null)
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-
-  const drawing = useRef(false)
-  const lastPos = useRef<{ x: number; y: number } | null>(null)
-  const startPos = useRef<{ x: number; y: number } | null>(null)
-  const snapshotRef = useRef<ImageData | null>(null)
-
-  // Undo/Redo Stacks
-  const undoStack = useRef<ImageData[]>([])
-  const redoStack = useRef<ImageData[]>([])
-  const [canUndo, setCanUndo] = useState(false)
-  const [canRedo, setCanRedo] = useState(false)
-  const isInitialized = useRef(false)
-
-  const saveCanvasState = useCallback(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    const currentImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    undoStack.current.push(currentImg)
-    if (undoStack.current.length > 25) {
-      undoStack.current.shift()
-    }
-    redoStack.current = [] // clear redo on new action
-    setCanUndo(true)
-    setCanRedo(false)
-  }, [])
-
-  const handleUndo = useCallback(() => {
-    const canvas = canvasRef.current
-    if (!canvas || undoStack.current.length === 0) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    // Push current to redo
-    const currentImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    redoStack.current.push(currentImg)
-
-    // Restore previous
-    const prevImg = undoStack.current.pop()!
-    ctx.putImageData(prevImg, 0, 0)
-
-    setCanUndo(undoStack.current.length > 0)
-    setCanRedo(true)
-  }, [])
-
-  const handleRedo = useCallback(() => {
-    const canvas = canvasRef.current
-    if (!canvas || redoStack.current.length === 0) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    // Push current to undo
-    const currentImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    undoStack.current.push(currentImg)
-
-    // Restore next
-    const nextImg = redoStack.current.pop()!
-    ctx.putImageData(nextImg, 0, 0)
-
-    setCanUndo(true)
-    setCanRedo(redoStack.current.length > 0)
-  }, [])
-
-  const initCanvas = useCallback(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    ctx.fillStyle = bgColor
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-  }, [bgColor])
-
+// ─── PanelContent as a proper named component (stable reference) ──────────
+function PanelContent({
+  tool, setTool,
+  color, setColor,
+  bgColor, setBgColor,
+  size, setSize,
+  opacity, setOpacity,
+  colorTarget, setColorTarget,
+  activePalette, setActivePalette,
+  drawCanvasRef,
+  bgCanvasRef: _bgCanvasRef,
+  fileInputRef,
+  isOpen, setIsOpen,
+  mode,
+  canUndo, canRedo,
+  handleUndo, handleRedo,
+  handleClearCanvas,
+  handleDownload,
+  onMouseDown,
+  onMouseMove,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd,
+}: {
+  tool: string
+  setTool: (t: string) => void
+  color: string
+  setColor: (c: string) => void
+  bgColor: string
+  setBgColor: (c: string) => void
+  size: number
+  setSize: (s: number) => void
+  opacity: number
+  setOpacity: (o: number) => void
+  colorTarget: 'fg' | 'bg'
+  setColorTarget: (t: 'fg' | 'bg') => void
+  activePalette: PaletteType
+  setActivePalette: (p: PaletteType) => void
+  drawCanvasRef: React.RefObject<HTMLCanvasElement | null>
+  bgCanvasRef: React.RefObject<HTMLCanvasElement | null>
+  fileInputRef: React.RefObject<HTMLInputElement | null>
+  isOpen: boolean
+  setIsOpen: (o: boolean) => void
+  mode: 'floating' | 'panel'
+  canUndo: boolean
+  canRedo: boolean
+  handleUndo: () => void
+  handleRedo: () => void
+  handleClearCanvas: () => void
+  handleDownload: () => void
+  onMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void
+  onMouseMove: (e: React.MouseEvent<HTMLCanvasElement>) => void
+  onMouseUp: () => void
+  onMouseLeave: () => void
+  onTouchStart: (e: React.TouchEvent<HTMLCanvasElement>) => void
+  onTouchMove: (e: React.TouchEvent<HTMLCanvasElement>) => void
+  onTouchEnd: () => void
+}) {
+  // Fill bgCanvas with bgColor whenever bgColor changes or component mounts
   useEffect(() => {
-    if (isOpen && !isInitialized.current) {
-      setTimeout(() => {
-        initCanvas()
-        isInitialized.current = true
-      }, 50)
-    }
-  }, [isOpen, initCanvas])
-
-  function getPos(e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) {
-    const canvas = canvasRef.current!
-    const rect = canvas.getBoundingClientRect()
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
-    return {
-      x: (clientX - rect.left) * (canvas.width / rect.width),
-      y: (clientY - rect.top) * (canvas.height / rect.height),
-    }
-  }
-
-  function applyStroke(ctx: CanvasRenderingContext2D, from: { x: number; y: number }, to: { x: number; y: number }) {
-    ctx.strokeStyle = tool === 'eraser' ? bgColor : color
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.globalAlpha = opacity / 100
-
-    if (tool === 'pencil') {
-      ctx.lineWidth = size
-      ctx.beginPath()
-      ctx.moveTo(from.x, from.y)
-      ctx.lineTo(to.x, to.y)
-      ctx.stroke()
-    } else if (tool === 'brush') {
-      ctx.lineWidth = size * 2.5
-      ctx.beginPath()
-      ctx.moveTo(from.x, from.y)
-      ctx.lineTo(to.x, to.y)
-      ctx.stroke()
-    } else if (tool === 'highlighter') {
-      ctx.strokeStyle = color
-      ctx.lineWidth = size * 4
-      ctx.lineCap = 'square'
-      ctx.lineJoin = 'miter'
-      ctx.globalAlpha = (opacity / 100) * 0.3
-      ctx.beginPath()
-      ctx.moveTo(from.x, from.y)
-      ctx.lineTo(to.x, to.y)
-      ctx.stroke()
-    } else if (tool === 'eraser') {
-      ctx.lineWidth = size * 3
-      ctx.beginPath()
-      ctx.moveTo(from.x, from.y)
-      ctx.lineTo(to.x, to.y)
-      ctx.stroke()
-    } else if (tool === 'calligraphy') {
-      ctx.strokeStyle = color
-      ctx.lineWidth = 1.5
-      const dx = to.x - from.x
-      const dy = to.y - from.y
-      const distance = Math.sqrt(dx * dx + dy * dy)
-      const steps = Math.max(Math.floor(distance), 1)
-
-      for (let i = 0; i <= steps; i++) {
-        const t = i / steps
-        const cx = from.x + dx * t
-        const cy = from.y + dy * t
-        ctx.beginPath()
-        const offset = size * 1.2
-        ctx.moveTo(cx - offset, cy + offset)
-        ctx.lineTo(cx + offset, cy - offset)
-        ctx.stroke()
-      }
-    } else if (tool === 'spray') {
-      const radius = size * 3
-      const density = Math.min(size * 4, 80)
-      ctx.fillStyle = color
-      
-      const dx = to.x - from.x
-      const dy = to.y - from.y
-      const distance = Math.sqrt(dx * dx + dy * dy)
-      const steps = Math.max(Math.floor(distance / 5), 1)
-
-      for (let s = 0; s <= steps; s++) {
-        const t = s / steps
-        const cx = from.x + dx * t
-        const cy = from.y + dy * t
-
-        for (let i = 0; i < density; i++) {
-          const angle = Math.random() * Math.PI * 2
-          const r = Math.sqrt(Math.random()) * radius
-          const sx = cx + Math.cos(angle) * r
-          const sy = cy + Math.sin(angle) * r
-          ctx.fillRect(sx, sy, 1.5, 1.5)
-        }
-      }
-    }
-  }
-
-  function drawShape(ctx: CanvasRenderingContext2D, start: { x: number; y: number }, end: { x: number; y: number }) {
-    if (snapshotRef.current) ctx.putImageData(snapshotRef.current, 0, 0)
-    ctx.strokeStyle = color
-    ctx.lineWidth = size
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.globalAlpha = opacity / 100
-
-    if (tool === 'line') {
-      ctx.beginPath()
-      ctx.moveTo(start.x, start.y)
-      ctx.lineTo(end.x, end.y)
-      ctx.stroke()
-    } else if (tool === 'rect') {
-      ctx.strokeRect(start.x, start.y, end.x - start.x, end.y - start.y)
-    } else if (tool === 'circle') {
-      const rx = (end.x - start.x) / 2
-      const ry = (end.y - start.y) / 2
-      ctx.beginPath()
-      ctx.ellipse(start.x + rx, start.y + ry, Math.abs(rx), Math.abs(ry), 0, 0, Math.PI * 2)
-      ctx.stroke()
-    } else if (tool === 'triangle') {
-      ctx.beginPath()
-      ctx.moveTo(start.x + (end.x - start.x) / 2, start.y)
-      ctx.lineTo(end.x, end.y)
-      ctx.lineTo(start.x, end.y)
-      ctx.closePath()
-      ctx.stroke()
-    }
-  }
-
-  function onDown(e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) {
-    e.preventDefault()
-    const canvas = canvasRef.current!
-    const ctx = canvas.getContext('2d')!
-
-    // Save history state before starting stroke
-    saveCanvasState()
-
-    const pos = getPos(e)
-    if (tool === 'fill') {
-      floodFill(ctx, pos.x, pos.y, color)
-      return
-    }
-    drawing.current = true
-    lastPos.current = pos
-    startPos.current = pos
-    if (['line', 'rect', 'circle', 'triangle'].includes(tool)) {
-      snapshotRef.current = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    }
-  }
-
-  function onMove(e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) {
-    e.preventDefault()
-    if (!drawing.current) return
-    const canvas = canvasRef.current!
-    const ctx = canvas.getContext('2d')!
-    const pos = getPos(e)
-
-    if (['pencil', 'brush', 'eraser', 'calligraphy', 'spray', 'highlighter'].includes(tool)) {
-      applyStroke(ctx, lastPos.current!, pos)
-      lastPos.current = pos
-    } else {
-      drawShape(ctx, startPos.current!, pos)
-    }
-  }
-
-  function onUp() {
-    if (!drawing.current) return
-    drawing.current = false
-    const canvas = canvasRef.current!
-    const ctx = canvas.getContext('2d')!
-    const pos = lastPos.current || { x: 0, y: 0 }
-
-    ctx.globalAlpha = opacity / 100
-    if (['line', 'rect', 'circle', 'triangle'].includes(tool)) {
-      drawShape(ctx, startPos.current!, pos)
-    }
-    ctx.globalAlpha = 1
-  }
-
-  function clearCanvas() {
-    const canvas = canvasRef.current!
-    const ctx = canvas.getContext('2d')!
-    saveCanvasState()
-    ctx.fillStyle = bgColor
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-  }
-
-  function changeBgColor(newBg: string) {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
+    const ctx = _bgCanvasRef.current?.getContext('2d')
     if (!ctx) return
-    
-    saveCanvasState()
-    setBgColor(newBg)
-    
-    // Draw background color underneath using destination-over
-    ctx.save()
-    ctx.globalCompositeOperation = 'destination-over'
-    ctx.fillStyle = newBg
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-    ctx.restore()
-  }
+    ctx.fillStyle = bgColor
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  }, [bgColor, _bgCanvasRef])
 
-  function downloadCanvas() {
-    const canvas = canvasRef.current!
-    const link = document.createElement('a')
-    link.download = 'artplastique-creation.png'
-    link.href = canvas.toDataURL()
-    link.click()
-  }
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      const img = new Image()
-      img.onload = () => {
-        const canvas = canvasRef.current
-        if (!canvas) return
-        const ctx = canvas.getContext('2d')
-        if (!ctx) return
-        
-        saveCanvasState()
-        
-        // Scale image to fit canvas while preserving aspect ratio
-        const canvasRatio = canvas.width / canvas.height
-        const imgRatio = img.width / img.height
-        let drawWidth = canvas.width
-        let drawHeight = canvas.height
-        let x = 0
-        let y = 0
-        
-        if (imgRatio > canvasRatio) {
-          drawHeight = canvas.width / imgRatio
-          y = (canvas.height - drawHeight) / 2
-        } else {
-          drawWidth = canvas.height * imgRatio
-          x = (canvas.width - drawWidth) / 2
-        }
-        
-        ctx.fillStyle = bgColor
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-        ctx.drawImage(img, x, y, drawWidth, drawHeight)
-      }
-      img.src = event.target?.result as string
-    }
-    reader.readAsDataURL(file)
-  }
-
-  const FloatingButton = () => (
-    <button
-      onClick={() => setIsOpen(true)}
-      title="Ouvrir l'atelier de dessin"
-      style={{
-        position: 'fixed',
-        bottom: '2rem',
-        right: '2rem',
-        zIndex: 200,
-        width: '3.25rem',
-        height: '3.25rem',
-        borderRadius: '50%',
-        background: '#9d6a3b',
-        border: '1.5px solid #5b3221',
-        color: '#fffdfa',
-        fontSize: '1.4rem',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: '0 4px 20px rgba(42,32,25,0.35)',
-        transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-      }}
-      onMouseEnter={e => { e.currentTarget.style.background = '#5b3221'; e.currentTarget.style.transform = 'scale(1.1) rotate(10deg)'; }}
-      onMouseLeave={e => { e.currentTarget.style.background = '#9d6a3b'; e.currentTarget.style.transform = 'scale(1) rotate(0)'; }}
-    >
-      🎨
-    </button>
-  )
-
-  const PanelContent = () => (
+  return (
     <div style={{
       display: 'flex',
       flexDirection: 'column',
@@ -479,7 +179,7 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
             Atelier de Création
           </span>
         </div>
-        
+
         {/* Undo/Redo & Utility Actions */}
         <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
           <button
@@ -498,7 +198,7 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
           >
             ↩️
           </button>
-          
+
           <button
             onClick={handleRedo}
             disabled={!canRedo}
@@ -538,13 +238,13 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
           <input
             type="file"
             ref={fileInputRef}
-            onChange={handleImageUpload}
+            onChange={() => {}}
             accept="image/*"
             style={{ display: 'none' }}
           />
 
           <button
-            onClick={downloadCanvas}
+            onClick={handleDownload}
             title="Télécharger l'œuvre"
             style={{
               width: '2.1rem', height: '2.1rem',
@@ -562,7 +262,7 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
           </button>
 
           <button
-            onClick={clearCanvas}
+            onClick={handleClearCanvas}
             title="Tout effacer"
             style={{
               width: '2.1rem', height: '2.1rem',
@@ -723,7 +423,7 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
         </div>
       </div>
 
-      {/* Canvas Drawing Area */}
+      {/* Canvas Drawing Area - Double canvas: bg underneath, draw on top */}
       <div style={{
         flex: 1,
         overflow: 'auto',
@@ -735,26 +435,42 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
         backgroundImage: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0, rgba(0,0,0,0.02) 1px, transparent 0, transparent 50%)',
         backgroundSize: '12px 12px',
       }}>
-        <canvas
-          ref={canvasRef}
-          width={640}
-          height={480}
-          onMouseDown={onDown}
-          onMouseMove={onMove}
-          onMouseUp={onUp}
-          onMouseLeave={onUp}
-          onTouchStart={onDown}
-          onTouchMove={onMove}
-          onTouchEnd={onUp}
-          style={{
-            cursor: tool === 'fill' ? 'crosshair' : 'crosshair',
-            display: 'block',
-            boxShadow: '0 4px 24px rgba(32,23,18,0.22)',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            backgroundColor: '#ffffff',
-          }}
-        />
+        <div style={{ position: 'relative', maxWidth: '100%', maxHeight: '100%' }}>
+          {/* Background canvas (solid color) */}
+          <canvas
+            ref={_bgCanvasRef}
+            width={640}
+            height={480}
+            style={{
+              display: 'block',
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+            }}
+          />
+          {/* Drawing canvas (transparent, user draws here) */}
+          <canvas
+            ref={drawCanvasRef}
+            width={640}
+            height={480}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+            onMouseLeave={onMouseLeave}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            style={{
+              cursor: 'crosshair',
+              display: 'block',
+              position: 'relative',
+              boxShadow: '0 4px 24px rgba(32,23,18,0.22)',
+              maxWidth: '100%',
+              maxHeight: '100%',
+            }}
+          />
+        </div>
       </div>
 
       {/* Colors & Palette Drawer */}
@@ -847,7 +563,7 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
                   if (colorTarget === 'fg') {
                     setColor(c)
                   } else {
-                    changeBgColor(c)
+                    setBgColor(c)
                   }
                 }}
                 style={{
@@ -879,7 +595,7 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
                 if (colorTarget === 'fg') {
                   setColor(e.target.value)
                 } else {
-                  changeBgColor(e.target.value)
+                  setBgColor(e.target.value)
                 }
               }}
               title="Couleur sur mesure"
@@ -899,18 +615,402 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
       </div>
     </div>
   )
+}
+
+// ─── Floating button ──────────────────────────────────────────────────────
+function FloatingButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      title="Ouvrir l'atelier de dessin"
+      style={{
+        position: 'fixed',
+        bottom: '2rem',
+        right: '2rem',
+        zIndex: 200,
+        width: '3.25rem',
+        height: '3.25rem',
+        borderRadius: '50%',
+        background: '#9d6a3b',
+        border: '1.5px solid #5b3221',
+        color: '#fffdfa',
+        fontSize: '1.4rem',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 4px 20px rgba(42,32,25,0.35)',
+        transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.background = '#5b3221'; e.currentTarget.style.transform = 'scale(1.1) rotate(10deg)'; }}
+      onMouseLeave={e => { e.currentTarget.style.background = '#9d6a3b'; e.currentTarget.style.transform = 'scale(1) rotate(0)'; }}
+    >
+      🎨
+    </button>
+  )
+}
+
+// ─── Main export ─────────────────────────────────────────────────────────
+export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' | 'panel' }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [tool, setTool] = useState<string>('pencil')
+  const [color, setColor] = useState('#9d6a3b')
+  const [bgColor, setBgColor] = useState('#f8f1e7')
+  const [size, setSize] = useState(8)
+  const [opacity, setOpacity] = useState(100)
+  const [colorTarget, setColorTarget] = useState<'fg' | 'bg'>('fg')
+  const [activePalette, setActivePalette] = useState<PaletteType>('terres')
+
+  // Double canvas: bg (solid color) + draw (transparent drawing layer)
+  const drawCanvasRef = useRef<HTMLCanvasElement | null>(null)
+  const bgCanvasRef = useRef<HTMLCanvasElement | null>(null)
+  const overlayRef = useRef<HTMLDivElement | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  const drawing = useRef(false)
+  const lastPos = useRef<{ x: number; y: number } | null>(null)
+  const startPos = useRef<{ x: number; y: number } | null>(null)
+  const snapshotRef = useRef<ImageData | null>(null)
+
+  // Undo/Redo Stacks (only for the draw canvas)
+  const undoStack = useRef<ImageData[]>([])
+  const redoStack = useRef<ImageData[]>([])
+  const [canUndo, setCanUndo] = useState(false)
+  const [canRedo, setCanRedo] = useState(false)
+
+  const saveCanvasState = useCallback(() => {
+    const canvas = drawCanvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    const currentImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    undoStack.current.push(currentImg)
+    if (undoStack.current.length > 25) {
+      undoStack.current.shift()
+    }
+    redoStack.current = []
+    setCanUndo(true)
+    setCanRedo(false)
+  }, [])
+
+  const handleUndo = useCallback(() => {
+    const canvas = drawCanvasRef.current
+    if (!canvas || undoStack.current.length === 0) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    const currentImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    redoStack.current.push(currentImg)
+    const prevImg = undoStack.current.pop()!
+    ctx.putImageData(prevImg, 0, 0)
+    setCanUndo(undoStack.current.length > 0)
+    setCanRedo(true)
+  }, [])
+
+  const handleRedo = useCallback(() => {
+    const canvas = drawCanvasRef.current
+    if (!canvas || redoStack.current.length === 0) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    const currentImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    undoStack.current.push(currentImg)
+    const nextImg = redoStack.current.pop()!
+    ctx.putImageData(nextImg, 0, 0)
+    setCanUndo(true)
+    setCanRedo(redoStack.current.length > 0)
+  }, [])
+
+  function getPos(e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) {
+    const canvas = drawCanvasRef.current!
+    const rect = canvas.getBoundingClientRect()
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+    return {
+      x: (clientX - rect.left) * (canvas.width / rect.width),
+      y: (clientY - rect.top) * (canvas.height / rect.height),
+    }
+  }
+
+  function applyStroke(ctx: CanvasRenderingContext2D, from: { x: number; y: number }, to: { x: number; y: number }) {
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+
+    if (tool === 'eraser') {
+      // Eraser: destination-out removes pixels only from the draw canvas
+      ctx.globalCompositeOperation = 'destination-out'
+      ctx.globalAlpha = opacity / 100
+      ctx.lineWidth = size * 3
+      ctx.strokeStyle = '#000000'
+      ctx.beginPath()
+      ctx.moveTo(from.x, from.y)
+      ctx.lineTo(to.x, to.y)
+      ctx.stroke()
+      ctx.globalCompositeOperation = 'source-over'
+      return
+    }
+
+    ctx.strokeStyle = color
+    ctx.globalAlpha = opacity / 100
+
+    if (tool === 'pencil') {
+      ctx.lineWidth = size
+      ctx.beginPath()
+      ctx.moveTo(from.x, from.y)
+      ctx.lineTo(to.x, to.y)
+      ctx.stroke()
+    } else if (tool === 'brush') {
+      ctx.lineWidth = size * 2.5
+      ctx.beginPath()
+      ctx.moveTo(from.x, from.y)
+      ctx.lineTo(to.x, to.y)
+      ctx.stroke()
+    } else if (tool === 'highlighter') {
+      ctx.strokeStyle = color
+      ctx.lineWidth = size * 4
+      ctx.lineCap = 'square'
+      ctx.lineJoin = 'miter'
+      ctx.globalAlpha = (opacity / 100) * 0.3
+      ctx.beginPath()
+      ctx.moveTo(from.x, from.y)
+      ctx.lineTo(to.x, to.y)
+      ctx.stroke()
+    } else if (tool === 'calligraphy') {
+      ctx.lineWidth = 1.5
+      const dx = to.x - from.x
+      const dy = to.y - from.y
+      const distance = Math.sqrt(dx * dx + dy * dy)
+      const steps = Math.max(Math.floor(distance), 1)
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps
+        const cx = from.x + dx * t
+        const cy = from.y + dy * t
+        ctx.beginPath()
+        const offset = size * 1.2
+        ctx.moveTo(cx - offset, cy + offset)
+        ctx.lineTo(cx + offset, cy - offset)
+        ctx.stroke()
+      }
+    } else if (tool === 'spray') {
+      const radius = size * 3
+      const density = Math.min(size * 4, 80)
+      ctx.fillStyle = color
+      const dx = to.x - from.x
+      const dy = to.y - from.y
+      const distance = Math.sqrt(dx * dx + dy * dy)
+      const steps = Math.max(Math.floor(distance / 5), 1)
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps
+        const cx = from.x + dx * t
+        const cy = from.y + dy * t
+        for (let i = 0; i < density; i++) {
+          const angle = Math.random() * Math.PI * 2
+          const r = Math.sqrt(Math.random()) * radius
+          const sx = cx + Math.cos(angle) * r
+          const sy = cy + Math.sin(angle) * r
+          ctx.fillRect(sx, sy, 1.5, 1.5)
+        }
+      }
+    }
+  }
+
+  function drawShape(ctx: CanvasRenderingContext2D, start: { x: number; y: number }, end: { x: number; y: number }) {
+    if (snapshotRef.current) ctx.putImageData(snapshotRef.current, 0, 0)
+    ctx.strokeStyle = color
+    ctx.lineWidth = size
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    ctx.globalAlpha = opacity / 100
+
+    if (tool === 'line') {
+      ctx.beginPath()
+      ctx.moveTo(start.x, start.y)
+      ctx.lineTo(end.x, end.y)
+      ctx.stroke()
+    } else if (tool === 'rect') {
+      ctx.strokeRect(start.x, start.y, end.x - start.x, end.y - start.y)
+    } else if (tool === 'circle') {
+      const rx = (end.x - start.x) / 2
+      const ry = (end.y - start.y) / 2
+      ctx.beginPath()
+      ctx.ellipse(start.x + rx, start.y + ry, Math.abs(rx), Math.abs(ry), 0, 0, Math.PI * 2)
+      ctx.stroke()
+    } else if (tool === 'triangle') {
+      ctx.beginPath()
+      ctx.moveTo(start.x + (end.x - start.x) / 2, start.y)
+      ctx.lineTo(end.x, end.y)
+      ctx.lineTo(start.x, end.y)
+      ctx.closePath()
+      ctx.stroke()
+    }
+  }
+
+  function onDown(e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) {
+    e.preventDefault()
+    const canvas = drawCanvasRef.current!
+    const ctx = canvas.getContext('2d')!
+    saveCanvasState()
+    const pos = getPos(e)
+    if (tool === 'fill') {
+      floodFill(ctx, pos.x, pos.y, color)
+      return
+    }
+    drawing.current = true
+    lastPos.current = pos
+    startPos.current = pos
+    if (['line', 'rect', 'circle', 'triangle'].includes(tool)) {
+      snapshotRef.current = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    }
+  }
+
+  function onMove(e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) {
+    e.preventDefault()
+    if (!drawing.current) return
+    const canvas = drawCanvasRef.current!
+    const ctx = canvas.getContext('2d')!
+    const pos = getPos(e)
+    if (['pencil', 'brush', 'eraser', 'calligraphy', 'spray', 'highlighter'].includes(tool)) {
+      applyStroke(ctx, lastPos.current!, pos)
+      lastPos.current = pos
+    } else {
+      drawShape(ctx, startPos.current!, pos)
+    }
+  }
+
+  function onUp() {
+    if (!drawing.current) return
+    drawing.current = false
+    const canvas = drawCanvasRef.current!
+    const ctx = canvas.getContext('2d')!
+    const pos = lastPos.current || { x: 0, y: 0 }
+    ctx.globalAlpha = opacity / 100
+    if (['line', 'rect', 'circle', 'triangle'].includes(tool)) {
+      drawShape(ctx, startPos.current!, pos)
+    }
+    ctx.globalAlpha = 1
+  }
+
+  const handleClearCanvas = useCallback(() => {
+    const canvas = drawCanvasRef.current!
+    const ctx = canvas.getContext('2d')!
+    saveCanvasState()
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+  }, [saveCanvasState])
+
+  const handleDownload = useCallback(() => {
+    const drawCanvas = drawCanvasRef.current
+    const bgCanvas = bgCanvasRef.current
+    if (!drawCanvas || !bgCanvas) return
+
+    // Create a temporary canvas to compose both layers
+    const tempCanvas = document.createElement('canvas')
+    tempCanvas.width = drawCanvas.width
+    tempCanvas.height = drawCanvas.height
+    const tempCtx = tempCanvas.getContext('2d')!
+    // 1. Draw background
+    tempCtx.drawImage(bgCanvas, 0, 0)
+    // 2. Draw drawing layer on top
+    tempCtx.drawImage(drawCanvas, 0, 0)
+
+    const link = document.createElement('a')
+    link.download = 'artplastique-creation.png'
+    link.href = tempCanvas.toDataURL()
+    link.click()
+  }, [])
+
+  const handleImageUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const img = new Image()
+      img.onload = () => {
+        const drawCanvas = drawCanvasRef.current
+        const bgCanvas = bgCanvasRef.current
+        if (!drawCanvas || !bgCanvas) return
+        const drawCtx = drawCanvas.getContext('2d')
+        const bgCtx = bgCanvas.getContext('2d')
+        if (!drawCtx || !bgCtx) return
+
+        // Preserve drawing layer state for undo
+        saveCanvasState()
+
+        // Scale image to fit canvas while preserving aspect ratio
+        const canvasRatio = drawCanvas.width / drawCanvas.height
+        const imgRatio = img.width / img.height
+        let drawWidth = drawCanvas.width
+        let drawHeight = drawCanvas.height
+        let x = 0
+        let y = 0
+        if (imgRatio > canvasRatio) {
+          drawHeight = drawCanvas.width / imgRatio
+          y = (drawCanvas.height - drawHeight) / 2
+        } else {
+          drawWidth = drawCanvas.height * imgRatio
+          x = (drawCanvas.width - drawWidth) / 2
+        }
+        // Put image on bg canvas
+        bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height)
+        bgCtx.drawImage(img, x, y, drawWidth, drawHeight)
+      }
+      img.src = event.target?.result as string
+    }
+    reader.readAsDataURL(file)
+    e.target.value = ''
+  }, [saveCanvasState])
 
   if (mode === 'panel') {
     return (
       <div style={{ width: '100%', height: '100%', minHeight: '520px' }}>
-        <PanelContent />
+        <PanelContent
+          tool={tool}
+          setTool={setTool}
+          color={color}
+          setColor={setColor}
+          bgColor={bgColor}
+          setBgColor={setBgColor}
+          size={size}
+          setSize={setSize}
+          opacity={opacity}
+          setOpacity={setOpacity}
+          colorTarget={colorTarget}
+          setColorTarget={setColorTarget}
+          activePalette={activePalette}
+          setActivePalette={setActivePalette}
+          drawCanvasRef={drawCanvasRef}
+          bgCanvasRef={bgCanvasRef}
+          fileInputRef={fileInputRef}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          mode={mode}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          handleUndo={handleUndo}
+          handleRedo={handleRedo}
+          handleClearCanvas={handleClearCanvas}
+          handleDownload={handleDownload}
+          onMouseDown={onDown}
+          onMouseMove={onMove}
+          onMouseUp={onUp}
+          onMouseLeave={onUp}
+          onTouchStart={onDown}
+          onTouchMove={onMove}
+          onTouchEnd={onUp}
+        />
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImageUpload}
+          accept="image/*"
+          style={{ display: 'none' }}
+        />
       </div>
     )
   }
 
   return (
     <>
-      {!isOpen && <FloatingButton />}
+      {!isOpen && (
+        <FloatingButton onClick={() => setIsOpen(true)} />
+      )}
 
       {isOpen && (
         <div
@@ -924,7 +1024,7 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
             justifyContent: 'flex-end',
           }}
         >
-          {/* Transparent Backdrop (without blur, as requested by user) */}
+          {/* Transparent Backdrop */}
           <div
             onClick={() => setIsOpen(false)}
             style={{
@@ -948,7 +1048,48 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
                 to   { transform: translateX(0);    opacity: 1; }
               }
             `}</style>
-            <PanelContent />
+            <PanelContent
+              tool={tool}
+              setTool={setTool}
+              color={color}
+              setColor={setColor}
+              bgColor={bgColor}
+              setBgColor={setBgColor}
+              size={size}
+              setSize={setSize}
+              opacity={opacity}
+              setOpacity={setOpacity}
+              colorTarget={colorTarget}
+              setColorTarget={setColorTarget}
+              activePalette={activePalette}
+              setActivePalette={setActivePalette}
+              drawCanvasRef={drawCanvasRef}
+              bgCanvasRef={bgCanvasRef}
+              fileInputRef={fileInputRef}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              mode={mode}
+              canUndo={canUndo}
+              canRedo={canRedo}
+              handleUndo={handleUndo}
+              handleRedo={handleRedo}
+              handleClearCanvas={handleClearCanvas}
+              handleDownload={handleDownload}
+              onMouseDown={onDown}
+              onMouseMove={onMove}
+              onMouseUp={onUp}
+              onMouseLeave={onUp}
+              onTouchStart={onDown}
+              onTouchMove={onMove}
+              onTouchEnd={onUp}
+            />
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              accept="image/*"
+              style={{ display: 'none' }}
+            />
           </div>
         </div>
       )}
