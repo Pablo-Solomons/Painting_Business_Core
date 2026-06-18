@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useRef, useState, useEffect, useCallback } from 'react'
+import { generatePaintCommands, type AIContext, type DrawCommand } from '@/lib/aiPaintService'
+import { useDemoStore } from '@/context/DemoStoreContext'
 
 // ─── Palettes de couleurs artistiques ───────────────────────────────────────────
 const PALETTES = {
@@ -99,6 +101,9 @@ function PanelContent({
   handleUndo, handleRedo,
   handleClearCanvas,
   handleDownload,
+  isAiPainting,
+  aiStatusMessage,
+  handleAiPaint,
   onMouseDown,
   onMouseMove,
   onMouseUp,
@@ -133,6 +138,9 @@ function PanelContent({
   handleRedo: () => void
   handleClearCanvas: () => void
   handleDownload: () => void
+  isAiPainting: boolean
+  aiStatusMessage: string
+  handleAiPaint: () => void
   onMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void
   onMouseMove: (e: React.MouseEvent<HTMLCanvasElement>) => void
   onMouseUp: () => void
@@ -184,14 +192,14 @@ function PanelContent({
         <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
           <button
             onClick={handleUndo}
-            disabled={!canUndo}
+            disabled={!canUndo || isAiPainting}
             title="Annuler (Ctrl+Z)"
             style={{
               width: '2.1rem', height: '2.1rem',
-              background: canUndo ? 'rgba(214,177,137,0.18)' : 'transparent',
+              background: canUndo && !isAiPainting ? 'rgba(214,177,137,0.18)' : 'transparent',
               border: '1px solid rgba(214,177,137,0.25)',
-              color: canUndo ? '#d6b189' : 'rgba(214,177,137,0.35)',
-              cursor: canUndo ? 'pointer' : 'not-allowed',
+              color: canUndo && !isAiPainting ? '#d6b189' : 'rgba(214,177,137,0.35)',
+              cursor: canUndo && !isAiPainting ? 'pointer' : 'not-allowed',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '0.9rem', transition: 'background 0.2s',
             }}
@@ -201,19 +209,42 @@ function PanelContent({
 
           <button
             onClick={handleRedo}
-            disabled={!canRedo}
+            disabled={!canRedo || isAiPainting}
             title="Rétablir (Ctrl+Y)"
             style={{
               width: '2.1rem', height: '2.1rem',
-              background: canRedo ? 'rgba(214,177,137,0.18)' : 'transparent',
+              background: canRedo && !isAiPainting ? 'rgba(214,177,137,0.18)' : 'transparent',
               border: '1px solid rgba(214,177,137,0.25)',
-              color: canRedo ? '#d6b189' : 'rgba(214,177,137,0.35)',
-              cursor: canRedo ? 'pointer' : 'not-allowed',
+              color: canRedo && !isAiPainting ? '#d6b189' : 'rgba(214,177,137,0.35)',
+              cursor: canRedo && !isAiPainting ? 'pointer' : 'not-allowed',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '0.9rem', transition: 'background 0.2s',
             }}
           >
             ↪️
+          </button>
+
+          <div style={{ width: 1, height: '1.4rem', background: 'rgba(214,177,137,0.2)', margin: '0 0.2rem' }} />
+
+          {/* AI Inspiration Button */}
+          <button
+            onClick={handleAiPaint}
+            disabled={isAiPainting}
+            title="Demander à l'IA de peindre une illustration inspirée de la page"
+            style={{
+              width: '2.1rem', height: '2.1rem',
+              background: isAiPainting ? 'rgba(100,200,100,0.25)' : 'rgba(100,200,100,0.15)',
+              border: '1px solid rgba(100,200,100,0.4)',
+              color: isAiPainting ? '#a0e0a0' : '#7bc07b',
+              cursor: isAiPainting ? 'not-allowed' : 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.9rem', transition: 'background 0.15s',
+              animation: isAiPainting ? 'pulse 1s ease-in-out infinite' : 'none',
+            }}
+            onMouseEnter={e => { if (!isAiPainting) e.currentTarget.style.background = 'rgba(100,200,100,0.3)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = isAiPainting ? 'rgba(100,200,100,0.25)' : 'rgba(100,200,100,0.15)'; }}
+          >
+            💡
           </button>
 
           <div style={{ width: 1, height: '1.4rem', background: 'rgba(214,177,137,0.2)', margin: '0 0.2rem' }} />
@@ -434,7 +465,18 @@ function PanelContent({
         background: '#cbd2c7',
         backgroundImage: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0, rgba(0,0,0,0.02) 1px, transparent 0, transparent 50%)',
         backgroundSize: '12px 12px',
+        position: 'relative',
       }}>
+        <style>{`
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+          }
+          @keyframes aiPulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+          }
+        `}</style>
         <div style={{ position: 'relative', maxWidth: '100%', maxHeight: '100%' }}>
           {/* Background canvas (solid color) */}
           <canvas
@@ -454,15 +496,15 @@ function PanelContent({
             ref={drawCanvasRef}
             width={640}
             height={480}
-            onMouseDown={onMouseDown}
-            onMouseMove={onMouseMove}
-            onMouseUp={onMouseUp}
-            onMouseLeave={onMouseLeave}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
+            onMouseDown={isAiPainting ? undefined : onMouseDown}
+            onMouseMove={isAiPainting ? undefined : onMouseMove}
+            onMouseUp={isAiPainting ? undefined : onMouseUp}
+            onMouseLeave={isAiPainting ? undefined : onMouseLeave}
+            onTouchStart={isAiPainting ? undefined : onTouchStart}
+            onTouchMove={isAiPainting ? undefined : onTouchMove}
+            onTouchEnd={isAiPainting ? undefined : onTouchEnd}
             style={{
-              cursor: 'crosshair',
+              cursor: isAiPainting ? 'not-allowed' : 'crosshair',
               display: 'block',
               position: 'relative',
               boxShadow: '0 4px 24px rgba(32,23,18,0.22)',
@@ -470,6 +512,41 @@ function PanelContent({
               maxHeight: '100%',
             }}
           />
+
+          {/* AI Painting Overlay */}
+          {isAiPainting && aiStatusMessage && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(0,0,0,0.35)',
+                zIndex: 10,
+                pointerEvents: 'none',
+              }}
+            >
+              <div
+                style={{
+                  background: 'rgba(42,32,25,0.85)',
+                  color: '#d6b189',
+                  padding: '0.8rem 1.6rem',
+                  borderRadius: '8px',
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: '0.95rem',
+                  fontWeight: 600,
+                  textAlign: 'center',
+                  animation: 'aiPulse 1.5s ease-in-out infinite',
+                  border: '1px solid rgba(214,177,137,0.3)',
+                  maxWidth: '80%',
+                }}
+              >
+                {aiStatusMessage}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -660,6 +737,169 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
   const [opacity, setOpacity] = useState(100)
   const [colorTarget, setColorTarget] = useState<'fg' | 'bg'>('fg')
   const [activePalette, setActivePalette] = useState<PaletteType>('terres')
+
+  // ─── AI Painting state ─────────────────────────────────────────────────
+  const [isAiPainting, setIsAiPainting] = useState(false)
+  const [aiStatusMessage, setAiStatusMessage] = useState('')
+  const aiCancelRef = useRef(false)
+  const { getFicheBySlug, getRoadmapBySlug } = useDemoStore()
+
+  // ─── Detect current page context ───────────────────────────────────────
+  function detectPageContext(): AIContext | null {
+    if (typeof window === 'undefined') return null
+    const path = window.location.pathname
+
+    // Match /fiches/<slug>
+    const ficheMatch = path.match(/^\/fiches\/([^/]+)/)
+    if (ficheMatch) {
+      const slug = ficheMatch[1]
+      const fiche = getFicheBySlug(slug)
+      if (fiche) {
+        return {
+          type: 'fiche',
+          title: fiche.title,
+          summary: fiche.summary,
+          tags: fiche.tags,
+          category: fiche.category,
+          tool: fiche.tool,
+          level: fiche.level,
+        }
+      }
+    }
+
+    // Match /roadmaps/<slug>
+    const roadmapMatch = path.match(/^\/roadmaps\/([^/]+)/)
+    if (roadmapMatch) {
+      const slug = roadmapMatch[1]
+      const roadmap = getRoadmapBySlug(slug)
+      if (roadmap) {
+        return {
+          type: 'roadmap',
+          title: roadmap.title,
+          summary: roadmap.summary,
+          tags: [], // roadmaps don't have tags
+          category: roadmap.level,
+          level: roadmap.level,
+        }
+      }
+    }
+
+    return null
+  }
+
+  // ─── Execute a single draw command on the canvas ──────────────────────
+  function executeCommand(ctx: CanvasRenderingContext2D, bgCtx: CanvasRenderingContext2D, cmd: DrawCommand) {
+    switch (cmd.action) {
+      case 'setBg':
+        bgCtx.fillStyle = cmd.color
+        bgCtx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+        break
+      case 'setColor':
+        ctx.strokeStyle = cmd.color
+        ctx.fillStyle = cmd.color
+        break
+      case 'setSize':
+        ctx.lineWidth = cmd.size
+        break
+      case 'setOpacity':
+        ctx.globalAlpha = cmd.opacity
+        break
+      case 'clear':
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+        break
+      case 'line':
+        ctx.beginPath()
+        ctx.moveTo(cmd.x1, cmd.y1)
+        ctx.lineTo(cmd.x2, cmd.y2)
+        ctx.stroke()
+        break
+      case 'circle':
+        ctx.beginPath()
+        ctx.ellipse(cmd.cx, cmd.cy, cmd.r, cmd.r, 0, 0, Math.PI * 2)
+        ctx.stroke()
+        break
+      case 'rect':
+        ctx.strokeRect(cmd.x, cmd.y, cmd.w, cmd.h)
+        break
+      case 'fill':
+        floodFill(ctx, cmd.x, cmd.y, cmd.color)
+        break
+      case 'dot': {
+        const r = Math.max(ctx.lineWidth, 2) / 2
+        ctx.beginPath()
+        ctx.ellipse(cmd.x, cmd.y, r, r, 0, 0, Math.PI * 2)
+        ctx.fill()
+        break
+      }
+      case 'spray': {
+        const density = cmd.density ?? 20
+        const radius = cmd.radius ?? 30
+        for (let i = 0; i < density; i++) {
+          const angle = Math.random() * Math.PI * 2
+          const r = Math.sqrt(Math.random()) * radius
+          ctx.fillRect(cmd.x + Math.cos(angle) * r, cmd.y + Math.sin(angle) * r, 1.5, 1.5)
+        }
+        break
+      }
+    }
+  }
+
+  // ─── Animate AI painting ──────────────────────────────────────────────
+  async function animateAiPaint(commands: DrawCommand[]) {
+    const canvas = drawCanvasRef.current
+    const bgCanvas = bgCanvasRef.current
+    if (!canvas || !bgCanvas) return
+
+    const ctx = canvas.getContext('2d')
+    const bgCtx = bgCanvas.getContext('2d')
+    if (!ctx || !bgCtx) return
+
+    // Save current state for undo
+    saveCanvasState()
+
+    // Lock interaction
+    setIsAiPainting(true)
+
+    // Animate commands
+    for (let i = 0; i < commands.length; i++) {
+      if (aiCancelRef.current) break
+      setAiStatusMessage(`L'IA peint… ${Math.round((i / commands.length) * 100)}%`)
+
+      executeCommand(ctx, bgCtx, commands[i])
+
+      // Delay between commands for visual effect
+      await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 200))
+    }
+
+    if (!aiCancelRef.current) {
+      setAiStatusMessage('✨ Inspiration terminée !')
+      await new Promise(resolve => setTimeout(resolve, 1200))
+    }
+
+    setIsAiPainting(false)
+    setAiStatusMessage('')
+    aiCancelRef.current = false
+  }
+
+  // ─── Handle AI Paint button ───────────────────────────────────────────
+  const handleAiPaint = useCallback(async () => {
+    const context = detectPageContext()
+    if (!context) {
+      setAiStatusMessage('ℹ️ Ouvrez une fiche ou roadmap pour utiliser l\'IA')
+      setIsAiPainting(true)
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      setIsAiPainting(false)
+      setAiStatusMessage('')
+      return
+    }
+
+    aiCancelRef.current = false
+    setAiStatusMessage('🤔 L\'IA réfléchit à une composition…')
+    setIsAiPainting(true)
+
+    const commands = await generatePaintCommands(context)
+    await animateAiPaint(commands)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Double canvas: bg (solid color) + draw (transparent drawing layer)
   const drawCanvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -987,6 +1227,9 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
           handleRedo={handleRedo}
           handleClearCanvas={handleClearCanvas}
           handleDownload={handleDownload}
+          isAiPainting={isAiPainting}
+          aiStatusMessage={aiStatusMessage}
+          handleAiPaint={handleAiPaint}
           onMouseDown={onDown}
           onMouseMove={onMove}
           onMouseUp={onUp}
@@ -1075,6 +1318,9 @@ export default function PaintCanvas({ mode = 'floating' }: { mode?: 'floating' |
               handleRedo={handleRedo}
               handleClearCanvas={handleClearCanvas}
               handleDownload={handleDownload}
+              isAiPainting={isAiPainting}
+              aiStatusMessage={aiStatusMessage}
+              handleAiPaint={handleAiPaint}
               onMouseDown={onDown}
               onMouseMove={onMove}
               onMouseUp={onUp}
