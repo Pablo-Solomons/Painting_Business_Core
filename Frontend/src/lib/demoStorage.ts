@@ -88,6 +88,33 @@ export function upsertRegisteredUser(user: DemoUser) {
   saveRegisteredUsers(users)
 }
 
+export function deleteRegisteredUser(userId: string): boolean {
+  const users = loadRegisteredUsers()
+  const idx = users.findIndex((u) => u.id === userId)
+  if (idx < 0) return false
+  users.splice(idx, 1)
+  saveRegisteredUsers(users)
+  return true
+}
+
+export function suspendRegisteredUser(userId: string): boolean {
+  const users = loadRegisteredUsers()
+  const idx = users.findIndex((u) => u.id === userId)
+  if (idx < 0) return false
+  users[idx] = { ...users[idx], status: 'suspended' }
+  saveRegisteredUsers(users)
+  return true
+}
+
+export function unsuspendRegisteredUser(userId: string): boolean {
+  const users = loadRegisteredUsers()
+  const idx = users.findIndex((u) => u.id === userId)
+  if (idx < 0) return false
+  users[idx] = { ...users[idx], status: 'active' }
+  saveRegisteredUsers(users)
+  return true
+}
+
 export function clearRegisteredUsers() {
   if (typeof window === 'undefined') return
   window.localStorage.removeItem(USERS_KEY)
