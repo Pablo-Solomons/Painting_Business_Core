@@ -1,0 +1,955 @@
+'use client';
+
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+
+// ─── Palettes de couleurs artistiques ───────────────────────────────────────────
+const PALETTES = {
+  terres: {
+    label: 'Terres & Tradition',
+    colors: ['#201712', '#3f2c22', '#5b3221', '#9d6a3b', '#d6b189', '#eadfce', '#e6d9c7', '#7b6b5d', '#7a2a1a', '#b05a2a']
+  },
+  impressionniste: {
+    label: 'Impressionnisme',
+    colors: ['#2a4a6a', '#4a7aaa', '#8abadf', '#6a7662', '#a0b08a', '#c8b45a', '#d44a2a', '#e8884a', '#fffdfa', '#f8f1e7']
+  },
+  pop: {
+    label: 'Pop / Moderne',
+    colors: ['#ff0055', '#ff5500', '#ffcc00', '#33cc33', '#0099ff', '#7700ff', '#ff00ff', '#000000', '#888888', '#ffffff']
+  },
+  monochrome: {
+    label: 'Monochrome',
+    colors: ['#000000', '#222222', '#444444', '#666666', '#888888', '#aaaaaa', '#cccccc', '#eeeeee', '#ffffff', '#eadfce']
+  }
+};
+
+const TOOLS = [
+  { id: 'pencil',      label: 'Crayon',       icon: '✏️',   desc: 'Trait fin et précis' },
+  { id: 'brush',       label: 'Pinceau',      icon: '🖌️',   desc: 'Trait fluide classique' },
+  { id: 'calligraphy', label: 'Calligraphie', icon: '🖋️',   desc: 'Plume plate biseautée' },
+  { id: 'spray',       label: 'Aérographe',   icon: '💨',   desc: 'Spray moucheté texturé' },
+  { id: 'highlighter', label: 'Surligneur',   icon: '🖍️',   desc: 'Trait large semi-transparent' },
+  { id: 'eraser',      label: 'Gomme',        icon: '⬜',   desc: 'Gommer la peinture' },
+  { id: 'fill',        label: 'Remplir',      icon: '🪣',   desc: 'Remplir une zone' },
+  { id: 'line',        label: 'Ligne',        icon: '╱',    desc: 'Ligne droite' },
+  { id: 'rect',        label: 'Rectangle',    icon: '▭',    desc: 'Dessiner un rectangle' },
+  { id: 'circle',      label: 'Cercle',       icon: '○',    desc: 'Dessiner un cercle' },
+  { id: 'triangle',    label: 'Triangle',     icon: '▲',    desc: 'Dessiner un triangle' },
+];
+
+const SIZES = [2, 4, 8, 14, 22, 32, 48];
+
+function hexToRgba(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return [r, g, b, 255];
+}
+
+function floodFill(ctx, x, y, fillColor) {
+  const canvas = ctx.canvas;
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+  const idx = (Math.round(y) * canvas.width + Math.round(x)) * 4;
+  const target = [data[idx], data[idx+1], data[idx+2], data[idx+3]];
+  const fill = hexToRgba(fillColor);
+  if (target.every((v, i) => v === fill[i])) return;
+
+  const stack = [[Math.round(x), Math.round(y)]];
+  const w = canvas.width, h = canvas.height;
+  const visited = new Uint8Array(w * h);
+
+  function match(i) {
+    return data[i] === target[0] && data[i+1] === target[1] && data[i+2] === target[2] && data[i+3] === target[3];
+  }
+  function paint(px, py) {
+    const i = (py * w + px) * 4;
+    data[i] = fill[0]; data[i+1] = fill[1]; data[i+2] = fill[2]; data[i+3] = fill[3];
+  }
+
+  while (stack.length) {
+    const [cx, cy] = stack.pop();
+    if (cx < 0 || cy < 0 || cx >= w || cy >= h) continue;
+    const vi = cy * w + cx;
+    if (visited[vi]) continue;
+    visited[vi] = 1;
+    if (!match((cy * w + cx) * 4)) continue;
+    paint(cx, cy);
+    stack.push([cx+1,cy],[cx-1,cy],[cx,cy+1],[cx,cy-1]);
+  }
+  ctx.putImageData(imageData, 0, 0);
+}
+
+export default function PaintCanvas({ mode = 'floating' }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [tool, setTool] = useState('pencil');
+  const [color, setColor] = useState('#9d6a3b');
+  const [bgColor, setBgColor] = useState('#f8f1e7');
+  const [size, setSize] = useState(8);
+  const [opacity, setOpacity] = useState(100);
+  const [colorTarget, setColorTarget] = useState('fg');
+  const [activePalette, setActivePalette] = useState('terres');
+
+  const canvasRef = useRef(null);
+  const overlayRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  const drawing = useRef(false);
+  const lastPos = useRef(null);
+  const startPos = useRef(null);
+  const snapshotRef = useRef(null);
+
+  // Undo/Redo Stacks
+  const undoStack = useRef([]);
+  const redoStack = useRef([]);
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
+  const isInitialized = useRef(false);
+
+  const saveCanvasState = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const currentImg = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    undoStack.current.push(currentImg);
+    if (undoStack.current.length > 25) {
+      undoStack.current.shift();
+    }
+    redoStack.current = []; // clear redo on new action
+    setCanUndo(true);
+    setCanRedo(false);
+  }, []);
+
+  const handleUndo = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || undoStack.current.length === 0) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Push current to redo
+    const currentImg = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    redoStack.current.push(currentImg);
+
+    // Restore previous
+    const prevImg = undoStack.current.pop();
+    ctx.putImageData(prevImg, 0, 0);
+
+    setCanUndo(undoStack.current.length > 0);
+    setCanRedo(true);
+  }, []);
+
+  const handleRedo = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || redoStack.current.length === 0) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Push current to undo
+    const currentImg = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    undoStack.current.push(currentImg);
+
+    // Restore next
+    const nextImg = redoStack.current.pop();
+    ctx.putImageData(nextImg, 0, 0);
+
+    setCanUndo(true);
+    setCanRedo(redoStack.current.length > 0);
+  }, []);
+
+  const initCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }, [bgColor]);
+
+  useEffect(() => {
+    if (isOpen && !isInitialized.current) {
+      setTimeout(() => {
+        initCanvas();
+        isInitialized.current = true;
+      }, 50);
+    }
+  }, [isOpen, initCanvas]);
+
+  function getPos(e) {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: (clientX - rect.left) * (canvas.width / rect.width),
+      y: (clientY - rect.top) * (canvas.height / rect.height),
+    };
+  }
+
+  function applyStroke(ctx, from, to) {
+    ctx.strokeStyle = tool === 'eraser' ? bgColor : color;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = opacity / 100;
+
+    if (tool === 'pencil') {
+      ctx.lineWidth = size;
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.stroke();
+    } else if (tool === 'brush') {
+      ctx.lineWidth = size * 2.5;
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.stroke();
+    } else if (tool === 'highlighter') {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = size * 4;
+      ctx.lineCap = 'square';
+      ctx.lineJoin = 'miter';
+      ctx.globalAlpha = (opacity / 100) * 0.3;
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.stroke();
+    } else if (tool === 'eraser') {
+      ctx.lineWidth = size * 3;
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.stroke();
+    } else if (tool === 'calligraphy') {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const steps = Math.max(Math.floor(distance), 1);
+
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const cx = from.x + dx * t;
+        const cy = from.y + dy * t;
+        ctx.beginPath();
+        const offset = size * 1.2;
+        ctx.moveTo(cx - offset, cy + offset);
+        ctx.lineTo(cx + offset, cy - offset);
+        ctx.stroke();
+      }
+    } else if (tool === 'spray') {
+      const radius = size * 3;
+      const density = Math.min(size * 4, 80);
+      ctx.fillStyle = color;
+      
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const steps = Math.max(Math.floor(distance / 5), 1);
+
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps;
+        const cx = from.x + dx * t;
+        const cy = from.y + dy * t;
+
+        for (let i = 0; i < density; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const r = Math.sqrt(Math.random()) * radius;
+          const sx = cx + Math.cos(angle) * r;
+          const sy = cy + Math.sin(angle) * r;
+          ctx.fillRect(sx, sy, 1.5, 1.5);
+        }
+      }
+    }
+  }
+
+  function drawShape(ctx, start, end) {
+    if (snapshotRef.current) ctx.putImageData(snapshotRef.current, 0, 0);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = opacity / 100;
+
+    if (tool === 'line') {
+      ctx.beginPath();
+      ctx.moveTo(start.x, start.y);
+      ctx.lineTo(end.x, end.y);
+      ctx.stroke();
+    } else if (tool === 'rect') {
+      ctx.strokeRect(start.x, start.y, end.x - start.x, end.y - start.y);
+    } else if (tool === 'circle') {
+      const rx = (end.x - start.x) / 2;
+      const ry = (end.y - start.y) / 2;
+      ctx.beginPath();
+      ctx.ellipse(start.x + rx, start.y + ry, Math.abs(rx), Math.abs(ry), 0, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (tool === 'triangle') {
+      ctx.beginPath();
+      ctx.moveTo(start.x + (end.x - start.x) / 2, start.y);
+      ctx.lineTo(end.x, end.y);
+      ctx.lineTo(start.x, end.y);
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+
+  function onDown(e) {
+    e.preventDefault();
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    // Save history state before starting stroke
+    saveCanvasState();
+
+    const pos = getPos(e);
+    if (tool === 'fill') {
+      floodFill(ctx, pos.x, pos.y, color);
+      return;
+    }
+    drawing.current = true;
+    lastPos.current = pos;
+    startPos.current = pos;
+    if (['line', 'rect', 'circle', 'triangle'].includes(tool)) {
+      snapshotRef.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  function onMove(e) {
+    e.preventDefault();
+    if (!drawing.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const pos = getPos(e);
+
+    if (['pencil', 'brush', 'eraser', 'calligraphy', 'spray', 'highlighter'].includes(tool)) {
+      applyStroke(ctx, lastPos.current, pos);
+      lastPos.current = pos;
+    } else {
+      drawShape(ctx, startPos.current, pos);
+    }
+  }
+
+  function onUp() {
+    if (!drawing.current) return;
+    drawing.current = false;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const pos = lastPos.current || { x: 0, y: 0 };
+
+    ctx.globalAlpha = opacity / 100;
+    if (['line', 'rect', 'circle', 'triangle'].includes(tool)) {
+      drawShape(ctx, startPos.current, pos);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function clearCanvas() {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    saveCanvasState();
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function changeBgColor(newBg) {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    saveCanvasState();
+    setBgColor(newBg);
+    
+    // Draw background color underneath using destination-over
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = newBg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+  }
+
+  function downloadCanvas() {
+    const canvas = canvasRef.current;
+    const link = document.createElement('a');
+    link.download = 'artplastique-creation.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  }
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        
+        saveCanvasState();
+        
+        // Scale image to fit canvas while preserving aspect ratio
+        const canvasRatio = canvas.width / canvas.height;
+        const imgRatio = img.width / img.height;
+        let drawWidth = canvas.width;
+        let drawHeight = canvas.height;
+        let x = 0;
+        let y = 0;
+        
+        if (imgRatio > canvasRatio) {
+          drawHeight = canvas.width / imgRatio;
+          y = (canvas.height - drawHeight) / 2;
+        } else {
+          drawWidth = canvas.height * imgRatio;
+          x = (canvas.width - drawWidth) / 2;
+        }
+        
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, x, y, drawWidth, drawHeight);
+      };
+      img.src = event.target?.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const FloatingButton = () => (
+    <button
+      onClick={() => setIsOpen(true)}
+      title="Ouvrir l'atelier de dessin"
+      style={{
+        position: 'fixed',
+        bottom: '2rem',
+        right: '2rem',
+        zIndex: 200,
+        width: '3.25rem',
+        height: '3.25rem',
+        borderRadius: '50%',
+        background: '#9d6a3b',
+        border: '1.5px solid #5b3221',
+        color: '#fffdfa',
+        fontSize: '1.4rem',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 4px 20px rgba(42,32,25,0.35)',
+        transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.background = '#5b3221'; e.currentTarget.style.transform = 'scale(1.1) rotate(10deg)'; }}
+      onMouseLeave={e => { e.currentTarget.style.background = '#9d6a3b'; e.currentTarget.style.transform = 'scale(1) rotate(0)'; }}
+    >
+      🎨
+    </button>
+  );
+
+  const PanelContent = () => (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      background: '#f4ece1',
+      fontFamily: "'DM Sans', sans-serif",
+      color: '#2a2019',
+    }}>
+      {/* Header Bar */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0.75rem 1.2rem',
+        background: '#2a2019',
+        borderBottom: '2px solid rgba(42,32,25,0.3)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.2rem' }}>🎨</span>
+          <span style={{
+            fontFamily: "'Playfair Display', serif",
+            color: '#d6b189',
+            fontSize: '1.05rem',
+            fontWeight: 700,
+            letterSpacing: '0.04em',
+          }}>
+            Atelier de Création
+          </span>
+        </div>
+        
+        {/* Undo/Redo & Utility Actions */}
+        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          <button
+            onClick={handleUndo}
+            disabled={!canUndo}
+            title="Annuler (Ctrl+Z)"
+            style={{
+              width: '2.1rem', height: '2.1rem',
+              background: canUndo ? 'rgba(214,177,137,0.18)' : 'transparent',
+              border: '1px solid rgba(214,177,137,0.25)',
+              color: canUndo ? '#d6b189' : 'rgba(214,177,137,0.35)',
+              cursor: canUndo ? 'pointer' : 'not-allowed',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.9rem', transition: 'background 0.2s',
+            }}
+          >
+            ↩️
+          </button>
+          
+          <button
+            onClick={handleRedo}
+            disabled={!canRedo}
+            title="Rétablir (Ctrl+Y)"
+            style={{
+              width: '2.1rem', height: '2.1rem',
+              background: canRedo ? 'rgba(214,177,137,0.18)' : 'transparent',
+              border: '1px solid rgba(214,177,137,0.25)',
+              color: canRedo ? '#d6b189' : 'rgba(214,177,137,0.35)',
+              cursor: canRedo ? 'pointer' : 'not-allowed',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.9rem', transition: 'background 0.2s',
+            }}
+          >
+            ↪️
+          </button>
+
+          <div style={{ width: 1, height: '1.4rem', background: 'rgba(214,177,137,0.2)', margin: '0 0.2rem' }} />
+
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            title="Importer une image de fond"
+            style={{
+              width: '2.1rem', height: '2.1rem',
+              background: 'rgba(214,177,137,0.15)',
+              border: '1px solid rgba(214,177,137,0.3)',
+              color: '#d6b189',
+              cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.95rem', transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(214,177,137,0.25)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(214,177,137,0.15)'}
+          >
+            🖼️
+          </button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageUpload}
+            accept="image/*"
+            style={{ display: 'none' }}
+          />
+
+          <button
+            onClick={downloadCanvas}
+            title="Télécharger l'œuvre"
+            style={{
+              width: '2.1rem', height: '2.1rem',
+              background: 'rgba(214,177,137,0.15)',
+              border: '1px solid rgba(214,177,137,0.3)',
+              color: '#d6b189',
+              cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.95rem', transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(214,177,137,0.25)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(214,177,137,0.15)'}
+          >
+            ⬇️
+          </button>
+
+          <button
+            onClick={clearCanvas}
+            title="Tout effacer"
+            style={{
+              width: '2.1rem', height: '2.1rem',
+              background: 'rgba(214,177,137,0.15)',
+              border: '1px solid rgba(214,177,137,0.3)',
+              color: '#d6b189',
+              cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.95rem', transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(214,177,137,0.25)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(214,177,137,0.15)'}
+          >
+            🗑️
+          </button>
+
+          {mode === 'floating' && (
+            <button
+              onClick={() => setIsOpen(false)}
+              title="Fermer"
+              style={{
+                width: '2.1rem', height: '2.1rem',
+                background: 'rgba(220,100,100,0.18)',
+                border: '1px solid rgba(220,100,100,0.35)',
+                color: '#ff9494',
+                cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '0.8rem', transition: 'background 0.15s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(220,100,100,0.35)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(220,100,100,0.18)'}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Main Toolbar & Settings */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.5rem',
+        padding: '0.6rem 0.9rem',
+        background: '#ebdcc5',
+        borderBottom: '1px solid rgba(42,32,25,0.15)',
+      }}>
+        {/* Row 1: Brush styles */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#5b3221', marginRight: '0.3rem', minWidth: '40px' }}>Style :</span>
+          {TOOLS.map(t => (
+            <button
+              key={t.id}
+              title={`${t.label} : ${t.desc}`}
+              onClick={() => setTool(t.id)}
+              style={{
+                padding: '0.25rem 0.45rem',
+                fontSize: '0.85rem',
+                border: tool === t.id ? '2.5px solid #9d6a3b' : '1px solid rgba(42,32,25,0.22)',
+                background: tool === t.id ? '#fff9f0' : 'rgba(255,255,255,0.35)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+                transition: 'all 0.15s',
+              }}
+            >
+              <span>{t.icon}</span>
+              <span style={{ fontSize: '0.75rem', fontWeight: tool === t.id ? 'bold' : 'normal' }}>{t.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Row 2: Thickness, Opacity, and Live Preview */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1.2rem',
+          flexWrap: 'wrap',
+          borderTop: '1px dashed rgba(42,32,25,0.15)',
+          paddingTop: '0.5rem',
+          marginTop: '0.2rem',
+        }}>
+          {/* Thickness buttons */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#5b3221', marginRight: '0.3rem' }}>Taille :</span>
+            {SIZES.map(s => (
+              <button
+                key={s}
+                title={`Épaisseur ${s}px`}
+                onClick={() => setSize(s)}
+                style={{
+                  width: '1.9rem', height: '1.9rem',
+                  border: size === s ? '2.5px solid #9d6a3b' : '1px solid rgba(42,32,25,0.22)',
+                  background: size === s ? '#fff9f0' : 'rgba(255,255,255,0.35)',
+                  cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 0.1s',
+                }}
+              >
+                <div style={{
+                  width: Math.min(s * 0.7 + 1, 16),
+                  height: Math.min(s * 0.7 + 1, 16),
+                  borderRadius: '50%',
+                  background: '#2a2019',
+                }} />
+              </button>
+            ))}
+          </div>
+
+          {/* Opacity slider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: '150px' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#5b3221' }}>Opacité:</span>
+            <input
+              type="range"
+              min="1"
+              max="100"
+              value={opacity}
+              onChange={e => setOpacity(parseInt(e.target.value))}
+              style={{
+                flex: 1,
+                cursor: 'pointer',
+                accentColor: '#9d6a3b',
+              }}
+            />
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', width: '30px', textAlign: 'right' }}>{opacity}%</span>
+          </div>
+
+          {/* Brush Preview Widget */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'rgba(255,255,255,0.45)',
+            padding: '0.25rem 0.6rem',
+            border: '1px solid rgba(42,32,25,0.15)',
+          }}>
+            <span style={{ fontSize: '0.7rem', color: '#5b3221', fontWeight: 'bold' }}>Aperçu :</span>
+            <div style={{
+              width: '32px',
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'repeating-conic-gradient(#fff 0% 25%, #ddd 0% 50%) 50% / 8px 8px',
+              border: '1px solid rgba(42,32,25,0.2)',
+            }}>
+              <div style={{
+                width: Math.max(2, Math.min(size, 28)),
+                height: Math.max(2, Math.min(size, 28)),
+                borderRadius: tool === 'highlighter' || tool === 'rect' ? '0' : '50%',
+                background: tool === 'eraser' ? '#ffffff' : color,
+                opacity: opacity / 100,
+                border: tool === 'eraser' ? '1px dashed #aaa' : 'none',
+              }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Canvas Drawing Area */}
+      <div style={{
+        flex: 1,
+        overflow: 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0.8rem',
+        background: '#cbd2c7',
+        backgroundImage: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0, rgba(0,0,0,0.02) 1px, transparent 0, transparent 50%)',
+        backgroundSize: '12px 12px',
+      }}>
+        <canvas
+          ref={canvasRef}
+          width={640}
+          height={480}
+          onMouseDown={onDown}
+          onMouseMove={onMove}
+          onMouseUp={onUp}
+          onMouseLeave={onUp}
+          onTouchStart={onDown}
+          onTouchMove={onMove}
+          onTouchEnd={onUp}
+          style={{
+            cursor: tool === 'fill' ? 'crosshair' : 'crosshair',
+            display: 'block',
+            boxShadow: '0 4px 24px rgba(32,23,18,0.22)',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            backgroundColor: '#ffffff',
+          }}
+        />
+      </div>
+
+      {/* Colors & Palette Drawer */}
+      <div style={{
+        padding: '0.6rem 1rem',
+        background: '#ebdcc5',
+        borderTop: '1px solid rgba(42,32,25,0.2)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.5rem',
+      }}>
+        {/* Palette Tab Selector */}
+        <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#5b3221', marginRight: '0.3rem' }}>Palette :</span>
+          {Object.keys(PALETTES).map((pKey) => (
+            <button
+              key={pKey}
+              onClick={() => setActivePalette(pKey)}
+              style={{
+                padding: '0.2rem 0.5rem',
+                fontSize: '0.7rem',
+                cursor: 'pointer',
+                border: '1px solid rgba(42,32,25,0.2)',
+                background: activePalette === pKey ? '#2a2019' : 'rgba(255,255,255,0.45)',
+                color: activePalette === pKey ? '#fffdfa' : '#2a2019',
+                fontWeight: activePalette === pKey ? 'bold' : 'normal',
+                transition: 'all 0.15s',
+              }}
+            >
+              {PALETTES[pKey].label}
+            </button>
+          ))}
+        </div>
+
+        {/* Color circles & custom pickers */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          flexWrap: 'wrap',
+          borderTop: '1px dashed rgba(42,32,25,0.15)',
+          paddingTop: '0.5rem',
+        }}>
+          {/* Active Colors (FG/BG) Swapper */}
+          <div style={{
+            position: 'relative',
+            width: '2.9rem',
+            height: '2.3rem',
+            cursor: 'pointer',
+            flexShrink: 0,
+            marginRight: '0.4rem',
+          }}>
+            {/* Background Color Indicator */}
+            <div
+              onClick={() => setColorTarget('bg')}
+              title="Couleur d'arrière-plan (cliquer pour activer)"
+              style={{
+                position: 'absolute', bottom: 0, right: 0,
+                width: '1.6rem', height: '1.6rem',
+                background: bgColor,
+                border: colorTarget === 'bg' ? '2.5px solid #9d6a3b' : '1px solid rgba(42,32,25,0.4)',
+                zIndex: 1,
+                boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+              }}
+            />
+            {/* Foreground/Brush Color Indicator */}
+            <div
+              onClick={() => setColorTarget('fg')}
+              title="Couleur du pinceau (cliquer pour activer)"
+              style={{
+                position: 'absolute', top: 0, left: 0,
+                width: '1.6rem', height: '1.6rem',
+                background: color,
+                border: colorTarget === 'fg' ? '2.5px solid #9d6a3b' : '1px solid rgba(42,32,25,0.4)',
+                zIndex: 2,
+                boxShadow: '1px 2px 4px rgba(0,0,0,0.2)',
+              }}
+            />
+          </div>
+
+          <div style={{ width: 1, height: '1.6rem', background: 'rgba(42,32,25,0.15)', margin: '0 0.1rem' }} />
+
+          {/* Render Active Palette Colors */}
+          <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            {PALETTES[activePalette].colors.map(c => (
+              <button
+                key={c}
+                title={c}
+                onClick={() => {
+                  if (colorTarget === 'fg') {
+                    setColor(c);
+                  } else {
+                    changeBgColor(c);
+                  }
+                }}
+                style={{
+                  width: '1.5rem',
+                  height: '1.5rem',
+                  background: c,
+                  border: (colorTarget === 'fg' ? color : bgColor) === c
+                    ? '3px solid #9d6a3b'
+                    : '1px solid rgba(42,32,25,0.3)',
+                  cursor: 'pointer',
+                  borderRadius: '50%',
+                  flexShrink: 0,
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                  transform: (colorTarget === 'fg' ? color : bgColor) === c ? 'scale(1.1)' : 'scale(1)',
+                  transition: 'transform 0.1s',
+                }}
+              />
+            ))}
+          </div>
+
+          <div style={{ width: 1, height: '1.6rem', background: 'rgba(42,32,25,0.15)', margin: '0 0.1rem' }} />
+
+          {/* Custom Color Selector */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+            <input
+              type="color"
+              value={colorTarget === 'fg' ? color : bgColor}
+              onChange={e => {
+                if (colorTarget === 'fg') {
+                  setColor(e.target.value);
+                } else {
+                  changeBgColor(e.target.value);
+                }
+              }}
+              title="Couleur sur mesure"
+              style={{
+                width: '1.6rem',
+                height: '1.6rem',
+                border: '1px solid rgba(42,32,25,0.3)',
+                padding: 0,
+                cursor: 'pointer',
+                background: 'transparent',
+                borderRadius: '50%',
+              }}
+            />
+            <span style={{ fontSize: '0.65rem', color: '#5b3221', fontWeight: 'bold' }}>Perso</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (mode === 'panel') {
+    return (
+      <div style={{ width: '100%', height: '100%', minHeight: '520px' }}>
+        <PanelContent />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {!isOpen && <FloatingButton />}
+
+      {isOpen && (
+        <div
+          ref={overlayRef}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 300,
+            display: 'flex',
+            alignItems: 'stretch',
+            justifyContent: 'flex-end',
+          }}
+        >
+          {/* Transparent Backdrop (without blur, as requested by user) */}
+          <div
+            onClick={() => setIsOpen(false)}
+            style={{
+              flex: 1,
+              background: 'rgba(32,23,18,0.35)',
+            }}
+          />
+
+          {/* Right Sliding Panel */}
+          <div style={{
+            width: 'min(720px, 95vw)',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            boxShadow: '-8px 0 42px rgba(32,23,18,0.35)',
+            animation: 'slideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1)',
+          }}>
+            <style>{`
+              @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to   { transform: translateX(0);    opacity: 1; }
+              }
+            `}</style>
+            <PanelContent />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

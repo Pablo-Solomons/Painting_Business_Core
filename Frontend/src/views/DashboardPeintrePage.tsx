@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Link from 'next/link'
 import { PainterShell } from '../components/PainterShell'
 import { useDemoStore } from '@/context/DemoStoreContext'
 import {
@@ -51,12 +52,15 @@ export function DashboardPeintrePage() {
     submitRoadmapForReview,
     fiches,
     publishedFiches,
+    questions,
   } = useDemoStore()
 
   const [activePanel, setActivePanel] = useState('overview')
   const [search, setSearch] = useState('')
   const [editingRoadmapSlug, setEditingRoadmapSlug] = useState<string | null>(null)
   const [editingFicheSlug, setEditingFicheSlug] = useState<string | null>(null)
+  const [answeringQuestionId, setAnsweringQuestionId] = useState<string | null>(null)
+  const [answeringQuestionType, setAnsweringQuestionType] = useState<'fiche' | 'roadmap' | null>(null)
   const [form, setForm] = useState<FicheFormInput>(emptyFicheForm())
   const [roadmapForm, setRoadmapForm] = useState<RoadmapFormInput>(emptyRoadmapForm())
   const [editorMessage, setEditorMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
@@ -108,6 +112,8 @@ export function DashboardPeintrePage() {
 
   function openEditor(slug?: string) {
     setEditorMessage(null)
+    setAnsweringQuestionId(null)
+    setAnsweringQuestionType(null)
     if (slug) {
       const fiche = getFicheBySlug(slug)
       if (fiche) {
@@ -121,27 +127,44 @@ export function DashboardPeintrePage() {
     setActivePanel('editeur')
   }
 
+  function openEditorForQuestion(questionText: string, questionId: string) {
+    setEditorMessage(null)
+    setEditingFicheSlug(null)
+    setAnsweringQuestionId(questionId)
+    setAnsweringQuestionType('fiche')
+    setForm({
+      ...emptyFicheForm(),
+      question: questionText,
+      title: questionText.replace('?', '').replace("Comment ", "").replace("Qu'est-ce que ", "").replace("Est-ce qu'on peut ", "").replace("Est-ce que ", ""),
+    })
+    setActivePanel('editeur')
+  }
+
   function updateForm(field: keyof FicheFormInput, value: string) {
     setForm((current) => ({ ...current, [field]: value }))
   }
 
   function handleSaveDraft() {
-    const result = saveFicheDraft(form, editingFicheSlug ?? undefined)
+    const result = saveFicheDraft(form, editingFicheSlug ?? undefined, answeringQuestionType === 'fiche' ? answeringQuestionId ?? undefined : undefined)
     if (!result.ok) {
       setEditorMessage({ type: 'error', text: result.error })
       return
     }
     setEditingFicheSlug(result.slug)
+    setAnsweringQuestionId(null)
+    setAnsweringQuestionType(null)
     setEditorMessage({ type: 'success', text: 'Brouillon enregistré.' })
   }
 
   function handleSubmitForReview() {
-    const result = submitFicheForReview(form, editingFicheSlug ?? undefined)
+    const result = submitFicheForReview(form, editingFicheSlug ?? undefined, answeringQuestionType === 'fiche' ? answeringQuestionId ?? undefined : undefined)
     if (!result.ok) {
       setEditorMessage({ type: 'error', text: result.error })
       return
     }
     setEditingFicheSlug(result.slug)
+    setAnsweringQuestionId(null)
+    setAnsweringQuestionType(null)
     setEditorMessage({
       type: 'success',
       text: 'Fiche soumise à modération. Un administrateur doit l’approuver pour publication.',
@@ -151,6 +174,8 @@ export function DashboardPeintrePage() {
 
   function openRoadmapEditor(slug?: string) {
     setRoadmapEditorMessage(null)
+    setAnsweringQuestionId(null)
+    setAnsweringQuestionType(null)
     if (slug) {
       const roadmap = getRoadmapBySlug(slug)
       if (roadmap) {
@@ -161,6 +186,19 @@ export function DashboardPeintrePage() {
       setEditingRoadmapSlug(null)
       setRoadmapForm(emptyRoadmapForm())
     }
+    setActivePanel('roadmap-editor')
+  }
+
+  function openRoadmapEditorForQuestion(questionText: string, questionId: string) {
+    setRoadmapEditorMessage(null)
+    setEditingRoadmapSlug(null)
+    setAnsweringQuestionId(questionId)
+    setAnsweringQuestionType('roadmap')
+    setRoadmapForm({
+      ...emptyRoadmapForm(),
+      title: questionText.replace('?', '').replace("Comment ", "").replace("Qu'est-ce que ", "").replace("Est-ce qu'on peut ", "").replace("Est-ce que ", ""),
+      summary: `Parcours rédigé en réponse à la question : "${questionText}"`,
+    })
     setActivePanel('roadmap-editor')
   }
 
@@ -211,22 +249,26 @@ export function DashboardPeintrePage() {
   }
 
   function handleSaveRoadmapDraft() {
-    const result = saveRoadmapDraft(roadmapForm, editingRoadmapSlug ?? undefined)
+    const result = saveRoadmapDraft(roadmapForm, editingRoadmapSlug ?? undefined, answeringQuestionType === 'roadmap' ? answeringQuestionId ?? undefined : undefined)
     if (!result.ok) {
       setRoadmapEditorMessage({ type: 'error', text: result.error })
       return
     }
     setEditingRoadmapSlug(result.slug)
+    setAnsweringQuestionId(null)
+    setAnsweringQuestionType(null)
     setRoadmapEditorMessage({ type: 'success', text: 'Brouillon enregistré.' })
   }
 
   function handleSubmitRoadmapForReview() {
-    const result = submitRoadmapForReview(roadmapForm, editingRoadmapSlug ?? undefined)
+    const result = submitRoadmapForReview(roadmapForm, editingRoadmapSlug ?? undefined, answeringQuestionType === 'roadmap' ? answeringQuestionId ?? undefined : undefined)
     if (!result.ok) {
       setRoadmapEditorMessage({ type: 'error', text: result.error })
       return
     }
     setEditingRoadmapSlug(result.slug)
+    setAnsweringQuestionId(null)
+    setAnsweringQuestionType(null)
     setRoadmapEditorMessage({
       type: 'success',
       text: 'Roadmap soumise à modération. Un administrateur doit l’approuver pour publication.',
@@ -253,8 +295,8 @@ export function DashboardPeintrePage() {
             </div>
 
             <div className="hero-pills">
+              <span>{questions.filter((q) => q.status === 'pending').length} questions en attente</span>
               <span>3 fiches en révision</span>
-              <span>1 nouveau commentaire</span>
               <span>72 points contributeur</span>
             </div>
           </div>
@@ -278,8 +320,8 @@ export function DashboardPeintrePage() {
                 <strong>1 roadmap</strong>
               </div>
               <div>
-                <span>Favoris</span>
-                <strong>+28 cette semaine</strong>
+                <span>Questions</span>
+                <strong>{questions.filter((q) => q.status === 'pending').length} en attente</strong>
               </div>
               <div>
                 <span>Lectures</span>
@@ -342,9 +384,9 @@ export function DashboardPeintrePage() {
                   <div><div>Créer une roadmap</div><div className="qa-desc">Parcours guidé par discipline</div></div>
                   <div className="qa-arrow" />
                 </button>
-                <button type="button" className="qa-btn">
-                  <span className="qa-icon">📥</span>
-                  <div><div>Importer un lot</div><div className="qa-desc">CSV · 50 fiches max</div></div>
+                <button type="button" className="qa-btn" onClick={() => setActivePanel('questions')}>
+                  <span className="qa-icon">❓</span>
+                  <div><div>Questions visiteurs</div><div className="qa-desc">{questions.filter((q) => q.status === 'pending').length} questions en attente</div></div>
                   <div className="qa-arrow" />
                 </button>
               </div>
@@ -723,6 +765,110 @@ export function DashboardPeintrePage() {
         <div className="card" style={{ maxWidth: 720 }}>
           <div className="card-header"><div className="card-title">Récentes</div><a href="#" className="card-action">Tout marquer comme lu</a></div>
           <div className="card-body"><div className="notif-list">{notifications.map((item) => <div key={item.time} className="notif-item">{item.unread ? <div className="unread-dot" /> : <div style={{ width: '0.45rem' }} /> }<div className="notif-icon">{item.icon}</div><div className="notif-text"><strong>{item.title}</strong>{item.strong ? <strong> {item.strong}</strong> : null}<div className="notif-sub">{item.sub}</div></div><span className="notif-time">{item.time}</span></div>)}</div></div>
+        </div>
+      </section>
+
+      <section className={`panel ${activePanel === 'questions' ? 'active' : ''}`} id="panel-questions">
+        <div className="section-head">
+          <div>
+            <div className="section-eyebrow">Échanges</div>
+            <h2 className="section-title-main">Questions des <em>visiteurs</em></h2>
+          </div>
+        </div>
+
+        <div className="card" style={{ marginTop: '1.5rem' }}>
+          <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="card-title" style={{ fontSize: '1.1rem' }}>Questions en attente de fiches explicatives</div>
+            <div className="hero-pills" style={{ margin: 0 }}>
+              <span>{questions.filter((q) => q.status === 'pending').length} en attente</span>
+            </div>
+          </div>
+          <div className="card-body">
+            {questions.length === 0 ? (
+              <div style={{ color: 'var(--bone-muted)', fontStyle: 'italic', padding: '2rem', textAlign: 'center' }}>
+                Aucune question pour le moment.
+              </div>
+            ) : (
+              <table className="content-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid var(--stroke)', textAlign: 'left' }}>
+                    <th style={{ padding: '0.8rem' }}>Question / Auteur</th>
+                    <th style={{ padding: '0.8rem' }}>Statut</th>
+                    <th style={{ padding: '0.8rem' }}>Date</th>
+                    <th style={{ padding: '0.8rem', textAlign: 'right' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {questions.map((q) => {
+                    const dateStr = new Date(q.createdAt).toLocaleDateString('fr-FR')
+                    return (
+                      <tr key={q.id} style={{ borderBottom: '1px solid var(--stroke)', verticalAlign: 'middle' }}>
+                        <td style={{ padding: '1rem 0.8rem' }}>
+                          <strong style={{ fontFamily: 'Playfair Display, serif', fontSize: '1.05rem', color: 'var(--bone)' }}>{q.text}</strong>
+                          <br />
+                          <span style={{ fontSize: '0.75rem', color: 'var(--bone-muted)', fontFamily: 'DM Mono, monospace' }}>Posée par {q.authorName || 'Visiteur Anonyme'}</span>
+                        </td>
+                        <td style={{ padding: '1rem 0.8rem' }}>
+                          {q.status === 'answered' ? (
+                            <span className="badge badge-published" style={{ background: 'rgba(74, 124, 89, 0.15)', color: '#2b5037' }}>● Répondu</span>
+                          ) : (
+                            <span className="badge badge-review" style={{ background: 'rgba(157, 106, 59, 0.15)', color: 'var(--ochre)' }}>○ En attente</span>
+                          )}
+                        </td>
+                        <td style={{ padding: '1rem 0.8rem', fontFamily: 'DM Mono, monospace', fontSize: '0.8rem' }}>
+                          {dateStr}
+                        </td>
+                        <td style={{ padding: '1rem 0.8rem', textAlign: 'right' }}>
+                          {q.status === 'pending' ? (
+                            <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end' }}>
+                              <button
+                                type="button"
+                                className="topbar-btn"
+                                style={{ fontSize: '0.72rem', padding: '0.35rem 0.7rem' }}
+                                onClick={() => openEditorForQuestion(q.text, q.id)}
+                              >
+                                + Fiche
+                              </button>
+                              <button
+                                type="button"
+                                className="topbar-btn topbar-btn-ghost"
+                                style={{ fontSize: '0.72rem', padding: '0.35rem 0.7rem', borderColor: 'var(--stroke-strong)' }}
+                                onClick={() => openRoadmapEditorForQuestion(q.text, q.id)}
+                              >
+                                + Roadmap
+                              </button>
+                            </div>
+                          ) : (
+                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                              {q.ficheSlug ? (
+                                <Link
+                                  href={`/fiches/${q.ficheSlug}`}
+                                  className="row-btn"
+                                  style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem', display: 'inline-block' }}
+                                >
+                                  Voir la réponse (Fiche) →
+                                </Link>
+                              ) : q.roadmapSlug ? (
+                                <Link
+                                  href={`/roadmaps/${q.roadmapSlug}`}
+                                  className="row-btn"
+                                  style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem', display: 'inline-block' }}
+                                >
+                                  Voir la réponse (Roadmap) →
+                                </Link>
+                              ) : (
+                                <span style={{ fontSize: '0.75rem', color: 'var(--bone-muted)' }}>Répondu</span>
+                              )}
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
       </section>
 

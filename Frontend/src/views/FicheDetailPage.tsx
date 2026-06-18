@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { useDemoStore } from '@/context/DemoStoreContext'
+import { getRelatedFiches } from '@/lib/ficheUtils'
 import { findRoadmapsForFiche } from '@/lib/roadmapUtils'
 
 type FicheDetailPageProps = {
@@ -14,7 +15,9 @@ export function FicheDetailPage({ slug }: FicheDetailPageProps) {
   const fiche = getFicheBySlug(slug)
   const isPublished = fiche?.status === 'published'
   const referencingRoadmaps = isPublished ? findRoadmapsForFiche(slug, publishedRoadmaps) : []
-  const relatedFiches = publishedFiches.filter((item) => item.slug !== slug && item.category === fiche?.category).slice(0, 3)
+  const relatedFiches = isPublished && fiche
+    ? getRelatedFiches(fiche, publishedFiches, 4)
+    : []
 
   useEffect(() => {
     if (!fiche?.swatch) return
@@ -173,31 +176,54 @@ export function FicheDetailPage({ slug }: FicheDetailPageProps) {
       </div>
 
       {relatedFiches.length > 0 ? (
-        <section className="related-section">
+        <section className="related-section" aria-labelledby="related-fiches-title">
           <div className="related-header">
             <div>
-              <div className="section-label">Même catégorie · {fiche.category}</div>
-              <div className="related-title">Fiches similaires</div>
+              <div className="section-label">Continuer à explorer</div>
+              <h2 id="related-fiches-title" className="related-title">Fiches similaires</h2>
+              <p className="related-subtitle">
+                Sélectionnées selon vos tags et la catégorie <strong>{fiche.category}</strong>
+              </p>
             </div>
-            <Link href="/fiches" className="see-all">Voir tout</Link>
+            <Link href={`/fiches?cat=${encodeURIComponent(fiche.category)}`} className="see-all related-see-all">
+              Tout voir →
+            </Link>
           </div>
 
-          <div className="related-grid">
-            {relatedFiches.map((item) => (
+          <div className="related-track">
+            {relatedFiches.map(({ fiche: item, reason, sharedTags }) => (
               <Link key={item.slug} href={`/fiches/${item.slug}`} className="related-card">
-                {item.swatch ? (
-                  <div className="related-swatch">
-                    {item.swatch.map((color) => (
-                      <div key={color} className="related-swatch-seg" style={{ background: color }} />
+                <div className="related-card-top">
+                  {item.swatch ? (
+                    <div className="related-swatch" aria-hidden>
+                      {item.swatch.map((color) => (
+                        <div key={color} className="related-swatch-seg" style={{ background: color }} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="related-swatch related-swatch-text" data-category={item.category} aria-hidden>
+                      <span>{item.category.charAt(0)}</span>
+                    </div>
+                  )}
+                  <span className="related-reason">{reason}</span>
+                </div>
+
+                <div className="related-body">
+                  <div className="related-meta-row">
+                    <span className="related-code">{item.category}</span>
+                    <span className="related-duration">{item.duration}</span>
+                  </div>
+                  <div className="related-name">{item.title}</div>
+                  <p className="related-question">{item.question}</p>
+                  <p className="related-excerpt">{item.summary}</p>
+                  <div className="related-tags">
+                    {(sharedTags.length > 0 ? sharedTags : item.tags).slice(0, 3).map((tag) => (
+                      <span key={tag} className="related-tag">{tag}</span>
                     ))}
                   </div>
-                ) : (
-                  <div className="related-swatch related-swatch-text">{item.category.charAt(0)}</div>
-                )}
-                <div className="related-body">
-                  <div className="related-code">{item.category}</div>
-                  <div className="related-name">{item.title}</div>
                 </div>
+
+                <span className="related-arrow" aria-hidden />
               </Link>
             ))}
           </div>

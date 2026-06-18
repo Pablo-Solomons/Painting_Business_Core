@@ -44,9 +44,20 @@ export type RoadmapFormInput = {
   steps: RoadmapStepInput[]
 }
 
+export type VisitorQuestion = {
+  id: string
+  text: string
+  authorName?: string
+  status: 'pending' | 'answered'
+  ficheSlug?: string
+  roadmapSlug?: string
+  createdAt: string
+}
+
 export type DemoData = {
   fiches: DemoFiche[]
   roadmaps: DemoRoadmap[]
+  questions: VisitorQuestion[]
 }
 
 export type SaveContentResult =

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useDemoStore } from '@/context/DemoStoreContext'
 import type { DemoFiche } from '@/types/content'
 
@@ -12,12 +13,20 @@ const LEVEL_ORDER: Record<string, number> = {
 }
 
 export function FichesPage() {
+  const searchParams = useSearchParams()
   const { publishedFiches, isHydrated } = useDemoStore()
   const fiches = publishedFiches
 
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set())
   const [sortBy, setSortBy] = useState<string>('alpha')
+
+  useEffect(() => {
+    const category = searchParams.get('cat')
+    if (category) {
+      setSelectedCategories(new Set([category]))
+    }
+  }, [searchParams])
 
   const allCategories = useMemo(() => [...new Set(fiches.map((f) => f.category))].sort(), [fiches])
 

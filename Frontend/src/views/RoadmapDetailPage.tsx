@@ -1,17 +1,30 @@
 'use client'
 
 import Link from 'next/link'
+import { useCallback, useState } from 'react'
 import { useDemoStore } from '@/context/DemoStoreContext'
 import { countRoadmapFiches } from '@/lib/roadmapUtils'
+
+type SlideDirection = 'next' | 'prev'
 
 type RoadmapDetailPageProps = {
   slug: string
 }
 
 export function RoadmapDetailPage({ slug }: RoadmapDetailPageProps) {
+  const [currentStepIndex, setCurrentStepIndex] = useState(0)
+  const [slideDirection, setSlideDirection] = useState<SlideDirection>('next')
   const { getRoadmapBySlug, publishedFiches, isHydrated } = useDemoStore()
   const roadmap = getRoadmapBySlug(slug)
   const isPublished = roadmap?.status === 'published'
+
+  const goToStep = useCallback((index: number) => {
+    setCurrentStepIndex((prev) => {
+      if (index === prev) return prev
+      setSlideDirection(index > prev ? 'next' : 'prev')
+      return index
+    })
+  }, [])
 
   if (!isHydrated) {
     return (
@@ -41,6 +54,13 @@ export function RoadmapDetailPage({ slug }: RoadmapDetailPageProps) {
 
   const linkedCount = countRoadmapFiches(roadmap)
 
+  const prevStep = currentStepIndex > 0 ? roadmap.steps[currentStepIndex - 1] : null
+  const nextStep = currentStepIndex < roadmap.steps.length - 1 ? roadmap.steps[currentStepIndex + 1] : null
+  const currentStep = roadmap.steps[currentStepIndex]
+  const stepFiches = currentStep.ficheSlugs
+    .map((ficheSlug) => publishedFiches.find((f) => f.slug === ficheSlug))
+    .filter((f) => f !== undefined)
+
   return (
     <article className="detail-page roadmap-detail-page">
       <nav className="breadcrumb" aria-label="Fil d’Ariane">
@@ -66,78 +86,135 @@ export function RoadmapDetailPage({ slug }: RoadmapDetailPageProps) {
 
       <section className="two-column">
         <div className="detail-block">
-          <p className="eyebrow">Parcours</p>
-          <div className="timeline">
-            {roadmap.steps.map((step, idx) => {
-              const stepFiches = step.ficheSlugs
-                .map((ficheSlug) => publishedFiches.find((f) => f.slug === ficheSlug))
-                .filter((f) => f !== undefined)
+          <p className="eyebrow">Parcours détaillés</p>
 
-              return (
-                <div key={step.title} className={`step ${idx === 0 ? 'active' : ''}`}>
-                  <div className="step-left">
-                    <div className="step-dot">{idx + 1}</div>
+          {/* Info header */}
+          <div className="roadmap-info-header">
+            <div className="roadmap-info-grid">
+              <div className="info-item">
+                <div className="info-label">Auteur</div>
+                <div className="info-value">Art Plastique Team</div>
+                <div className="info-meta">Contributeurs · 3</div>
+              </div>
+              <div className="info-item">
+                <div className="info-label">Étapes</div>
+                <div className="info-value">{roadmap.steps.length}</div>
+              </div>
+              <div className="info-item">
+                <div className="info-label">Fiches liées</div>
+                <div className="info-value">{linkedCount}</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="roadmap-carousel">
+            {/* Progress bar */}
+            <div className="roadmap-progress">
+              <div className="progress-track">
+                <div 
+                  className="progress-fill"
+                  style={{ width: `${((currentStepIndex + 1) / roadmap.steps.length) * 100}%` }}
+                />
+              </div>
+              <div className="progress-label">{currentStepIndex + 1} / {roadmap.steps.length}</div>
+            </div>
+
+            {/* Step slide */}
+            <div className="carousel-viewport">
+              <div
+                key={currentStepIndex}
+                className={`carousel-slide carousel-slide--${slideDirection}`}
+              >
+                <div className="slide-content">
+                  <div className="step-header">
+                    <div className="step-dot-large">{currentStepIndex + 1}</div>
+                    <div>
+                      <div className="step-title">{currentStep.title}</div>
+                      <div className="step-text">{currentStep.description}</div>
+                    </div>
                   </div>
-                  <div className="step-body">
-                    <div className="step-title">{step.title}</div>
-                    <div className="step-text">{step.description}</div>
-                    {stepFiches.length > 0 ? (
-                      <div className="step-footer">
-                        <div className="step-fiches">
-                          <strong>Fiches à lire :</strong>
-                          <div className="linked-list">
-                            {stepFiches.map((fiche) => (
-                              <Link key={fiche.slug} href={`/fiches/${fiche.slug}`} className="linked-item linked-item-roadmap linked-item-fiche">
-                                <span className="linked-fiche-category">{fiche.category}</span>
-                                <strong>{fiche.title}</strong>
-                                <span className="linked-fiche-question">{fiche.question}</span>
-                              </Link>
-                            ))}
-                          </div>
+
+                  {stepFiches.length > 0 ? (
+                    <div className="step-footer">
+                      <div className="step-fiches">
+                        <strong>Fiches à lire :</strong>
+                        <div className="linked-list">
+                          {stepFiches.map((fiche) => (
+                            <Link key={fiche.slug} href={`/fiches/${fiche.slug}`} className="linked-item linked-item-roadmap linked-item-fiche">
+                              <span className="linked-fiche-category">{fiche.category}</span>
+                              <strong>{fiche.title}</strong>
+                              <span className="linked-fiche-question">{fiche.question}</span>
+                            </Link>
+                          ))}
                         </div>
                       </div>
-                    ) : (
-                      <div className="step-footer">
-                        <p className="step-empty">Contenu à venir — fiches en cours de rédaction.</p>
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="step-footer">
+                      <p className="step-empty">Contenu à venir — fiches en cours de rédaction.</p>
+                    </div>
+                  )}
                 </div>
-              )
-            })}
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <div className="carousel-nav">
+              <button
+                type="button"
+                onClick={() => goToStep(currentStepIndex - 1)}
+                disabled={!prevStep}
+                className="carousel-nav-btn carousel-nav-btn--prev"
+                aria-label={prevStep ? `Étape précédente : ${prevStep.title}` : 'Pas d’étape précédente'}
+              >
+                <span className="carousel-nav-chevron" aria-hidden>‹</span>
+                <span className="carousel-nav-copy">
+                  <span className="carousel-nav-label">Précédent</span>
+                  {prevStep ? (
+                    <span className="carousel-nav-hint">{prevStep.title}</span>
+                  ) : (
+                    <span className="carousel-nav-hint carousel-nav-hint--empty">Début du parcours</span>
+                  )}
+                </span>
+              </button>
+
+              <div className="carousel-steps-indicator" role="tablist" aria-label="Étapes du parcours">
+                {roadmap.steps.map((step, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    role="tab"
+                    aria-selected={idx === currentStepIndex}
+                    onClick={() => goToStep(idx)}
+                    className={`carousel-dot ${idx === currentStepIndex ? 'active' : ''}`}
+                    title={step.title}
+                    aria-label={`Étape ${idx + 1} : ${step.title}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => goToStep(currentStepIndex + 1)}
+                disabled={!nextStep}
+                className="carousel-nav-btn carousel-nav-btn--next"
+                aria-label={nextStep ? `Étape suivante : ${nextStep.title}` : 'Pas d’étape suivante'}
+              >
+                <span className="carousel-nav-copy">
+                  <span className="carousel-nav-label">Suivant</span>
+                  {nextStep ? (
+                    <span className="carousel-nav-hint">{nextStep.title}</span>
+                  ) : (
+                    <span className="carousel-nav-hint carousel-nav-hint--empty">Fin du parcours</span>
+                  )}
+                </span>
+                <span className="carousel-nav-chevron" aria-hidden>›</span>
+              </button>
+            </div>
           </div>
         </div>
-
-        <aside className="detail-block sidebar-col">
-          <div className="sidebar-card">
-            <div className="sidebar-card-head">
-              <div className="editor-section-label">Auteur</div>
-              <div />
-            </div>
-            <div className="sidebar-card-body">
-              <div className="author-name">Art Plastique Team</div>
-              <div className="author-meta">Contributeurs · 3</div>
-            </div>
-          </div>
-
-          <div className="sidebar-card">
-            <div className="sidebar-card-head">
-              <div className="editor-section-label">Informations</div>
-              <div />
-            </div>
-            <div className="sidebar-card-body">
-              <div className="meta-row">
-                <div className="meta-key">Étapes</div>
-                <div className="meta-val">{roadmap.steps.length}</div>
-              </div>
-              <div className="meta-row">
-                <div className="meta-key">Fiches liées</div>
-                <div className="meta-val">{linkedCount}</div>
-              </div>
-            </div>
-          </div>
-        </aside>
       </section>
     </article>
   )
 }
+

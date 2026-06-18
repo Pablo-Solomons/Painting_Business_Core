@@ -1,5 +1,5 @@
 import { fiches as seedFiches, roadmaps as seedRoadmaps } from '@/data/siteContent'
-import type { DemoData, DemoFiche, DemoRoadmap } from '@/types/content'
+import type { DemoData, DemoFiche, DemoRoadmap, VisitorQuestion } from '@/types/content'
 
 const now = '2025-06-07T10:00:00.000Z'
 
@@ -67,10 +67,36 @@ const extraRoadmapDraft: DemoRoadmap = {
   updatedAt: now,
 }
 
+const seededQuestions: VisitorQuestion[] = [
+  {
+    id: 'question-1',
+    text: "Comment réussir à faire un glacis bien régulier à la peinture à l'huile ?",
+    authorName: 'Léonard',
+    status: 'answered',
+    ficheSlug: 'glacis',
+    createdAt: '2025-06-01T14:20:00.000Z',
+  },
+  {
+    id: 'question-2',
+    text: 'Quel blanc choisir pour une sous-couche très couvrante ?',
+    authorName: 'Alice M.',
+    status: 'pending',
+    createdAt: '2025-06-06T12:00:00.000Z',
+  },
+  {
+    id: 'question-3',
+    text: "Est-ce qu'on peut mélanger de la gouache et de l'acrylique sur une même toile ?",
+    authorName: 'Julien',
+    status: 'pending',
+    createdAt: '2025-06-07T08:30:00.000Z',
+  },
+]
+
 export function createInitialDemoData(): DemoData {
   return {
     fiches: [...seededFiches, extraDraft],
     roadmaps: [...seededRoadmaps, extraRoadmapDraft],
+    questions: seededQuestions,
   }
 }
 
@@ -81,5 +107,6 @@ export function mergeStoredDemoData(stored: Partial<DemoData> | null): DemoData 
   return {
     fiches: stored.fiches ?? initial.fiches,
     roadmaps: stored.roadmaps ?? initial.roadmaps,
+    questions: stored.questions ?? initial.questions,
   }
 }

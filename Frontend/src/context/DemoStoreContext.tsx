@@ -45,6 +45,7 @@ import {
   type FicheFormInput,
   type RoadmapFormInput,
   type SaveContentResult,
+  type VisitorQuestion,
 } from '@/types/content'
 
 type LoginResult = { ok: true; redirectTo: string } | { ok: false; error: string }
@@ -58,6 +59,7 @@ type DemoStoreContextValue = {
   isHydrated: boolean
   fiches: DemoFiche[]
   roadmaps: DemoRoadmap[]
+  questions: VisitorQuestion[]
   publishedFiches: DemoFiche[]
   publishedRoadmaps: DemoRoadmap[]
   login: (email: string, password: string) => LoginResult
@@ -74,14 +76,16 @@ type DemoStoreContextValue = {
   deleteFiche: (slug: string) => boolean
   deleteRoadmap: (slug: string) => boolean
   getAllRegisteredUsers: () => DemoSession[]
-  saveFicheDraft: (input: FicheFormInput, existingSlug?: string) => SaveContentResult
-  submitFicheForReview: (input: FicheFormInput, existingSlug?: string) => SaveContentResult
+  saveFicheDraft: (input: FicheFormInput, existingSlug?: string, questionId?: string) => SaveContentResult
+  submitFicheForReview: (input: FicheFormInput, existingSlug?: string, questionId?: string) => SaveContentResult
   approveFiche: (slug: string) => SaveContentResult
   rejectFiche: (slug: string) => SaveContentResult
-  saveRoadmapDraft: (input: RoadmapFormInput, existingSlug?: string) => SaveContentResult
-  submitRoadmapForReview: (input: RoadmapFormInput, existingSlug?: string) => SaveContentResult
+  saveRoadmapDraft: (input: RoadmapFormInput, existingSlug?: string, questionId?: string) => SaveContentResult
+  submitRoadmapForReview: (input: RoadmapFormInput, existingSlug?: string, questionId?: string) => SaveContentResult
   approveRoadmap: (slug: string) => SaveContentResult
   rejectRoadmap: (slug: string) => SaveContentResult
+  askQuestion: (text: string, authorName?: string) => void
+  linkQuestionToFiche: (questionId: string, ficheSlug: string) => void
 }
 
 const DemoStoreContext = createContext<DemoStoreContextValue | null>(null)
@@ -157,7 +161,7 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const upsertFiche = useCallback(
-    (input: FicheFormInput, status: ContentStatus, existingSlug?: string): SaveContentResult => {
+    (input: FicheFormInput, status: ContentStatus, existingSlug?: string, questionId?: string): SaveContentResult => {
       if (!session) {
         return { ok: false, error: 'Vous devez être connecté pour enregistrer une fiche.' }
       }
@@ -179,14 +183,21 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
         ? data.fiches.map((f) => (f.slug === existing.slug ? nextFiche : f))
         : [...data.fiches, nextFiche]
 
-      persistData({ ...data, fiches })
+      let nextQuestions = data.questions || []
+      if (questionId) {
+        nextQuestions = nextQuestions.map((q) =>
+          q.id === questionId ? { ...q, status: 'answered', ficheSlug: slug } : q
+        )
+      }
+
+      persistData({ ...data, fiches, questions: nextQuestions })
       return { ok: true, slug, status }
     },
     [data, persistData, session],
   )
 
   const upsertRoadmap = useCallback(
-    (input: RoadmapFormInput, status: ContentStatus, existingSlug?: string): SaveContentResult => {
+    (input: RoadmapFormInput, status: ContentStatus, existingSlug?: string, questionId?: string): SaveContentResult => {
       if (!session) {
         return { ok: false, error: 'Vous devez être connecté pour enregistrer une roadmap.' }
       }
@@ -212,7 +223,14 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
         ? data.roadmaps.map((r) => (r.slug === existing.slug ? nextRoadmap : r))
         : [...data.roadmaps, nextRoadmap]
 
-      persistData({ ...data, roadmaps })
+      let nextQuestions = data.questions || []
+      if (questionId) {
+        nextQuestions = nextQuestions.map((q) =>
+          q.id === questionId ? { ...q, status: 'answered', roadmapSlug: slug } : q
+        )
+      }
+
+      persistData({ ...data, roadmaps, questions: nextQuestions })
       return { ok: true, slug, status }
     },
     [data, persistData, session],
@@ -368,12 +386,12 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
   )
 
   const saveFicheDraft = useCallback(
-    (input: FicheFormInput, existingSlug?: string) => upsertFiche(input, 'draft', existingSlug),
+    (input: FicheFormInput, existingSlug?: string, questionId?: string) => upsertFiche(input, 'draft', existingSlug, questionId),
     [upsertFiche],
   )
 
   const submitFicheForReview = useCallback(
-    (input: FicheFormInput, existingSlug?: string) => upsertFiche(input, 'review', existingSlug),
+    (input: FicheFormInput, existingSlug?: string, questionId?: string) => upsertFiche(input, 'review', existingSlug, questionId),
     [upsertFiche],
   )
 
@@ -404,12 +422,12 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
   )
 
   const saveRoadmapDraft = useCallback(
-    (input: RoadmapFormInput, existingSlug?: string) => upsertRoadmap(input, 'draft', existingSlug),
+    (input: RoadmapFormInput, existingSlug?: string, questionId?: string) => upsertRoadmap(input, 'draft', existingSlug, questionId),
     [upsertRoadmap],
   )
 
   const submitRoadmapForReview = useCallback(
-    (input: RoadmapFormInput, existingSlug?: string) => upsertRoadmap(input, 'review', existingSlug),
+    (input: RoadmapFormInput, existingSlug?: string, questionId?: string) => upsertRoadmap(input, 'review', existingSlug, questionId),
     [upsertRoadmap],
   )
 
@@ -462,6 +480,31 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
     return users.map((user) => toSession(user))
   }, [])
 
+  const askQuestion = useCallback(
+    (text: string, authorName?: string) => {
+      const newQuestion: VisitorQuestion = {
+        id: 'question-' + Date.now(),
+        text: text.trim(),
+        authorName: authorName?.trim() || 'Visiteur Anonyme',
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+      }
+      const questions = [...(data.questions || []), newQuestion]
+      persistData({ ...data, questions })
+    },
+    [data, persistData],
+  )
+
+  const linkQuestionToFiche = useCallback(
+    (questionId: string, ficheSlug: string) => {
+      const nextQuestions = (data.questions || []).map((q) =>
+        q.id === questionId ? { ...q, status: 'answered' as const, ficheSlug } : q
+      )
+      persistData({ ...data, questions: nextQuestions })
+    },
+    [data, persistData],
+  )
+
   const publishedFiches = useMemo(
     () => data.fiches.filter((f) => f.status === 'published'),
     [data.fiches],
@@ -478,6 +521,7 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       isHydrated,
       fiches: data.fiches,
       roadmaps: data.roadmaps,
+      questions: data.questions || [],
       publishedFiches,
       publishedRoadmaps,
       login,
@@ -502,12 +546,15 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       submitRoadmapForReview,
       approveRoadmap,
       rejectRoadmap,
+      askQuestion,
+      linkQuestionToFiche,
     }),
     [
       session,
       isHydrated,
       data.fiches,
       data.roadmaps,
+      data.questions,
       publishedFiches,
       publishedRoadmaps,
       login,
@@ -532,6 +579,8 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       submitRoadmapForReview,
       approveRoadmap,
       rejectRoadmap,
+      askQuestion,
+      linkQuestionToFiche,
     ],
   )
 

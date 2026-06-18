@@ -23,9 +23,20 @@ const navItems = [
 ]
 
 export function PainterShell({ children, activePanel = 'overview', onNavigate }: PainterShellProps) {
-  const { session, logout } = useDemoStore()
+  const { session, logout, questions } = useDemoStore()
   const router = useRouter()
   const initial = session?.name.charAt(0).toUpperCase() ?? 'P'
+
+  const pendingQuestionsCount = questions.filter((q) => q.status === 'pending').length
+
+  const dynamicNavItems = [
+    { label: "Vue d'ensemble", panel: 'overview', icon: '⬡' },
+    { label: 'Notifications', panel: 'notifs', icon: '🔔', badge: '3' },
+    { label: 'Questions visiteurs', panel: 'questions', icon: '❓', badge: pendingQuestionsCount > 0 ? String(pendingQuestionsCount) : undefined },
+    { label: 'Mes fiches', panel: 'fiches', icon: '📄' },
+    { label: 'Nouvelle fiche', panel: 'editeur', icon: '✏️' },
+    { label: 'Roadmaps', panel: 'roadmaps', icon: '🗺' },
+  ]
 
   function handleLogout() {
     logout()
@@ -50,7 +61,7 @@ export function PainterShell({ children, activePanel = 'overview', onNavigate }:
 
         <nav className="sidebar-nav" aria-label="Navigation peintre">
           <div className="nav-group-label">Tableau de bord</div>
-          {navItems.slice(0, 2).map((item) => (
+          {dynamicNavItems.slice(0, 3).map((item) => (
             <button
               key={item.panel}
               type="button"
@@ -63,7 +74,7 @@ export function PainterShell({ children, activePanel = 'overview', onNavigate }:
           ))}
 
           <div className="nav-group-label">Contenu</div>
-          {navItems.slice(2, 5).map((item) => (
+          {dynamicNavItems.slice(3, 6).map((item) => (
             <button
               key={item.panel}
               type="button"
@@ -102,7 +113,7 @@ export function PainterShell({ children, activePanel = 'overview', onNavigate }:
         <div className="topbar" id="topbar">
           <div className="topbar-breadcrumb">
             <img src={appLogoUrl} alt="ArtPlastique logo" className="topbar-logo-img" />
-            · <span id="topbar-label">{activePanel === 'overview' ? "Vue d'ensemble" : activePanel === 'fiches' ? 'Mes fiches' : activePanel === 'editeur' ? 'Éditeur de fiche' : activePanel === 'roadmaps' ? 'Roadmaps' : activePanel === 'analytics' ? 'Analytiques' : activePanel === 'notifs' ? 'Notifications' : 'Mon profil'}</span>
+            · <span id="topbar-label">{activePanel === 'overview' ? "Vue d'ensemble" : activePanel === 'questions' ? 'Questions visiteurs' : activePanel === 'fiches' ? 'Mes fiches' : activePanel === 'editeur' ? 'Éditeur de fiche' : activePanel === 'roadmaps' ? 'Roadmaps' : activePanel === 'analytics' ? 'Analytiques' : activePanel === 'notifs' ? 'Notifications' : 'Mon profil'}</span>
           </div>
           <div className="topbar-actions">
             <button type="button" className="topbar-btn topbar-btn-ghost" onClick={() => onNavigate?.('editeur')}>
