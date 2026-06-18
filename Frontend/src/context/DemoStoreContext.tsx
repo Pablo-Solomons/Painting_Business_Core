@@ -24,6 +24,7 @@ import {
 import { uniqueSlug } from '@/lib/slugify'
 import {
   clearDemoData,
+  deleteRegisteredUser,
   findRegisteredUser,
   loadDemoData,
   loadRegisteredUsers,
@@ -32,6 +33,8 @@ import {
   saveSession,
   clearSession,
   seedFictionalPainters,
+  suspendRegisteredUser,
+  unsuspendRegisteredUser,
   upsertRegisteredUser,
 } from '@/lib/demoStorage'
 import {
@@ -76,6 +79,9 @@ type DemoStoreContextValue = {
   deleteFiche: (slug: string) => boolean
   deleteRoadmap: (slug: string) => boolean
   getAllRegisteredUsers: () => DemoSession[]
+  deleteUser: (userId: string) => boolean
+  suspendUser: (userId: string) => boolean
+  unsuspendUser: (userId: string) => boolean
   saveFicheDraft: (input: FicheFormInput, existingSlug?: string, questionId?: string) => SaveContentResult
   submitFicheForReview: (input: FicheFormInput, existingSlug?: string, questionId?: string) => SaveContentResult
   approveFiche: (slug: string) => SaveContentResult
@@ -480,6 +486,18 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
     return users.map((user) => toSession(user))
   }, [])
 
+  const deleteUser = useCallback((userId: string): boolean => {
+    return deleteRegisteredUser(userId)
+  }, [])
+
+  const suspendUser = useCallback((userId: string): boolean => {
+    return suspendRegisteredUser(userId)
+  }, [])
+
+  const unsuspendUser = useCallback((userId: string): boolean => {
+    return unsuspendRegisteredUser(userId)
+  }, [])
+
   const askQuestion = useCallback(
     (text: string, authorName?: string) => {
       const newQuestion: VisitorQuestion = {
@@ -538,6 +556,9 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       deleteFiche,
       deleteRoadmap,
       getAllRegisteredUsers,
+      deleteUser,
+      suspendUser,
+      unsuspendUser,
       saveFicheDraft,
       submitFicheForReview,
       approveFiche,
@@ -571,6 +592,9 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       deleteFiche,
       deleteRoadmap,
       getAllRegisteredUsers,
+      deleteUser,
+      suspendUser,
+      unsuspendUser,
       saveFicheDraft,
       submitFicheForReview,
       approveFiche,

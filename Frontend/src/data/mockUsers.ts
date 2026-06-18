@@ -1,4 +1,5 @@
 export type UserRole = 'peintre' | 'admin'
+export type AccountStatus = 'active' | 'suspended'
 
 export type ProfileData = {
   name: string
@@ -21,6 +22,7 @@ export type DemoUser = {
   city: string
   expertise: string
   specialties: string[]
+  status?: AccountStatus
 }
 
 export type DemoSession = {
@@ -33,6 +35,7 @@ export type DemoSession = {
   city: string
   expertise: string
   specialties: string[]
+  status: AccountStatus
 }
 
 export const DEMO_PASSWORD = 'demo'
@@ -74,6 +77,7 @@ export function toSession(user: DemoUser): DemoSession {
     city: user.city,
     expertise: user.expertise,
     specialties: [...user.specialties],
+    status: user.status ?? 'active',
   }
 }
 
@@ -89,6 +93,7 @@ export function createDefaultSession(name: string, email: string, id: string): D
     city: '',
     expertise: '',
     specialties: ['🎨 Peinture'],
+    status: 'active',
   }
 }
 
