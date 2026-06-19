@@ -163,7 +163,7 @@ function PanelContent({
       flexDirection: 'column',
       height: '100%',
       background: '#f4ece1',
-      fontFamily: "'DM Sans', sans-serif",
+      fontFamily: "'Poppins', sans-serif",
       color: '#2a2019',
     }}>
       {/* Header Bar */}
@@ -534,7 +534,7 @@ function PanelContent({
                   color: '#d6b189',
                   padding: '0.8rem 1.6rem',
                   borderRadius: '8px',
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "'Poppins', sans-serif",
                   fontSize: '0.95rem',
                   fontWeight: 600,
                   textAlign: 'center',

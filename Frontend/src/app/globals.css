@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;600;700;900&display=swap');
 
 :root {
   color: #2a2019;
   background: #f8f1e7;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Poppins', system-ui, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -1401,7 +1401,7 @@ body {
   border: 1px solid var(--stroke);
   background: rgba(255,255,255,0.8);
   min-height: 2.8rem;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .divider {
@@ -1655,7 +1655,7 @@ body {
 .btn-dark,
 .footer-links a,
 .footer-brand .nav-logo {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   text-decoration: none;
 }
 
@@ -2854,7 +2854,7 @@ body {
 .btn,
 .bulk-btn,
 .pag-btn {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.15s;
@@ -3345,7 +3345,7 @@ body {
 .toolbar-right select {
   border: none;
   background: transparent;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.82rem;
   color: var(--bone);
   outline: none;
@@ -3530,7 +3530,7 @@ td {
 }
 
 .spec-tag {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.62rem;
   font-weight: 500;
   padding: 0.15rem 0.5rem;
@@ -3913,7 +3913,7 @@ td {
   text-decoration: underline;
   background: none;
   border: none;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin-top: 0.5rem;
 }
 
@@ -3960,7 +3960,7 @@ td {
 }
 
 .sort-select {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.8rem;
   color: var(--bone-muted);
   background: transparent;
@@ -4301,7 +4301,7 @@ td {
   border: 1px solid var(--stroke-strong);
   background: transparent;
   color: var(--bone-muted);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -5204,7 +5204,7 @@ td {
   background: var(--ochre);
   color: var(--canvas);
   border: none;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -5552,7 +5552,7 @@ td {
   background: var(--page);
   border: 1px solid var(--stroke);
   color: var(--bone);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.8rem;
   font-weight: 500;
   text-align: left;
@@ -5671,7 +5671,7 @@ td {
   border: none;
   outline: none;
   background: transparent;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   color: var(--bone);
 }
 
@@ -5753,7 +5753,7 @@ tr:hover .row-actions {
   font-size: 0.7rem;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .row-btn:hover {
@@ -5953,7 +5953,7 @@ tr:hover .row-actions {
   background: var(--ochre);
   color: var(--canvas);
   border: none;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -5968,7 +5968,7 @@ tr:hover .row-actions {
   background: transparent;
   color: var(--bone-muted);
   border: 1px solid var(--stroke-strong);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -6215,7 +6215,7 @@ tr:hover .row-actions {
   font-size: 0.78rem;
   cursor: pointer;
   transition: all 0.15s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .discipline-chip.selected {

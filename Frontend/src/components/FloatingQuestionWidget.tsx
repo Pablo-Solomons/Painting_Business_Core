@@ -167,7 +167,7 @@ export function FloatingQuestionWidget() {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",
             color: 'var(--bone)',
             userSelect: isDragging ? 'none' : 'auto',
           }}
