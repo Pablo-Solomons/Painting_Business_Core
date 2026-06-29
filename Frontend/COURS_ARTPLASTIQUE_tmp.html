@@ -1,0 +1,2526 @@
+<!DOCTYPE html><html><head>
+<title>COURS_ARTPLASTIQUE.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/*
+
+Arduino® Light Theme - Stefania Mellai <s.mellai@arduino.cc>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #FFFFFF;
+}
+
+.hljs,
+.hljs-subst {
+  color: #434f54;
+}
+
+.hljs-keyword,
+.hljs-attribute,
+.hljs-selector-tag,
+.hljs-doctag,
+.hljs-name {
+  color: #00979D;
+}
+
+.hljs-built_in,
+.hljs-literal,
+.hljs-bullet,
+.hljs-code,
+.hljs-addition {
+  color: #D35400;
+}
+
+.hljs-regexp,
+.hljs-symbol,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-link,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #00979D;
+}
+
+.hljs-type,
+.hljs-string,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-deletion {
+  color: #005C5F;
+}
+
+.hljs-title,
+.hljs-section {
+  color: #880000;
+  font-weight: bold;
+}
+
+.hljs-comment {
+  color: rgba(149,165,166,.8);
+}
+
+.hljs-meta-keyword {
+  color: #728E00;
+}
+
+.hljs-meta {
+  color: #434f54;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-function {
+  color: #728E00;
+}
+
+.hljs-number {
+  color: #8A7B52;  
+}
+
+</style>
+
+<style>
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family:   "HelveticaNeue-Light", sans-serif, "宋体","Segoe WPC", "Segoe UI", "SFUIText-Light","Droid Sans Fallback";
+	font-size: 18px;
+	padding: 0 12px;
+	line-height: 1.6;
+	word-wrap: break-word;
+	color: #333333;
+}
+
+.content-wrapper{
+	max-width: 860px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	color: #4080D0;
+	text-decoration: none;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom: 1px solid #eee;
+}
+
+
+h2{
+	padding-bottom: .3em;
+    font-size: 2em;
+    line-height: 1.225;
+    border-bottom: 1px solid #eee;
+}
+
+h3{
+	font-size: 1.75em;
+    line-height: 1.225;
+}
+
+h1, h2, h3 {
+	font-weight: bold;
+}
+
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+	font-size: inherit;
+	line-height: auto;
+}
+
+a:hover {
+	color: #4080D0;
+	text-decoration: underline;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left: 5px solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 14px;
+	line-height: 19px;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+.mac code {
+	font-size: 12px;
+	line-height: 18px;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+/** Theming */
+
+.vscode-light,
+.vscode-light pre code {
+	color: rgb(30, 30, 30);
+}
+
+.vscode-dark,
+.vscode-dark pre code {
+	color: #DDD;
+}
+
+.vscode-high-contrast,
+.vscode-high-contrast pre code {
+	color: white;
+}
+
+.vscode-light code {
+	color: #A31515;
+}
+
+.vscode-dark code {
+	color: #D7BA7D;
+}
+
+.vscode-light pre:not(.hljs),
+.vscode-light code > div {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre:not(.hljs),
+.vscode-dark code > div {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre:not(.hljs),
+.vscode-high-contrast code > div {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+.vscode-light blockquote,
+.vscode-dark blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.vscode-high-contrast blockquote {
+	background: transparent;
+	border-color: #fff;
+}
+</style>
+
+<style>
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+.table-of-contents li{
+	list-style-type: initial;
+}
+</style>
+
+<style>
+@font-face{font-display:block;font-family:KaTeX_AMS;font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_AMS-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_AMS-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_AMS-Regular.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Caligraphic;font-style:normal;font-weight:700;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Caligraphic-Bold.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Caligraphic-Bold.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Caligraphic-Bold.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Caligraphic;font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Caligraphic-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Caligraphic-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Caligraphic-Regular.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Fraktur;font-style:normal;font-weight:700;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Fraktur-Bold.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Fraktur-Bold.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Fraktur-Bold.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Fraktur;font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Fraktur-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Fraktur-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Fraktur-Regular.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Main;font-style:normal;font-weight:700;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-Bold.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-Bold.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-Bold.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Main;font-style:italic;font-weight:700;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-BoldItalic.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-BoldItalic.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-BoldItalic.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Main;font-style:italic;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-Italic.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-Italic.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-Italic.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Main;font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Main-Regular.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Math;font-style:italic;font-weight:700;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Math-BoldItalic.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Math-BoldItalic.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Math-BoldItalic.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Math;font-style:italic;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Math-Italic.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Math-Italic.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Math-Italic.ttf") format("truetype")}@font-face{font-display:block;font-family:"KaTeX_SansSerif";font-style:normal;font-weight:700;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_SansSerif-Bold.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_SansSerif-Bold.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_SansSerif-Bold.ttf") format("truetype")}@font-face{font-display:block;font-family:"KaTeX_SansSerif";font-style:italic;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_SansSerif-Italic.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_SansSerif-Italic.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_SansSerif-Italic.ttf") format("truetype")}@font-face{font-display:block;font-family:"KaTeX_SansSerif";font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_SansSerif-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_SansSerif-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_SansSerif-Regular.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Script;font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Script-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Script-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Script-Regular.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Size1;font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size1-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size1-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size1-Regular.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Size2;font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size2-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size2-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size2-Regular.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Size3;font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size3-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size3-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size3-Regular.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Size4;font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size4-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size4-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Size4-Regular.ttf") format("truetype")}@font-face{font-display:block;font-family:KaTeX_Typewriter;font-style:normal;font-weight:400;src:url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Typewriter-Regular.woff2") format("woff2"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Typewriter-Regular.woff") format("woff"),url("file:///home/salomon/.vscode/extensions/cweijan.vscode-office-4.0.9/resource/markdown/dist/js/katex/fonts/KaTeX_Typewriter-Regular.ttf") format("truetype")}.katex{font:normal 1.21em KaTeX_Main,Times New Roman,serif;line-height:1.2;position:relative;text-indent:0;text-rendering:auto}.katex *{-ms-high-contrast-adjust:none!important;border-color:currentColor}.katex .katex-version:after{content:"0.16.47"}.katex .katex-mathml{border:0;-webkit-clip-path:inset(50%);clip-path:inset(50%);height:1px;overflow:hidden;padding:0;position:absolute;width:1px}.katex .katex-html>.newline{display:block}.katex .base{position:relative;white-space:nowrap;width:-webkit-min-content;width:-moz-min-content;width:min-content}.katex .base,.katex .strut{display:inline-block}.katex .textbf{font-weight:700}.katex .textit{font-style:italic}.katex .textrm{font-family:KaTeX_Main}.katex .textsf{font-family:KaTeX_SansSerif}.katex .texttt{font-family:KaTeX_Typewriter}.katex .mathnormal{font-family:KaTeX_Math;font-style:italic}.katex .mathit{font-family:KaTeX_Main;font-style:italic}.katex .mathrm{font-style:normal}.katex .mathbf{font-family:KaTeX_Main;font-weight:700}.katex .boldsymbol{font-family:KaTeX_Math;font-style:italic;font-weight:700}.katex .amsrm,.katex .mathbb,.katex .textbb{font-family:KaTeX_AMS}.katex .mathcal{font-family:KaTeX_Caligraphic}.katex .mathfrak,.katex .textfrak{font-family:KaTeX_Fraktur}.katex .mathboldfrak,.katex .textboldfrak{font-family:KaTeX_Fraktur;font-weight:700}.katex .mathtt{font-family:KaTeX_Typewriter}.katex .mathscr,.katex .textscr{font-family:KaTeX_Script}.katex .mathsf,.katex .textsf{font-family:KaTeX_SansSerif}.katex .mathboldsf,.katex .textboldsf{font-family:KaTeX_SansSerif;font-weight:700}.katex .mathitsf,.katex .mathsfit,.katex .textitsf{font-family:KaTeX_SansSerif;font-style:italic}.katex .mainrm{font-family:KaTeX_Main;font-style:normal}.katex .vlist-t{border-collapse:collapse;display:inline-table;table-layout:fixed}.katex .vlist-r{display:table-row}.katex .vlist{display:table-cell;position:relative;vertical-align:bottom}.katex .vlist>span{display:block;height:0;position:relative}.katex .vlist>span>span{display:inline-block}.katex .vlist>span>.pstrut{overflow:hidden;width:0}.katex .vlist-t2{margin-right:-2px}.katex .vlist-s{display:table-cell;font-size:1px;min-width:2px;vertical-align:bottom;width:2px}.katex .vbox{align-items:baseline;display:inline-flex;flex-direction:column}.katex .hbox{width:100%}.katex .hbox,.katex .thinbox{display:inline-flex;flex-direction:row}.katex .thinbox{max-width:0;width:0}.katex .msupsub{text-align:left}.katex .mfrac>span>span{text-align:center}.katex .mfrac .frac-line{border-bottom-style:solid;display:inline-block;width:100%}.katex .hdashline,.katex .hline,.katex .mfrac .frac-line,.katex .overline .overline-line,.katex .rule,.katex .underline .underline-line{min-height:1px}.katex .mspace{display:inline-block}.katex .smash{display:inline;line-height:0}.katex .clap,.katex .llap,.katex .rlap{position:relative;width:0}.katex .clap>.inner,.katex .llap>.inner,.katex .rlap>.inner{position:absolute}.katex .clap>.fix,.katex .llap>.fix,.katex .rlap>.fix{display:inline-block}.katex .llap>.inner{right:0}.katex .clap>.inner,.katex .rlap>.inner{left:0}.katex .clap>.inner>span{margin-left:-50%;margin-right:50%}.katex .rule{border:0 solid;display:inline-block;position:relative}.katex .hline,.katex .overline .overline-line,.katex .underline .underline-line{border-bottom-style:solid;display:inline-block;width:100%}.katex .hdashline{border-bottom-style:dashed;display:inline-block;width:100%}.katex .sqrt>.root{margin-left:.2777777778em;margin-right:-.5555555556em}.katex .fontsize-ensurer.reset-size1.size1,.katex .sizing.reset-size1.size1{font-size:1em}.katex .fontsize-ensurer.reset-size1.size2,.katex .sizing.reset-size1.size2{font-size:1.2em}.katex .fontsize-ensurer.reset-size1.size3,.katex .sizing.reset-size1.size3{font-size:1.4em}.katex .fontsize-ensurer.reset-size1.size4,.katex .sizing.reset-size1.size4{font-size:1.6em}.katex .fontsize-ensurer.reset-size1.size5,.katex .sizing.reset-size1.size5{font-size:1.8em}.katex .fontsize-ensurer.reset-size1.size6,.katex .sizing.reset-size1.size6{font-size:2em}.katex .fontsize-ensurer.reset-size1.size7,.katex .sizing.reset-size1.size7{font-size:2.4em}.katex .fontsize-ensurer.reset-size1.size8,.katex .sizing.reset-size1.size8{font-size:2.88em}.katex .fontsize-ensurer.reset-size1.size9,.katex .sizing.reset-size1.size9{font-size:3.456em}.katex .fontsize-ensurer.reset-size1.size10,.katex .sizing.reset-size1.size10{font-size:4.148em}.katex .fontsize-ensurer.reset-size1.size11,.katex .sizing.reset-size1.size11{font-size:4.976em}.katex .fontsize-ensurer.reset-size2.size1,.katex .sizing.reset-size2.size1{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size2.size2,.katex .sizing.reset-size2.size2{font-size:1em}.katex .fontsize-ensurer.reset-size2.size3,.katex .sizing.reset-size2.size3{font-size:1.1666666667em}.katex .fontsize-ensurer.reset-size2.size4,.katex .sizing.reset-size2.size4{font-size:1.3333333333em}.katex .fontsize-ensurer.reset-size2.size5,.katex .sizing.reset-size2.size5{font-size:1.5em}.katex .fontsize-ensurer.reset-size2.size6,.katex .sizing.reset-size2.size6{font-size:1.6666666667em}.katex .fontsize-ensurer.reset-size2.size7,.katex .sizing.reset-size2.size7{font-size:2em}.katex .fontsize-ensurer.reset-size2.size8,.katex .sizing.reset-size2.size8{font-size:2.4em}.katex .fontsize-ensurer.reset-size2.size9,.katex .sizing.reset-size2.size9{font-size:2.88em}.katex .fontsize-ensurer.reset-size2.size10,.katex .sizing.reset-size2.size10{font-size:3.4566666667em}.katex .fontsize-ensurer.reset-size2.size11,.katex .sizing.reset-size2.size11{font-size:4.1466666667em}.katex .fontsize-ensurer.reset-size3.size1,.katex .sizing.reset-size3.size1{font-size:.7142857143em}.katex .fontsize-ensurer.reset-size3.size2,.katex .sizing.reset-size3.size2{font-size:.8571428571em}.katex .fontsize-ensurer.reset-size3.size3,.katex .sizing.reset-size3.size3{font-size:1em}.katex .fontsize-ensurer.reset-size3.size4,.katex .sizing.reset-size3.size4{font-size:1.1428571429em}.katex .fontsize-ensurer.reset-size3.size5,.katex .sizing.reset-size3.size5{font-size:1.2857142857em}.katex .fontsize-ensurer.reset-size3.size6,.katex .sizing.reset-size3.size6{font-size:1.4285714286em}.katex .fontsize-ensurer.reset-size3.size7,.katex .sizing.reset-size3.size7{font-size:1.7142857143em}.katex .fontsize-ensurer.reset-size3.size8,.katex .sizing.reset-size3.size8{font-size:2.0571428571em}.katex .fontsize-ensurer.reset-size3.size9,.katex .sizing.reset-size3.size9{font-size:2.4685714286em}.katex .fontsize-ensurer.reset-size3.size10,.katex .sizing.reset-size3.size10{font-size:2.9628571429em}.katex .fontsize-ensurer.reset-size3.size11,.katex .sizing.reset-size3.size11{font-size:3.5542857143em}.katex .fontsize-ensurer.reset-size4.size1,.katex .sizing.reset-size4.size1{font-size:.625em}.katex .fontsize-ensurer.reset-size4.size2,.katex .sizing.reset-size4.size2{font-size:.75em}.katex .fontsize-ensurer.reset-size4.size3,.katex .sizing.reset-size4.size3{font-size:.875em}.katex .fontsize-ensurer.reset-size4.size4,.katex .sizing.reset-size4.size4{font-size:1em}.katex .fontsize-ensurer.reset-size4.size5,.katex .sizing.reset-size4.size5{font-size:1.125em}.katex .fontsize-ensurer.reset-size4.size6,.katex .sizing.reset-size4.size6{font-size:1.25em}.katex .fontsize-ensurer.reset-size4.size7,.katex .sizing.reset-size4.size7{font-size:1.5em}.katex .fontsize-ensurer.reset-size4.size8,.katex .sizing.reset-size4.size8{font-size:1.8em}.katex .fontsize-ensurer.reset-size4.size9,.katex .sizing.reset-size4.size9{font-size:2.16em}.katex .fontsize-ensurer.reset-size4.size10,.katex .sizing.reset-size4.size10{font-size:2.5925em}.katex .fontsize-ensurer.reset-size4.size11,.katex .sizing.reset-size4.size11{font-size:3.11em}.katex .fontsize-ensurer.reset-size5.size1,.katex .sizing.reset-size5.size1{font-size:.5555555556em}.katex .fontsize-ensurer.reset-size5.size2,.katex .sizing.reset-size5.size2{font-size:.6666666667em}.katex .fontsize-ensurer.reset-size5.size3,.katex .sizing.reset-size5.size3{font-size:.7777777778em}.katex .fontsize-ensurer.reset-size5.size4,.katex .sizing.reset-size5.size4{font-size:.8888888889em}.katex .fontsize-ensurer.reset-size5.size5,.katex .sizing.reset-size5.size5{font-size:1em}.katex .fontsize-ensurer.reset-size5.size6,.katex .sizing.reset-size5.size6{font-size:1.1111111111em}.katex .fontsize-ensurer.reset-size5.size7,.katex .sizing.reset-size5.size7{font-size:1.3333333333em}.katex .fontsize-ensurer.reset-size5.size8,.katex .sizing.reset-size5.size8{font-size:1.6em}.katex .fontsize-ensurer.reset-size5.size9,.katex .sizing.reset-size5.size9{font-size:1.92em}.katex .fontsize-ensurer.reset-size5.size10,.katex .sizing.reset-size5.size10{font-size:2.3044444444em}.katex .fontsize-ensurer.reset-size5.size11,.katex .sizing.reset-size5.size11{font-size:2.7644444444em}.katex .fontsize-ensurer.reset-size6.size1,.katex .sizing.reset-size6.size1{font-size:.5em}.katex .fontsize-ensurer.reset-size6.size2,.katex .sizing.reset-size6.size2{font-size:.6em}.katex .fontsize-ensurer.reset-size6.size3,.katex .sizing.reset-size6.size3{font-size:.7em}.katex .fontsize-ensurer.reset-size6.size4,.katex .sizing.reset-size6.size4{font-size:.8em}.katex .fontsize-ensurer.reset-size6.size5,.katex .sizing.reset-size6.size5{font-size:.9em}.katex .fontsize-ensurer.reset-size6.size6,.katex .sizing.reset-size6.size6{font-size:1em}.katex .fontsize-ensurer.reset-size6.size7,.katex .sizing.reset-size6.size7{font-size:1.2em}.katex .fontsize-ensurer.reset-size6.size8,.katex .sizing.reset-size6.size8{font-size:1.44em}.katex .fontsize-ensurer.reset-size6.size9,.katex .sizing.reset-size6.size9{font-size:1.728em}.katex .fontsize-ensurer.reset-size6.size10,.katex .sizing.reset-size6.size10{font-size:2.074em}.katex .fontsize-ensurer.reset-size6.size11,.katex .sizing.reset-size6.size11{font-size:2.488em}.katex .fontsize-ensurer.reset-size7.size1,.katex .sizing.reset-size7.size1{font-size:.4166666667em}.katex .fontsize-ensurer.reset-size7.size2,.katex .sizing.reset-size7.size2{font-size:.5em}.katex .fontsize-ensurer.reset-size7.size3,.katex .sizing.reset-size7.size3{font-size:.5833333333em}.katex .fontsize-ensurer.reset-size7.size4,.katex .sizing.reset-size7.size4{font-size:.6666666667em}.katex .fontsize-ensurer.reset-size7.size5,.katex .sizing.reset-size7.size5{font-size:.75em}.katex .fontsize-ensurer.reset-size7.size6,.katex .sizing.reset-size7.size6{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size7.size7,.katex .sizing.reset-size7.size7{font-size:1em}.katex .fontsize-ensurer.reset-size7.size8,.katex .sizing.reset-size7.size8{font-size:1.2em}.katex .fontsize-ensurer.reset-size7.size9,.katex .sizing.reset-size7.size9{font-size:1.44em}.katex .fontsize-ensurer.reset-size7.size10,.katex .sizing.reset-size7.size10{font-size:1.7283333333em}.katex .fontsize-ensurer.reset-size7.size11,.katex .sizing.reset-size7.size11{font-size:2.0733333333em}.katex .fontsize-ensurer.reset-size8.size1,.katex .sizing.reset-size8.size1{font-size:.3472222222em}.katex .fontsize-ensurer.reset-size8.size2,.katex .sizing.reset-size8.size2{font-size:.4166666667em}.katex .fontsize-ensurer.reset-size8.size3,.katex .sizing.reset-size8.size3{font-size:.4861111111em}.katex .fontsize-ensurer.reset-size8.size4,.katex .sizing.reset-size8.size4{font-size:.5555555556em}.katex .fontsize-ensurer.reset-size8.size5,.katex .sizing.reset-size8.size5{font-size:.625em}.katex .fontsize-ensurer.reset-size8.size6,.katex .sizing.reset-size8.size6{font-size:.6944444444em}.katex .fontsize-ensurer.reset-size8.size7,.katex .sizing.reset-size8.size7{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size8.size8,.katex .sizing.reset-size8.size8{font-size:1em}.katex .fontsize-ensurer.reset-size8.size9,.katex .sizing.reset-size8.size9{font-size:1.2em}.katex .fontsize-ensurer.reset-size8.size10,.katex .sizing.reset-size8.size10{font-size:1.4402777778em}.katex .fontsize-ensurer.reset-size8.size11,.katex .sizing.reset-size8.size11{font-size:1.7277777778em}.katex .fontsize-ensurer.reset-size9.size1,.katex .sizing.reset-size9.size1{font-size:.2893518519em}.katex .fontsize-ensurer.reset-size9.size2,.katex .sizing.reset-size9.size2{font-size:.3472222222em}.katex .fontsize-ensurer.reset-size9.size3,.katex .sizing.reset-size9.size3{font-size:.4050925926em}.katex .fontsize-ensurer.reset-size9.size4,.katex .sizing.reset-size9.size4{font-size:.462962963em}.katex .fontsize-ensurer.reset-size9.size5,.katex .sizing.reset-size9.size5{font-size:.5208333333em}.katex .fontsize-ensurer.reset-size9.size6,.katex .sizing.reset-size9.size6{font-size:.5787037037em}.katex .fontsize-ensurer.reset-size9.size7,.katex .sizing.reset-size9.size7{font-size:.6944444444em}.katex .fontsize-ensurer.reset-size9.size8,.katex .sizing.reset-size9.size8{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size9.size9,.katex .sizing.reset-size9.size9{font-size:1em}.katex .fontsize-ensurer.reset-size9.size10,.katex .sizing.reset-size9.size10{font-size:1.2002314815em}.katex .fontsize-ensurer.reset-size9.size11,.katex .sizing.reset-size9.size11{font-size:1.4398148148em}.katex .fontsize-ensurer.reset-size10.size1,.katex .sizing.reset-size10.size1{font-size:.2410800386em}.katex .fontsize-ensurer.reset-size10.size2,.katex .sizing.reset-size10.size2{font-size:.2892960463em}.katex .fontsize-ensurer.reset-size10.size3,.katex .sizing.reset-size10.size3{font-size:.337512054em}.katex .fontsize-ensurer.reset-size10.size4,.katex .sizing.reset-size10.size4{font-size:.3857280617em}.katex .fontsize-ensurer.reset-size10.size5,.katex .sizing.reset-size10.size5{font-size:.4339440694em}.katex .fontsize-ensurer.reset-size10.size6,.katex .sizing.reset-size10.size6{font-size:.4821600771em}.katex .fontsize-ensurer.reset-size10.size7,.katex .sizing.reset-size10.size7{font-size:.5785920926em}.katex .fontsize-ensurer.reset-size10.size8,.katex .sizing.reset-size10.size8{font-size:.6943105111em}.katex .fontsize-ensurer.reset-size10.size9,.katex .sizing.reset-size10.size9{font-size:.8331726133em}.katex .fontsize-ensurer.reset-size10.size10,.katex .sizing.reset-size10.size10{font-size:1em}.katex .fontsize-ensurer.reset-size10.size11,.katex .sizing.reset-size10.size11{font-size:1.1996142719em}.katex .fontsize-ensurer.reset-size11.size1,.katex .sizing.reset-size11.size1{font-size:.2009646302em}.katex .fontsize-ensurer.reset-size11.size2,.katex .sizing.reset-size11.size2{font-size:.2411575563em}.katex .fontsize-ensurer.reset-size11.size3,.katex .sizing.reset-size11.size3{font-size:.2813504823em}.katex .fontsize-ensurer.reset-size11.size4,.katex .sizing.reset-size11.size4{font-size:.3215434084em}.katex .fontsize-ensurer.reset-size11.size5,.katex .sizing.reset-size11.size5{font-size:.3617363344em}.katex .fontsize-ensurer.reset-size11.size6,.katex .sizing.reset-size11.size6{font-size:.4019292605em}.katex .fontsize-ensurer.reset-size11.size7,.katex .sizing.reset-size11.size7{font-size:.4823151125em}.katex .fontsize-ensurer.reset-size11.size8,.katex .sizing.reset-size11.size8{font-size:.578778135em}.katex .fontsize-ensurer.reset-size11.size9,.katex .sizing.reset-size11.size9{font-size:.6945337621em}.katex .fontsize-ensurer.reset-size11.size10,.katex .sizing.reset-size11.size10{font-size:.8336012862em}.katex .fontsize-ensurer.reset-size11.size11,.katex .sizing.reset-size11.size11{font-size:1em}.katex .delimsizing.size1{font-family:KaTeX_Size1}.katex .delimsizing.size2{font-family:KaTeX_Size2}.katex .delimsizing.size3{font-family:KaTeX_Size3}.katex .delimsizing.size4{font-family:KaTeX_Size4}.katex .delimsizing.mult .delim-size1>span{font-family:KaTeX_Size1}.katex .delimsizing.mult .delim-size4>span{font-family:KaTeX_Size4}.katex .nulldelimiter{display:inline-block;width:.12em}.katex .delimcenter,.katex .op-symbol{position:relative}.katex .op-symbol.small-op{font-family:KaTeX_Size1}.katex .op-symbol.large-op{font-family:KaTeX_Size2}.katex .accent>.vlist-t,.katex .op-limits>.vlist-t{text-align:center}.katex .accent .accent-body{position:relative}.katex .accent .accent-body:not(.accent-full){width:0}.katex .overlay{display:block}.katex .mtable .vertical-separator{display:inline-block;min-width:1px}.katex .mtable .arraycolsep{display:inline-block}.katex .mtable .col-align-c>.vlist-t{text-align:center}.katex .mtable .col-align-l>.vlist-t{text-align:left}.katex .mtable .col-align-r>.vlist-t{text-align:right}.katex .svg-align{text-align:left}.katex svg{fill:currentColor;stroke:currentColor;display:block;height:inherit;position:absolute;width:100%}.katex svg path{stroke:none}.katex svg{fill-rule:nonzero;fill-opacity:1;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1}.katex img{border-style:none;max-height:none;max-width:none;min-height:0;min-width:0}.katex .stretchy{display:block;overflow:hidden;position:relative;width:100%}.katex .stretchy:after,.katex .stretchy:before{content:""}.katex .hide-tail{overflow:hidden;position:relative;width:100%}.katex .halfarrow-left{left:0;overflow:hidden;position:absolute;width:50.2%}.katex .halfarrow-right{overflow:hidden;position:absolute;right:0;width:50.2%}.katex .brace-left{left:0;overflow:hidden;position:absolute;width:25.1%}.katex .brace-center{left:25%;overflow:hidden;position:absolute;width:50%}.katex .brace-right{overflow:hidden;position:absolute;right:0;width:25.1%}.katex .x-arrow-pad{padding:0 .5em}.katex .cd-arrow-pad{padding:0 .55556em 0 .27778em}.katex .mover,.katex .munder,.katex .x-arrow{text-align:center}.katex .boxpad{padding:0 .3em}.katex .fbox,.katex .fcolorbox{border:.04em solid;box-sizing:border-box}.katex .cancel-pad{padding:0 .2em}.katex .cancel-lap{margin-left:-.2em;margin-right:-.2em}.katex .sout{border-bottom-style:solid;border-bottom-width:.08em}.katex .angl{border-right:.049em solid;border-top:.049em solid;box-sizing:border-box;margin-right:.03889em}.katex .anglpad{padding:0 .03889em}.katex .eqn-num:before{content:"(" counter(katexEqnNo) ")";counter-increment:katexEqnNo}.katex .mml-eqn-num:before{content:"(" counter(mmlEqnNo) ")";counter-increment:mmlEqnNo}.katex .mtr-glue{width:50%}.katex .cd-vert-arrow{display:inline-block;position:relative}.katex .cd-label-left{display:inline-block;position:absolute;right:calc(50% + .3em);text-align:left}.katex .cd-label-right{display:inline-block;left:calc(50% + .3em);position:absolute;text-align:right}.katex-display{display:block;margin:1em 0;text-align:center}.katex-display>.katex{display:block;text-align:center;white-space:nowrap}.katex-display>.katex>.katex-html{display:block;position:relative}.katex-display>.katex>.katex-html>.tag{position:absolute;right:0}.katex-display.leqno>.katex>.katex-html>.tag{left:0;right:auto}.katex-display.fleqn>.katex{padding-left:2em;text-align:left}body{counter-reset:katexEqnNo mmlEqnNo}
+
+</style>
+
+</head>
+<body>
+    <div class="content-wrapper">
+        <nav class="table-of-contents"><ol><li><a href="#cours-artplastique-%E2%80%94-apprendre-react-%26-next.js-%C3%A0-travers-un-vrai-projet">Cours ArtPlastique — Apprendre React &amp; Next.js à travers un vrai projet</a><ol><li><a href="#table-des-mati%C3%A8res">Table des matières</a></li><li><a href="#1.-introduction">1. Introduction</a><ol><li><a href="#1.1-qu'est-ce-qu'artplastique-%3F">1.1 Qu'est-ce qu'ArtPlastique ?</a></li><li><a href="#1.2-pourquoi-apprendre-avec-ce-projet-%3F">1.2 Pourquoi apprendre avec ce projet ?</a></li><li><a href="#1.3-comment-utiliser-ce-cours">1.3 Comment utiliser ce cours</a></li></ol></li><li><a href="#2.-pr%C3%A9requis-et-environnement">2. Prérequis et environnement</a><ol><li><a href="#2.1-ce-qu'il-faut-savoir-avant-de-commencer">2.1 Ce qu'il faut savoir avant de commencer</a></li><li><a href="#2.2-installation-du-projet">2.2 Installation du projet</a></li><li><a href="#2.3-stack-technique">2.3 Stack technique</a></li></ol></li><li><a href="#3.-vue-d'ensemble-du-projet">3. Vue d'ensemble du projet</a><ol><li><a href="#3.1-les-trois-espaces-utilisateur">3.1 Les trois espaces utilisateur</a></li><li><a href="#3.2-flux-de-donn%C3%A9es-simplifi%C3%A9">3.2 Flux de données simplifié</a></li><li><a href="#3.3-carte-des-routes-principales">3.3 Carte des routes principales</a></li></ol></li><li><a href="#4.-les-fondamentaux-de-react-(rappel-guid%C3%A9)">4. Les fondamentaux de React (rappel guidé)</a><ol><li><a href="#4.1-qu'est-ce-qu'un-composant-%3F">4.1 Qu'est-ce qu'un composant ?</a></li><li><a href="#4.2-props-%3A-passer-des-donn%C3%A9es-d'un-parent-%C3%A0-un-enfant">4.2 Props : passer des données d'un parent à un enfant</a></li><li><a href="#4.3-%C3%A9tat-local-avec-usestate">4.3 État local avec useState</a></li><li><a href="#4.4-effets-de-bord-avec-useeffect">4.4 Effets de bord avec useEffect</a></li><li><a href="#4.5-r%C3%A9f%C3%A9rences-avec-useref">4.5 Références avec useRef</a></li><li><a href="#4.6-listes-et-cl%C3%A9s-(key)">4.6 Listes et clés (key)</a></li></ol></li><li><a href="#5.-next.js-et-le-app-router">5. Next.js et le App Router</a><ol><li><a href="#5.1-next.js-vs-react-seul">5.1 Next.js vs React seul</a></li><li><a href="#5.2-le-fichier-layout.tsx-%E2%80%94-la-coquille-globale">5.2 Le fichier layout.tsx — la coquille globale</a></li><li><a href="#5.3-convention-page.tsx">5.3 Convention page.tsx</a></li><li><a href="#5.4-m%C3%A9tadonn%C3%A9es-seo">5.4 Métadonnées SEO</a></li><li><a href="#5.5-alias-d'import-%40%2F">5.5 Alias d'import @/</a></li></ol></li><li><a href="#6.-architecture-des-dossiers">6. Architecture des dossiers</a><ol><li><a href="#6.1-arborescence-comment%C3%A9e">6.1 Arborescence commentée</a></li><li><a href="#6.2-s%C3%A9paration-app%2F-vs-views%2F">6.2 Séparation app/ vs views/</a></li><li><a href="#6.3-r%C3%B4le-de-chaque-couche">6.3 Rôle de chaque couche</a></li></ol></li><li><a href="#7.-le-routage-%3A-pages-publiques-et-routes-dynamiques">7. Le routage : pages publiques et routes dynamiques</a><ol><li><a href="#7.1-routes-statiques">7.1 Routes statiques</a></li><li><a href="#7.2-routes-dynamiques-avec-%5Bslug%5D">7.2 Routes dynamiques avec [slug]</a></li><li><a href="#7.3-navigation-avec-link">7.3 Navigation avec Link</a></li><li><a href="#7.4-userouter-et-usepathname">7.4 useRouter et usePathname</a></li><li><a href="#7.5-page-404">7.5 Page 404</a></li></ol></li><li><a href="#8.-composants-client-vs-server">8. Composants Client vs Server</a><ol><li><a href="#8.1-la-directive-'use-client'">8.1 La directive 'use client'</a></li><li><a href="#8.2-pourquoi-cette-s%C3%A9paration-%3F">8.2 Pourquoi cette séparation ?</a></li><li><a href="#8.3-l'hydratation-et-ishydrated">8.3 L'hydratation et isHydrated</a></li><li><a href="#8.4-arbre-des-composants-client">8.4 Arbre des composants client</a></li></ol></li><li><a href="#9.-les-layouts-et-shells-(coquilles-d'interface)">9. Les layouts et shells (coquilles d'interface)</a><ol><li><a href="#9.1-publicshell-%E2%80%94-navigation-visiteur">9.1 PublicShell — navigation visiteur</a></li><li><a href="#9.2-paintershell-%E2%80%94-espace-peintre">9.2 PainterShell — espace peintre</a></li><li><a href="#9.3-controlshell-%E2%80%94-espace-admin">9.3 ControlShell — espace admin</a></li><li><a href="#9.4-layout-imbriqu%C3%A9-admin">9.4 Layout imbriqué admin</a></li><li><a href="#9.5-composition-%3A-shell-%2B-contenu">9.5 Composition : shell + contenu</a></li></ol></li><li><a href="#10.-gestion-d'%C3%A9tat-avec-react-context">10. Gestion d'état avec React Context</a><ol><li><a href="#10.1-le-probl%C3%A8me-du-%C2%AB-prop-drilling-%C2%BB">10.1 Le problème du « prop drilling »</a></li><li><a href="#10.2-demostorecontext-%E2%80%94-le-c%C5%93ur-de-l'app">10.2 DemoStoreContext — le cœur de l'app</a></li><li><a href="#10.3-cr%C3%A9er-et-consommer-un-contexte">10.3 Créer et consommer un contexte</a></li><li><a href="#10.4-usecallback-et-usememo">10.4 useCallback et useMemo</a></li><li><a href="#10.5-pattern-%C2%AB-r%C3%A9sultat-typ%C3%A9-%C2%BB">10.5 Pattern « résultat typé »</a></li></ol></li><li><a href="#11.-persistance-locale-(mode-d%C3%A9mo)">11. Persistance locale (mode démo)</a><ol><li><a href="#11.1-localstorage-en-bref">11.1 localStorage en bref</a></li><li><a href="#11.2-garde-typeof-window">11.2 Garde typeof window</a></li><li><a href="#11.3-fusion-seed-%2B-stockage">11.3 Fusion seed + stockage</a></li><li><a href="#11.4-resetdemodata">11.4 resetDemoData</a></li></ol></li><li><a href="#12.-authentification-et-r%C3%B4les">12. Authentification et rôles</a><ol><li><a href="#12.1-les-trois-r%C3%B4les">12.1 Les trois rôles</a></li><li><a href="#12.2-flux-de-connexion">12.2 Flux de connexion</a></li><li><a href="#12.3-requirerole-%E2%80%94-garde-de-route">12.3 RequireRole — garde de route</a></li><li><a href="#12.4-admingate-et-paintergate">12.4 AdminGate et PainterGate</a></li><li><a href="#12.5-inscription-peintre">12.5 Inscription peintre</a></li></ol></li><li><a href="#13.-le-mod%C3%A8le-de-donn%C3%A9es-%3A-fiches-et-roadmaps">13. Le modèle de données : fiches et roadmaps</a><ol><li><a href="#13.1-type-fiche">13.1 Type Fiche</a></li><li><a href="#13.2-type-roadmap">13.2 Type Roadmap</a></li><li><a href="#13.3-extension-d%C3%A9mo-%3A-statuts-et-auteur">13.3 Extension démo : statuts et auteur</a></li><li><a href="#13.4-organisation-des-fiches-dans-data%2F">13.4 Organisation des fiches dans data/</a></li><li><a href="#13.5-g%C3%A9n%C3%A9ration-de-slugs">13.5 Génération de slugs</a></li></ol></li><li><a href="#14.-workflow-%C3%A9ditorial-(brouillon-%E2%86%92-publication)">14. Workflow éditorial (brouillon → publication)</a><ol><li><a href="#14.1-les-statuts-de-contenu">14.1 Les statuts de contenu</a></li><li><a href="#14.2-parcours-peintre">14.2 Parcours peintre</a></li><li><a href="#14.3-file-de-mod%C3%A9ration-admin">14.3 File de modération admin</a></li><li><a href="#14.4-questions-visiteurs-%E2%86%92-fiches">14.4 Questions visiteurs → fiches</a></li></ol></li><li><a href="#15.-typescript-dans-le-projet">15. TypeScript dans le projet</a><ol><li><a href="#15.1-pourquoi-typescript-%3F">15.1 Pourquoi TypeScript ?</a></li><li><a href="#15.2-types-vs-interfaces">15.2 Types vs interfaces</a></li><li><a href="#15.3-types-utilitaires-du-projet">15.3 Types utilitaires du projet</a></li><li><a href="#15.4-readonly-et-props-next.js">15.4 Readonly et props Next.js</a></li></ol></li><li><a href="#16.-le-canvas-de-peinture-(paintcanvas)">16. Le canvas de peinture (PaintCanvas)</a><ol><li><a href="#16.1-pr%C3%A9sentation">16.1 Présentation</a></li><li><a href="#16.2-concepts-html5-canvas">16.2 Concepts HTML5 Canvas</a></li><li><a href="#16.3-palettes-et-outils">16.3 Palettes et outils</a></li><li><a href="#16.4-int%C3%A9gration-ia-(aipaintservice)">16.4 Intégration IA (aiPaintService)</a></li><li><a href="#16.5-ficheswatch-%E2%80%94-mini-canvas-d%C3%A9coratif">16.5 FicheSwatch — mini canvas décoratif</a></li></ol></li><li><a href="#17.-styles-et-css-global">17. Styles et CSS global</a><ol><li><a href="#17.1-approche-css-du-projet">17.1 Approche CSS du projet</a></li><li><a href="#17.2-organisation-des-classes">17.2 Organisation des classes</a></li><li><a href="#17.3-bonnes-pratiques-accessibilit%C3%A9">17.3 Bonnes pratiques accessibilité</a></li></ol></li><li><a href="#18.-exercices-pratiques">18. Exercices pratiques</a><ol><li><a href="#niveau-1-%E2%80%94-d%C3%A9couverte">Niveau 1 — Découverte</a></li><li><a href="#niveau-2-%E2%80%94-react">Niveau 2 — React</a></li><li><a href="#niveau-3-%E2%80%94-next.js">Niveau 3 — Next.js</a></li><li><a href="#niveau-4-%E2%80%94-%C3%A9tat-et-donn%C3%A9es">Niveau 4 — État et données</a></li><li><a href="#niveau-5-%E2%80%94-canvas">Niveau 5 — Canvas</a></li><li><a href="#projet-fil-rouge-%E2%80%94-page-%C2%AB-mes-favoris-%C2%BB">Projet fil rouge — Page « Mes favoris »</a></li></ol></li><li><a href="#19.-annexes">19. Annexes</a><ol><li><a href="#a.-glossaire">A. Glossaire</a></li><li><a href="#b.-fichiers-cl%C3%A9s-%C3%A0-conna%C3%AEtre">B. Fichiers clés à connaître</a></li><li><a href="#c.-comptes-et-mots-de-passe-d%C3%A9mo">C. Comptes et mots de passe démo</a></li><li><a href="#d.-ressources-externes">D. Ressources externes</a></li><li><a href="#e.-changelog-du-cours">E. Changelog du cours</a></li></ol></li></ol></li></ol></nav><h1 id="cours-artplastique-%E2%80%94-apprendre-react-%26-next.js-%C3%A0-travers-un-vrai-projet" tabindex="-1">Cours ArtPlastique — Apprendre React &amp; Next.js à travers un vrai projet</h1>
+<blockquote>
+<p><strong>Public visé :</strong> débutant en React et Next.js, curieux de comprendre comment une application web moderne est construite.<br>
+<strong>Projet étudié :</strong> le frontend <strong>ArtPlastique</strong> (<code>artplastique</code>) — plateforme de fiches techniques, roadmaps pédagogiques et espaces peintres.<br>
+<strong>Statut du cours :</strong> document complet (version 2 — juin 2026).</p>
+</blockquote>
+<hr>
+<h2 id="table-des-mati%C3%A8res" tabindex="-1">Table des matières</h2>
+<ol>
+<li><a href="#1-introduction">Introduction</a></li>
+<li><a href="#2-pr%C3%A9requis-et-environnement">Prérequis et environnement</a></li>
+<li><a href="#3-vue-densemble-du-projet">Vue d'ensemble du projet</a></li>
+<li><a href="#4-les-fondamentaux-de-react-rappel-guid%C3%A9">Les fondamentaux de React (rappel guidé)</a></li>
+<li><a href="#5-nextjs-et-le-app-router">Next.js et le App Router</a></li>
+<li><a href="#6-architecture-des-dossiers">Architecture des dossiers</a></li>
+<li><a href="#7-le-routage-pages-publiques-et-routes-dynamiques">Le routage : pages publiques et routes dynamiques</a></li>
+<li><a href="#8-composants-client-vs-server">Composants Client vs Server</a></li>
+<li><a href="#9-les-layouts-et-shells-coquilles-dinterface">Les layouts et shells (coquilles d'interface)</a></li>
+<li><a href="#10-gestion-d%C3%A9tat-avec-react-context">Gestion d'état avec React Context</a></li>
+<li><a href="#11-persistance-locale-mode-d%C3%A9mo">Persistance locale (mode démo)</a></li>
+<li><a href="#12-authentification-et-r%C3%B4les">Authentification et rôles</a></li>
+<li><a href="#13-le-mod%C3%A8le-de-donn%C3%A9es-fiches-et-roadmaps">Le modèle de données : fiches et roadmaps</a></li>
+<li><a href="#14-workflow-%C3%A9ditorial-brouillon--publication">Workflow éditorial (brouillon → publication)</a></li>
+<li><a href="#15-typescript-dans-le-projet">TypeScript dans le projet</a></li>
+<li><a href="#16-le-canvas-de-peinture-paintcanvas">Le canvas de peinture (PaintCanvas)</a></li>
+<li><a href="#17-styles-et-css-global">Styles et CSS global</a></li>
+<li><a href="#18-exercices-pratiques">Exercices pratiques</a></li>
+<li><a href="#19-annexes">Annexes</a></li>
+</ol>
+<hr>
+<h2 id="1.-introduction" tabindex="-1">1. Introduction</h2>
+<h3 id="1.1-qu'est-ce-qu'artplastique-%3F" tabindex="-1">1.1 Qu'est-ce qu'ArtPlastique ?</h3>
+<p><strong>ArtPlastique</strong> est une application web dédiée à la peinture et aux arts plastiques. Elle permet de :</p>
+<ul>
+<li><strong>Consulter</strong> des <em>fiches techniques</em> (pigments, outils, techniques comme le glacis, le lavis…)</li>
+<li><strong>Suivre</strong> des <em>roadmaps</em> — parcours d'apprentissage structurés en plusieurs étapes</li>
+<li><strong>Poser des questions</strong> aux peintres de la communauté</li>
+<li><strong>Contribuer</strong> en créant du contenu (espace peintre)</li>
+<li><strong>Modérer</strong> les contributions (espace administrateur)</li>
+</ul>
+<p>L'application tourne entièrement côté navigateur en mode démo : les données sont stockées dans le <code>localStorage</code>, sans serveur backend pour l'instant. C'est un excellent terrain d'apprentissage : on voit React et Next.js « en vrai », sans la complexité d'une API distante.</p>
+<h3 id="1.2-pourquoi-apprendre-avec-ce-projet-%3F" tabindex="-1">1.2 Pourquoi apprendre avec ce projet ?</h3>
+<table>
+<thead>
+<tr>
+<th>Avantage</th>
+<th>Explication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Projet réel</strong></td>
+<td>Pas un « todo list » générique — domaine métier concret (peinture)</td>
+</tr>
+<tr>
+<td><strong>Next.js 16 + React 19</strong></td>
+<td>Stack moderne, proche de ce qu'on trouve en entreprise</td>
+</tr>
+<tr>
+<td><strong>TypeScript</strong></td>
+<td>Typage fort, bonnes pratiques</td>
+</tr>
+<tr>
+<td><strong>Patterns variés</strong></td>
+<td>Routing, Context, formulaires, guards, canvas HTML5</td>
+</tr>
+<tr>
+<td><strong>Progression naturelle</strong></td>
+<td>Du visiteur anonyme à l'admin, chaque rôle expose un concept</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1.3-comment-utiliser-ce-cours" tabindex="-1">1.3 Comment utiliser ce cours</h3>
+<p><strong>Première lecture (parcours linéaire)</strong></p>
+<ol>
+<li>Lisez les chapitres 1 à 3 pour comprendre le contexte.</li>
+<li>Parcourez les chapitres 4 à 8 pour les bases React/Next.js illustrées par le code.</li>
+<li>Approfondissez les chapitres 9 à 14 pour la logique métier.</li>
+<li>Terminez par les chapitres 15 à 18 (TypeScript, canvas, CSS, exercices).</li>
+</ol>
+<p><strong>Méthode recommandée</strong></p>
+<ul>
+<li>Ouvrez <strong>deux fenêtres</strong> : ce document et le code source dans l'éditeur.</li>
+<li>Chaque section cite des fichiers précis — allez les lire immédiatement.</li>
+<li>Lancez <code>npm run dev</code> et manipulez l'app en parallèle de la lecture.</li>
+<li>Faites les exercices du chapitre 18 un par un, sans regarder les solutions avant d'avoir essayé.</li>
+</ul>
+<p><strong>Repères visuels dans ce document</strong></p>
+<ul>
+<li>Les blocs de code avec un chemin de fichier proviennent du projet réel.</li>
+<li>Les schémas ASCII résument des flux complexes.</li>
+<li>Les tableaux comparent des concepts (Server vs Client, statuts de contenu…).</li>
+</ul>
+<hr>
+<h2 id="2.-pr%C3%A9requis-et-environnement" tabindex="-1">2. Prérequis et environnement</h2>
+<h3 id="2.1-ce-qu'il-faut-savoir-avant-de-commencer" tabindex="-1">2.1 Ce qu'il faut savoir avant de commencer</h3>
+<p><strong>Indispensable :</strong></p>
+<ul>
+<li>HTML et CSS de base (balises, classes, flexbox rudimentaire)</li>
+<li>JavaScript ES6+ : <code>const</code>/<code>let</code>, fonctions fléchées, destructuring, <code>map</code>/<code>filter</code></li>
+<li>Notions de terminal : <code>cd</code>, <code>npm install</code>, <code>npm run dev</code></li>
+</ul>
+<p><strong>Utile mais pas bloquant :</strong></p>
+<ul>
+<li>Première exposition à React (composants, props, <code>useState</code>)</li>
+<li>Notions de TypeScript (types, interfaces)</li>
+</ul>
+<h3 id="2.2-installation-du-projet" tabindex="-1">2.2 Installation du projet</h3>
+<pre class="hljs"><code><div><span class="hljs-comment"># Se placer dans le dossier Frontend</span>
+<span class="hljs-built_in">cd</span> Frontend
+
+<span class="hljs-comment"># Installer les dépendances</span>
+npm install
+
+<span class="hljs-comment"># Lancer le serveur de développement</span>
+npm run dev
+</div></code></pre>
+<p>Ouvrez <a href="http://localhost:3000">http://localhost:3000</a>. Vous devriez voir la page d'accueil ArtPlastique.</p>
+<p><strong>Scripts disponibles</strong> (<code>package.json</code>) :</p>
+<table>
+<thead>
+<tr>
+<th>Commande</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm run dev</code></td>
+<td>Serveur de développement avec rechargement à chaud</td>
+</tr>
+<tr>
+<td><code>npm run build</code></td>
+<td>Compilation de production</td>
+</tr>
+<tr>
+<td><code>npm run start</code></td>
+<td>Lance l'app compilée</td>
+</tr>
+<tr>
+<td><code>npm run lint</code></td>
+<td>Vérification ESLint</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2.3-stack-technique" tabindex="-1">2.3 Stack technique</h3>
+<table>
+<thead>
+<tr>
+<th>Technologie</th>
+<th>Version</th>
+<th>Rôle dans le projet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Next.js</strong></td>
+<td>16.x</td>
+<td>Framework React, routage, build</td>
+</tr>
+<tr>
+<td><strong>React</strong></td>
+<td>19.x</td>
+<td>Interface utilisateur, hooks, Context</td>
+</tr>
+<tr>
+<td><strong>TypeScript</strong></td>
+<td>5.8</td>
+<td>Typage statique</td>
+</tr>
+<tr>
+<td><strong>ESLint</strong></td>
+<td>9.x</td>
+<td>Qualité de code (<code>eslint-config-next</code>)</td>
+</tr>
+<tr>
+<td><strong>CSS custom</strong></td>
+<td>—</td>
+<td>Pas de Tailwind, Bootstrap ni CSS Modules</td>
+</tr>
+<tr>
+<td><strong>Persistance</strong></td>
+<td><code>localStorage</code></td>
+<td>Pas de base de données ni d'API backend</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ce que le projet n'utilise pas (volontairement)</strong></p>
+<ul>
+<li>Pas de Redux, Zustand ou autre store externe → React Context suffit</li>
+<li>Pas de Prisma, MongoDB, Supabase → mode démo 100 % client</li>
+<li>Pas de librairie de composants (MUI, shadcn…) → design sur mesure</li>
+</ul>
+<p>Le fichier <code>next.config.ts</code> est minimal — la configuration par défaut de Next.js 16 suffit :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">NextConfig</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'next'</span>
+
+<span class="hljs-keyword">const</span> <span class="hljs-attr">nextConfig</span>: <span class="hljs-title class_">NextConfig</span> = {}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> nextConfig
+</div></code></pre>
+<hr>
+<h2 id="3.-vue-d'ensemble-du-projet" tabindex="-1">3. Vue d'ensemble du projet</h2>
+<h3 id="3.1-les-trois-espaces-utilisateur" tabindex="-1">3.1 Les trois espaces utilisateur</h3>
+<pre class="hljs"><code><div>┌─────────────────────────────────────────────────────────────┐
+│                    VISITEUR (public)                        │
+│  /  /fiches  /roadmaps  /categories  /techniques  /oeuvres  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                    /connexion (login / signup)
+                              │
+          ┌───────────────────┴───────────────────┐
+          ▼                                       ▼
+┌─────────────────────┐               ┌─────────────────────┐
+│   PEINTRE           │               │   ADMIN               │
+│ /dashboard/peintre  │               │ /admin                │
+│ Créer fiches        │               │ Modérer contenu       │
+│ Créer roadmaps      │               │ Gérer peintres        │
+│ Répondre questions  │               │ Valider / rejeter     │
+└─────────────────────┘               └─────────────────────┘
+</div></code></pre>
+<h3 id="3.2-flux-de-donn%C3%A9es-simplifi%C3%A9" tabindex="-1">3.2 Flux de données simplifié</h3>
+<pre class="hljs"><code><div>siteContent.ts (données initiales)
+        │
+        ▼
+demoSeed.ts (fusion avec localStorage)
+        │
+        ▼
+DemoStoreContext (état global React)
+        │
+        ├──► Vues publiques (fiches publiées, roadmaps)
+        ├──► Dashboard peintre (mes brouillons, soumissions)
+        └──► Admin (file de modération)
+</div></code></pre>
+<h3 id="3.3-carte-des-routes-principales" tabindex="-1">3.3 Carte des routes principales</h3>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>Fichier page</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/</code></td>
+<td><code>src/app/page.tsx</code></td>
+<td>Accueil</td>
+</tr>
+<tr>
+<td><code>/fiches</code></td>
+<td><code>src/app/fiches/page.tsx</code></td>
+<td>Liste des fiches</td>
+</tr>
+<tr>
+<td><code>/fiches/[slug]</code></td>
+<td><code>src/app/fiches/[slug]/page.tsx</code></td>
+<td>Détail d'une fiche</td>
+</tr>
+<tr>
+<td><code>/roadmaps</code></td>
+<td><code>src/app/roadmaps/page.tsx</code></td>
+<td>Liste des roadmaps</td>
+</tr>
+<tr>
+<td><code>/roadmaps/[slug]</code></td>
+<td><code>src/app/roadmaps/[slug]/page.tsx</code></td>
+<td>Détail roadmap</td>
+</tr>
+<tr>
+<td><code>/connexion</code></td>
+<td><code>src/app/connexion/page.tsx</code></td>
+<td>Auth</td>
+</tr>
+<tr>
+<td><code>/dashboard/peintre</code></td>
+<td><code>src/app/dashboard/peintre/page.tsx</code></td>
+<td>Espace peintre</td>
+</tr>
+<tr>
+<td><code>/admin</code></td>
+<td><code>src/app/admin/page.tsx</code></td>
+<td>Espace admin</td>
+</tr>
+<tr>
+<td><code>/admin/fiches</code></td>
+<td><code>src/app/admin/fiches/page.tsx</code></td>
+<td>Modération fiches</td>
+</tr>
+<tr>
+<td><code>/admin/roadmaps</code></td>
+<td><code>src/app/admin/roadmaps/page.tsx</code></td>
+<td>Modération roadmaps</td>
+</tr>
+<tr>
+<td><code>/admin/peintres</code></td>
+<td><code>src/app/admin/peintres/page.tsx</code></td>
+<td>Gestion peintres</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="4.-les-fondamentaux-de-react-(rappel-guid%C3%A9)" tabindex="-1">4. Les fondamentaux de React (rappel guidé)</h2>
+<h3 id="4.1-qu'est-ce-qu'un-composant-%3F" tabindex="-1">4.1 Qu'est-ce qu'un composant ?</h3>
+<p>En React, l'interface est découpée en <strong>composants</strong> — des fonctions qui retournent du JSX (HTML enrichi).</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// src/app/page.tsx</span>
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">HomePage</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/views/HomePage'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Page</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">HomePage</span> /&gt;</span></span>
+}
+</div></code></pre>
+<p>Ici, <code>Page</code> est un composant Next.js (une « page »). Il délègue tout le contenu à <code>HomePage</code>, un composant plus riche dans <code>src/views/</code>.</p>
+<p><strong>À retenir :</strong> un composant = une brique réutilisable d'interface.</p>
+<h3 id="4.2-props-%3A-passer-des-donn%C3%A9es-d'un-parent-%C3%A0-un-enfant" tabindex="-1">4.2 Props : passer des données d'un parent à un enfant</h3>
+<p>Les <strong>props</strong> (properties) sont les arguments d'un composant.</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// src/app/fiches/[slug]/page.tsx</span>
+&lt;<span class="hljs-title class_">FicheDetailPage</span> slug={slug} /&gt;
+</div></code></pre>
+<p><code>FicheDetailPage</code> reçoit <code>slug</code> (ex. <code>"glacis"</code>) et peut afficher la fiche correspondante.</p>
+<h3 id="4.3-%C3%A9tat-local-avec-usestate" tabindex="-1">4.3 État local avec <code>useState</code></h3>
+<p>Quand une donnée <strong>change</strong> au fil des interactions (formulaire, onglet actif…), on utilise <code>useState</code>.</p>
+<p>Extrait de <code>HomePage.tsx</code> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> [questionText, setQuestionText] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">''</span>)
+<span class="hljs-keyword">const</span> [visitorName, setVisitorName] = <span class="hljs-title function_">useState</span>(<span class="hljs-string">''</span>)
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">handleQuestionSubmit</span>(<span class="hljs-params"><span class="hljs-attr">event</span>: <span class="hljs-title class_">React</span>.<span class="hljs-title class_">FormEvent</span></span>) {
+  event.<span class="hljs-title function_">preventDefault</span>()
+  <span class="hljs-keyword">if</span> (!questionText.<span class="hljs-title function_">trim</span>()) <span class="hljs-keyword">return</span>
+  <span class="hljs-title function_">askQuestion</span>(questionText, visitorName)
+  <span class="hljs-title function_">setQuestionText</span>(<span class="hljs-string">''</span>)
+  <span class="hljs-title function_">setVisitorName</span>(<span class="hljs-string">''</span>)
+}
+</div></code></pre>
+<ul>
+<li><code>questionText</code> : valeur actuelle du champ</li>
+<li><code>setQuestionText</code> : fonction pour la modifier</li>
+<li><code>event.preventDefault()</code> : empêche le rechargement de la page au submit</li>
+</ul>
+<h3 id="4.4-effets-de-bord-avec-useeffect" tabindex="-1">4.4 Effets de bord avec <code>useEffect</code></h3>
+<p><code>useEffect</code> exécute du code <strong>après</strong> le rendu, quand certaines dépendances changent. C'est le hook des « effets de bord » : accès au DOM, fetch, timers, redirections.</p>
+<p><strong>Pattern 1 — Chargement au montage (tableau de dépendances vide <code>[]</code>)</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// DemoStoreContext.tsx — charge la session une seule fois au démarrage</span>
+<span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-title function_">seedFictionalPainters</span>()
+  <span class="hljs-title function_">setSession</span>(<span class="hljs-title function_">loadSession</span>())
+  <span class="hljs-title function_">setData</span>(<span class="hljs-title function_">mergeStoredDemoData</span>(<span class="hljs-title function_">loadDemoData</span>()))
+  <span class="hljs-title function_">setIsHydrated</span>(<span class="hljs-literal">true</span>)
+}, [])
+</div></code></pre>
+<p><strong>Pattern 2 — Dessiner sur un canvas quand les données changent</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// HomePage.tsx — composant FicheSwatch</span>
+<span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">const</span> canvas = canvasRef.<span class="hljs-property">current</span>
+  <span class="hljs-keyword">if</span> (!canvas) <span class="hljs-keyword">return</span>
+  <span class="hljs-keyword">const</span> context = canvas.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">'2d'</span>)
+  <span class="hljs-keyword">if</span> (!context) <span class="hljs-keyword">return</span>
+
+  canvas.<span class="hljs-property">width</span> = <span class="hljs-number">300</span>
+  canvas.<span class="hljs-property">height</span> = <span class="hljs-number">96</span>
+  <span class="hljs-keyword">const</span> segmentWidth = <span class="hljs-number">300</span> / colors.<span class="hljs-property">length</span>
+  colors.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">color, index</span>) =&gt;</span> {
+    context.<span class="hljs-property">fillStyle</span> = color
+    context.<span class="hljs-title function_">fillRect</span>(index * segmentWidth, <span class="hljs-number">0</span>, segmentWidth + <span class="hljs-number">1</span>, <span class="hljs-number">96</span>)
+  })
+}, [colors])  <span class="hljs-comment">// ← se relance si le tableau colors change</span>
+</div></code></pre>
+<p><strong>Pattern 3 — Redirection selon la session</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// RequireRole.tsx</span>
+<span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">if</span> (!isHydrated) <span class="hljs-keyword">return</span>
+  <span class="hljs-keyword">if</span> (!session) {
+    router.<span class="hljs-title function_">replace</span>(<span class="hljs-string">'/connexion'</span>)
+    <span class="hljs-keyword">return</span>
+  }
+  <span class="hljs-keyword">if</span> (session.<span class="hljs-property">role</span> !== role) {
+    router.<span class="hljs-title function_">replace</span>(<span class="hljs-title function_">homePathForRole</span>(session.<span class="hljs-property">role</span>))
+  }
+}, [isHydrated, session, role, router])
+</div></code></pre>
+<p><strong>Pattern 4 — Lire les paramètres d'URL</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// FichesPage.tsx — pré-filtre par catégorie depuis ?cat=Technique</span>
+<span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">const</span> category = searchParams.<span class="hljs-title function_">get</span>(<span class="hljs-string">'cat'</span>)
+  <span class="hljs-keyword">if</span> (category) {
+    <span class="hljs-title function_">setSelectedCategories</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>([category]))
+  }
+}, [searchParams])
+</div></code></pre>
+<blockquote>
+<p><strong>Règle mnémotechnique :</strong> si ça touche au monde extérieur au rendu pur (DOM, API, storage, navigation), c'est probablement un <code>useEffect</code>.</p>
+</blockquote>
+<h3 id="4.5-r%C3%A9f%C3%A9rences-avec-useref" tabindex="-1">4.5 Références avec <code>useRef</code></h3>
+<p><code>useRef</code> crée une référence mutable qui <strong>ne déclenche pas de re-render</strong> quand elle change. Usages principaux dans ArtPlastique :</p>
+<ol>
+<li><strong>Accéder au DOM</strong> (canvas, input fichier)</li>
+<li><strong>Conserver une valeur</strong> entre les renders sans provoquer de mise à jour</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-comment">// HomePage.tsx</span>
+<span class="hljs-keyword">const</span> canvasRef = useRef&lt;<span class="hljs-title class_">HTMLCanvasElement</span> | <span class="hljs-literal">null</span>&gt;(<span class="hljs-literal">null</span>)
+
+<span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">canvas</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">{canvasRef}</span> <span class="hljs-attr">width</span>=<span class="hljs-string">{300}</span> <span class="hljs-attr">height</span>=<span class="hljs-string">{96}</span> /&gt;</span></span>
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment">// PaintCanvas.tsx</span>
+<span class="hljs-keyword">const</span> drawCanvasRef = useRef&lt;<span class="hljs-title class_">HTMLCanvasElement</span> | <span class="hljs-literal">null</span>&gt;(<span class="hljs-literal">null</span>)
+<span class="hljs-keyword">const</span> fileInputRef = useRef&lt;<span class="hljs-title class_">HTMLInputElement</span> | <span class="hljs-literal">null</span>&gt;(<span class="hljs-literal">null</span>)
+</div></code></pre>
+<p><strong>Différence clé <code>useState</code> vs <code>useRef</code></strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>useState</code></th>
+<th><code>useRef</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Re-render au changement</td>
+<td>Oui</td>
+<td>Non</td>
+</tr>
+<tr>
+<td>Cas d'usage</td>
+<td>Données affichées à l'écran</td>
+<td>Référence DOM, valeur technique</td>
+</tr>
+<tr>
+<td>Exemple projet</td>
+<td><code>questionText</code>, <code>activePanel</code></td>
+<td><code>canvasRef</code>, <code>fileInputRef</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="4.6-listes-et-cl%C3%A9s-(key)" tabindex="-1">4.6 Listes et clés (<code>key</code>)</h3>
+<p>Quand on affiche une liste avec <code>.map()</code>, React a besoin d'une prop <code>key</code> unique pour identifier chaque élément et optimiser les mises à jour.</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// FichesPage.tsx — grille de fiches</span>
+{filtered.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">fiche</span>) =&gt;</span> (
+  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{fiche.slug}</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{</span>`/<span class="hljs-attr">fiches</span>/${<span class="hljs-attr">fiche.slug</span>}`} <span class="hljs-attr">className</span>=<span class="hljs-string">"fiche-card"</span>&gt;</span>
+    ...
+    {fiche.tags.slice(0, 3).map((tag) =&gt; (
+      <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{tag}</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"tag"</span>&gt;</span>{tag}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    ))}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span></span>
+))}
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment">// PublicShell.tsx — navigation</span>
+{publicNav.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> (
+  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{item.to}</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{item.to}</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"topnav-link"</span>&gt;</span>
+    {item.label}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span></span>
+))}
+</div></code></pre>
+<p><strong>Bonnes pratiques :</strong></p>
+<ul>
+<li>Utilisez un identifiant <strong>stable et unique</strong> : <code>fiche.slug</code>, <code>item.to</code>, <code>category</code></li>
+<li>Évitez l'index de tableau (<code>key={index}</code>) si l'ordre peut changer</li>
+<li>Sans <code>key</code>, React affiche un avertissement en console et peut mal recycler les composants</li>
+</ul>
+<hr>
+<h2 id="5.-next.js-et-le-app-router" tabindex="-1">5. Next.js et le App Router</h2>
+<h3 id="5.1-next.js-vs-react-seul" tabindex="-1">5.1 Next.js vs React seul</h3>
+<p><strong>React seul</strong> gère l'interface. <strong>Next.js</strong> ajoute :</p>
+<ul>
+<li>Le <strong>routage par fichiers</strong> (un fichier = une URL)</li>
+<li>Le <strong>rendu côté serveur</strong> (SSR) et la génération statique</li>
+<li>Des optimisations (images, fonts, bundling)</li>
+</ul>
+<p>Dans ArtPlastique, on utilise surtout le <strong>App Router</strong> (dossier <code>src/app/</code>).</p>
+<h3 id="5.2-le-fichier-layout.tsx-%E2%80%94-la-coquille-globale" tabindex="-1">5.2 Le fichier <code>layout.tsx</code> — la coquille globale</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">// src/app/layout.tsx</span>
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">Metadata</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'next'</span>
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">DemoProvider</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/components/DemoProvider'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">PaintCanvas</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'@/components/PaintCanvas'</span>
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">FloatingQuestionWidget</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/components/FloatingQuestionWidget'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./globals.css'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-attr">metadata</span>: <span class="hljs-title class_">Metadata</span> = {
+  <span class="hljs-attr">title</span>: <span class="hljs-string">'ArtPlastique'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'Référence pour les fiches techniques, les roadmaps et les espaces peintres.'</span>,
+  <span class="hljs-attr">icons</span>: { <span class="hljs-attr">icon</span>: <span class="hljs-string">'/favicon.svg'</span> },
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">RootLayout</span>(<span class="hljs-params">{ children }: <span class="hljs-title class_">Readonly</span>&lt;{ children: React.ReactNode }&gt;</span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"fr"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">DemoProvider</span>&gt;</span>
+          {children}
+          <span class="hljs-tag">&lt;<span class="hljs-name">PaintCanvas</span> /&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">FloatingQuestionWidget</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">DemoProvider</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<p><strong>Rôle :</strong></p>
+<ul>
+<li>Enveloppe <strong>toutes</strong> les pages</li>
+<li>Injecte le <code>DemoProvider</code> (état global)</li>
+<li>Affiche le canvas de peinture et le widget de questions sur tout le site</li>
+<li><code>{children}</code> = le contenu de la page courante</li>
+</ul>
+<h3 id="5.3-convention-page.tsx" tabindex="-1">5.3 Convention <code>page.tsx</code></h3>
+<p>Chaque dossier dans <code>src/app/</code> peut contenir un <code>page.tsx</code> qui devient une route :</p>
+<pre class="hljs"><code><div>src/app/fiches/page.tsx     →  /fiches
+src/app/connexion/page.tsx  →  /connexion
+</div></code></pre>
+<h3 id="5.4-m%C3%A9tadonn%C3%A9es-seo" tabindex="-1">5.4 Métadonnées SEO</h3>
+<p>Next.js permet d'exporter un objet <code>metadata</code> depuis un <code>layout.tsx</code> ou un <code>page.tsx</code> <strong>Server Component</strong> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-attr">metadata</span>: <span class="hljs-title class_">Metadata</span> = {
+  <span class="hljs-attr">title</span>: <span class="hljs-string">'ArtPlastique'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'Référence pour les fiches techniques, les roadmaps et les espaces peintres.'</span>,
+  <span class="hljs-attr">icons</span>: { <span class="hljs-attr">icon</span>: <span class="hljs-string">'/favicon.svg'</span> },
+}
+</div></code></pre>
+<p><strong>Effet concret :</strong></p>
+<ul>
+<li>L'onglet du navigateur affiche « ArtPlastique »</li>
+<li>Les moteurs de recherche lisent la <code>description</code></li>
+<li>Le favicon apparaît dans l'onglet</li>
+</ul>
+<p>Pour des métadonnées <strong>dynamiques</strong> par fiche (titre = nom de la fiche), on utiliserait <code>generateMetadata</code> dans la page <code>[slug]</code> — non implémenté ici car les données sont côté client.</p>
+<h3 id="5.5-alias-d'import-%40%2F" tabindex="-1">5.5 Alias d'import <code>@/</code></h3>
+<p>Configuré dans <code>tsconfig.json</code> :</p>
+<pre class="hljs"><code><div><span class="hljs-attr">"paths"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"@/*"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">"./src/*"</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</div></code></pre>
+<p>Permet d'écrire :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> { <span class="hljs-title class_">HomePage</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/views/HomePage'</span>
+<span class="hljs-keyword">import</span> { useDemoStore } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/context/DemoStoreContext'</span>
+</div></code></pre>
+<p>Au lieu de chemins relatifs fragiles :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> { <span class="hljs-title class_">HomePage</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../../../views/HomePage'</span>  <span class="hljs-comment">// à éviter</span>
+</div></code></pre>
+<hr>
+<h2 id="6.-architecture-des-dossiers" tabindex="-1">6. Architecture des dossiers</h2>
+<h3 id="6.1-arborescence-comment%C3%A9e" tabindex="-1">6.1 Arborescence commentée</h3>
+<pre class="hljs"><code><div>Frontend/
+├── src/
+│   ├── app/              # Routes Next.js (pages, layouts)
+│   │   ├── layout.tsx    # Layout racine
+│   │   ├── page.tsx      # Page d'accueil (/)
+│   │   ├── fiches/       # Routes /fiches et /fiches/[slug]
+│   │   ├── roadmaps/
+│   │   ├── connexion/
+│   │   ├── dashboard/
+│   │   └── admin/
+│   │
+│   ├── views/            # Composants « page » (logique UI lourde)
+│   │   ├── HomePage.tsx
+│   │   ├── FichesPage.tsx
+│   │   ├── FicheDetailPage.tsx
+│   │   ├── AuthPage.tsx
+│   │   └── ...
+│   │
+│   ├── components/       # Composants réutilisables
+│   │   ├── PublicShell.tsx
+│   │   ├── PainterShell.tsx
+│   │   ├── RequireRole.tsx
+│   │   ├── PaintCanvas.tsx
+│   │   └── ...
+│   │
+│   ├── context/          # React Context (état global)
+│   │   └── DemoStoreContext.tsx
+│   │
+│   ├── data/             # Données statiques et seeds
+│   │   ├── siteContent.ts
+│   │   ├── siteContent/fiches/   # Fiches extraites (modulaires)
+│   │   ├── demoSeed.ts
+│   │   └── mockUsers.ts
+│   │
+│   ├── lib/              # Utilitaires purs
+│   │   ├── demoStorage.ts
+│   │   ├── slugify.ts
+│   │   ├── ficheUtils.ts
+│   │   └── aiPaintService.ts
+│   │
+│   └── types/            # Types TypeScript partagés
+│       └── content.ts
+│
+├── package.json
+├── tsconfig.json
+└── next.config.ts
+</div></code></pre>
+<h3 id="6.2-s%C3%A9paration-app%2F-vs-views%2F" tabindex="-1">6.2 Séparation <code>app/</code> vs <code>views/</code></h3>
+<table>
+<thead>
+<tr>
+<th>Dossier</th>
+<th>Responsabilité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>app/</code></td>
+<td><strong>Routing</strong> — fichiers minces qui composent shell + vue</td>
+</tr>
+<tr>
+<td><code>views/</code></td>
+<td><strong>Contenu</strong> — formulaires, listes, logique d'affichage</td>
+</tr>
+<tr>
+<td><code>components/</code></td>
+<td><strong>Briques</strong> — shells, guards, widgets réutilisables</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pourquoi ?</strong> Next.js impose que les pages vivent dans <code>app/</code>. En extrayant la logique dans <code>views/</code>, on garde les fichiers de route lisibles et testables.</p>
+<h3 id="6.3-r%C3%B4le-de-chaque-couche" tabindex="-1">6.3 Rôle de chaque couche</h3>
+<table>
+<thead>
+<tr>
+<th>Couche</th>
+<th>Fichiers types</th>
+<th>Dépend de React ?</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data/</code></td>
+<td><code>.ts</code></td>
+<td>Non</td>
+<td><code>siteContent.ts</code>, <code>mockUsers.ts</code></td>
+</tr>
+<tr>
+<td><code>lib/</code></td>
+<td><code>.ts</code></td>
+<td>Non</td>
+<td><code>slugify()</code>, <code>loadSession()</code></td>
+</tr>
+<tr>
+<td><code>types/</code></td>
+<td><code>.ts</code></td>
+<td>Non</td>
+<td><code>DemoFiche</code>, <code>FicheFormInput</code></td>
+</tr>
+<tr>
+<td><code>context/</code></td>
+<td><code>.tsx</code></td>
+<td>Oui</td>
+<td><code>DemoStoreContext</code></td>
+</tr>
+<tr>
+<td><code>components/</code></td>
+<td><code>.tsx</code></td>
+<td>Oui</td>
+<td><code>PublicShell</code>, <code>RequireRole</code></td>
+</tr>
+<tr>
+<td><code>views/</code></td>
+<td><code>.tsx</code></td>
+<td>Oui</td>
+<td><code>HomePage</code>, <code>DashboardPeintrePage</code></td>
+</tr>
+<tr>
+<td><code>app/</code></td>
+<td><code>.tsx</code></td>
+<td>Mixte</td>
+<td><code>page.tsx</code> (souvent Server)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Règle d'or :</strong> plus on descend dans la liste, plus le code est proche de l'interface. Les fonctions pures (<code>lib/</code>, <code>types/</code>) sont réutilisables partout, y compris hors React.</p>
+<hr>
+<h2 id="7.-le-routage-%3A-pages-publiques-et-routes-dynamiques" tabindex="-1">7. Le routage : pages publiques et routes dynamiques</h2>
+<h3 id="7.1-routes-statiques" tabindex="-1">7.1 Routes statiques</h3>
+<p>Une URL fixe = un dossier avec <code>page.tsx</code>.</p>
+<pre class="hljs"><code><div>/fiches  →  src/app/fiches/page.tsx
+</div></code></pre>
+<h3 id="7.2-routes-dynamiques-avec-%5Bslug%5D" tabindex="-1">7.2 Routes dynamiques avec <code>[slug]</code></h3>
+<p>Les crochets créent un <strong>segment variable</strong> :</p>
+<pre class="hljs"><code><div>/fiches/glacis     →  slug = "glacis"
+/fiches/lavis      →  slug = "lavis"
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment">// src/app/fiches/[slug]/page.tsx</span>
+<span class="hljs-keyword">type</span> <span class="hljs-title class_">PageProps</span> = {
+  <span class="hljs-attr">params</span>: <span class="hljs-title class_">Promise</span>&lt;{ <span class="hljs-attr">slug</span>: <span class="hljs-built_in">string</span> }&gt;
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Page</span>(<span class="hljs-params">{ params }: <span class="hljs-title class_">PageProps</span></span>) {
+  <span class="hljs-keyword">const</span> { slug } = <span class="hljs-keyword">await</span> params
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">PublicShell</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">FicheDetailPage</span> <span class="hljs-attr">slug</span>=<span class="hljs-string">{slug}</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">PublicShell</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<blockquote>
+<p><strong>Note Next.js 15+ :</strong> <code>params</code> est une <code>Promise</code> qu'il faut <code>await</code>.</p>
+</blockquote>
+<h3 id="7.3-navigation-avec-link" tabindex="-1">7.3 Navigation avec <code>Link</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> <span class="hljs-title class_">Link</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'next/link'</span>
+
+&lt;<span class="hljs-title class_">Link</span> href=<span class="hljs-string">"/fiches"</span>&gt;<span class="hljs-title class_">Fiches</span>&lt;/<span class="hljs-title class_">Link</span>&gt;
+<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{</span>`/<span class="hljs-attr">fiches</span>/${<span class="hljs-attr">fiche.slug</span>}`}&gt;</span>{fiche.title}<span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span></span>
+</div></code></pre>
+<p><code>Link</code> précharge les pages et évite le rechargement complet (navigation « SPA »).</p>
+<h3 id="7.4-userouter-et-usepathname" tabindex="-1">7.4 <code>useRouter</code> et <code>usePathname</code></h3>
+<p>Ces hooks viennent de <code>next/navigation</code> et ne fonctionnent que dans des <strong>Client Components</strong>.</p>
+<p><strong><code>useRouter()</code> — navigation programmatique</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> { useRouter } <span class="hljs-keyword">from</span> <span class="hljs-string">'next/navigation'</span>
+
+<span class="hljs-keyword">const</span> router = <span class="hljs-title function_">useRouter</span>()
+
+<span class="hljs-comment">// Après connexion réussie</span>
+router.<span class="hljs-title function_">push</span>(result.<span class="hljs-property">redirectTo</span>)
+
+<span class="hljs-comment">// Redirection sans historique (RequireRole)</span>
+router.<span class="hljs-title function_">replace</span>(<span class="hljs-string">'/connexion'</span>)
+
+<span class="hljs-comment">// Après déconnexion (PainterShell)</span>
+<span class="hljs-title function_">logout</span>()
+router.<span class="hljs-title function_">push</span>(<span class="hljs-string">'/connexion'</span>)
+</div></code></pre>
+<p><strong><code>usePathname()</code> — lire l'URL courante</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> { usePathname } <span class="hljs-keyword">from</span> <span class="hljs-string">'next/navigation'</span>
+
+<span class="hljs-keyword">const</span> pathname = <span class="hljs-title function_">usePathname</span>()
+
+<span class="hljs-comment">// PublicShell : pas de header/footer sur l'accueil</span>
+<span class="hljs-keyword">if</span> (pathname === <span class="hljs-string">'/'</span>) {
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;&gt;</span>{children}<span class="hljs-tag">&lt;/&gt;</span></span>
+}
+
+<span class="hljs-comment">// ControlShell : surligner l'item actif du menu admin</span>
+<span class="hljs-keyword">const</span> isActive = pathname === item.<span class="hljs-property">to</span>
+</div></code></pre>
+<p><strong><code>useSearchParams()</code> — lire les query strings</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// FichesPage.tsx</span>
+<span class="hljs-keyword">const</span> searchParams = <span class="hljs-title function_">useSearchParams</span>()
+<span class="hljs-keyword">const</span> category = searchParams.<span class="hljs-title function_">get</span>(<span class="hljs-string">'cat'</span>)  <span class="hljs-comment">// ex. /fiches?cat=Technique</span>
+</div></code></pre>
+<h3 id="7.5-page-404" tabindex="-1">7.5 Page 404</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">// src/app/not-found.tsx</span>
+<span class="hljs-keyword">import</span> { redirect } <span class="hljs-keyword">from</span> <span class="hljs-string">'next/navigation'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">NotFound</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-title function_">redirect</span>(<span class="hljs-string">'/'</span>)
+}
+</div></code></pre>
+<p>Dans ce projet, toute URL inconnue redirige vers l'accueil plutôt que d'afficher une page 404 classique. On pourrait aussi rendre un vrai composant 404 avec un lien « Retour à l'accueil ».</p>
+<hr>
+<h2 id="8.-composants-client-vs-server" tabindex="-1">8. Composants Client vs Server</h2>
+<h3 id="8.1-la-directive-'use-client'" tabindex="-1">8.1 La directive <code>'use client'</code></h3>
+<p>Par défaut, les composants App Router sont des <strong>Server Components</strong>. Pour les hooks React, marquez le fichier :</p>
+<pre class="hljs"><code><div><span class="hljs-string">'use client'</span>
+
+<span class="hljs-keyword">import</span> { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+</div></code></pre>
+<p><strong>Dans ArtPlastique</strong>, presque toute la logique interactive est en <code>'use client'</code> :</p>
+<ul>
+<li><code>views/*</code></li>
+<li><code>components/*</code></li>
+<li><code>context/DemoStoreContext.tsx</code></li>
+</ul>
+<p>Les fichiers <code>app/**/page.tsx</code> restent souvent <strong>sans</strong> <code>'use client'</code>.</p>
+<h3 id="8.2-pourquoi-cette-s%C3%A9paration-%3F" tabindex="-1">8.2 Pourquoi cette séparation ?</h3>
+<table>
+<thead>
+<tr>
+<th>Server Component</th>
+<th>Client Component</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pas de JS interactif envoyé</td>
+<td>JS interactif</td>
+</tr>
+<tr>
+<td>Pas de <code>window</code>, <code>localStorage</code></td>
+<td><code>useState</code>, <code>onClick</code>, storage</td>
+</tr>
+<tr>
+<td>Meilleur SEO, chargement initial</td>
+<td>Interactivité</td>
+</tr>
+</tbody>
+</table>
+<h3 id="8.3-l'hydratation-et-ishydrated" tabindex="-1">8.3 L'hydratation et <code>isHydrated</code></h3>
+<p>Le <code>localStorage</code> n'existe pas côté serveur. Au premier rendu, la session est <code>null</code>. Après le montage client :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> [isHydrated, setIsHydrated] = <span class="hljs-title function_">useState</span>(<span class="hljs-literal">false</span>)
+
+<span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-title function_">setSession</span>(<span class="hljs-title function_">loadSession</span>())
+  <span class="hljs-title function_">setData</span>(<span class="hljs-title function_">mergeStoredDemoData</span>(<span class="hljs-title function_">loadDemoData</span>()))
+  <span class="hljs-title function_">setIsHydrated</span>(<span class="hljs-literal">true</span>)
+}, [])
+</div></code></pre>
+<p>Les pages affichent un spinner tant que <code>!isHydrated</code> pour éviter un « flash » de contenu incorrect ou une redirection prématurée.</p>
+<h3 id="8.4-arbre-des-composants-client" tabindex="-1">8.4 Arbre des composants client</h3>
+<pre class="hljs"><code><div>RootLayout (Server)
+└── DemoProvider (Client)
+    ├── page courante (Server ou Client selon la route)
+    │   └── PublicShell / PainterGate+PainterShell / AdminGate+ControlShell (Client)
+    │       └── HomePage / FichesPage / DashboardPeintrePage… (Client)
+    ├── PaintCanvas (Client)          ← toujours monté
+    └── FloatingQuestionWidget (Client)
+</div></code></pre>
+<p><strong>Point important :</strong> un Server Component peut importer un Client Component, mais pas l'inverse. C'est pourquoi les <code>page.tsx</code> restent minces et délèguent aux <code>views/</code>.</p>
+<hr>
+<h2 id="9.-les-layouts-et-shells-(coquilles-d'interface)" tabindex="-1">9. Les layouts et shells (coquilles d'interface)</h2>
+<h3 id="9.1-publicshell-%E2%80%94-navigation-visiteur" tabindex="-1">9.1 <code>PublicShell</code> — navigation visiteur</h3>
+<p>Enveloppe les pages publiques (sauf l'accueil qui a sa propre nav intégrée) :</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// src/components/PublicShell.tsx</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">PublicShell</span>(<span class="hljs-params">{ children }: <span class="hljs-title class_">PublicShellProps</span></span>) {
+  <span class="hljs-keyword">const</span> pathname = <span class="hljs-title function_">usePathname</span>()
+
+  <span class="hljs-keyword">if</span> (pathname === <span class="hljs-string">'/'</span>) {
+    <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;&gt;</span>{children}<span class="hljs-tag">&lt;/&gt;</span></span>
+  }
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"app-shell public-shell"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"topbar"</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span>{children}<span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">footer</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"site-footer"</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">footer</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<h3 id="9.2-paintershell-%E2%80%94-espace-peintre" tabindex="-1">9.2 <code>PainterShell</code> — espace peintre</h3>
+<p><code>PainterShell</code> fournit la sidebar et la topbar du dashboard peintre. Contrairement à <code>PublicShell</code>, la navigation interne utilise des <strong>boutons</strong> (pas des routes Next.js séparées) car tout le dashboard est une <strong>SPA à panneaux</strong> dans <code>DashboardPeintrePage</code>.</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// src/components/PainterShell.tsx</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">PainterShell</span>(<span class="hljs-params">{ children, activePanel = <span class="hljs-string">'overview'</span>, onNavigate }: <span class="hljs-title class_">PainterShellProps</span></span>) {
+  <span class="hljs-keyword">const</span> { session, logout, questions } = <span class="hljs-title function_">useDemoStore</span>()
+  <span class="hljs-keyword">const</span> pendingQuestionsCount = questions.<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">q</span>) =&gt;</span> q.<span class="hljs-property">status</span> === <span class="hljs-string">'pending'</span>).<span class="hljs-property">length</span>
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"painter-shell"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">aside</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"sidebar painter-sidebar sidebar--dark"</span>&gt;</span>
+        {/* Avatar, nom, navigation par panneaux */}
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> onNavigate?.('editeur')}&gt;Nouvelle fiche<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> onNavigate?.('questions')}&gt;
+          Questions visiteurs {pendingQuestionsCount &gt; 0 &amp;&amp; `(${pendingQuestionsCount})`}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">aside</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">main</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"main painter-main"</span>&gt;</span>{children}<span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<p>Le badge de questions en attente est <strong>dynamique</strong> : il lit <code>questions</code> depuis le Context.</p>
+<h3 id="9.3-controlshell-%E2%80%94-espace-admin" tabindex="-1">9.3 <code>ControlShell</code> — espace admin</h3>
+<p><code>ControlShell</code> utilise des vrais liens <code>Link</code> vers des sous-routes admin (<code>/admin/fiches</code>, <code>/admin/peintres</code>…) :</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// src/components/ControlShell.tsx</span>
+<span class="hljs-keyword">const</span> navGroups = [
+  {
+    <span class="hljs-attr">label</span>: <span class="hljs-string">'Contenu'</span>,
+    <span class="hljs-attr">items</span>: [
+      { <span class="hljs-attr">label</span>: <span class="hljs-string">'Fiches techniques'</span>, <span class="hljs-attr">to</span>: <span class="hljs-string">'/admin/fiches'</span>, <span class="hljs-attr">icon</span>: <span class="hljs-string">'◧'</span> },
+      { <span class="hljs-attr">label</span>: <span class="hljs-string">'Roadmaps'</span>, <span class="hljs-attr">to</span>: <span class="hljs-string">'/admin/roadmaps'</span>, <span class="hljs-attr">icon</span>: <span class="hljs-string">'⬡'</span> },
+    ],
+  },
+  <span class="hljs-comment">// ...</span>
+]
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">ControlShell</span>(<span class="hljs-params">{ children }: <span class="hljs-title class_">ControlShellProps</span></span>) {
+  <span class="hljs-keyword">const</span> pathname = <span class="hljs-title function_">usePathname</span>()
+  <span class="hljs-comment">// isActive = pathname === item.to</span>
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"admin-shell"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">aside</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"sidebar"</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">aside</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">main</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"main"</span>&gt;</span>{children}<span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<h3 id="9.4-layout-imbriqu%C3%A9-admin" tabindex="-1">9.4 Layout imbriqué admin</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">// src/app/admin/layout.tsx</span>
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">AdminGate</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/components/AdminGate'</span>
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ControlShell</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/components/ControlShell'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">AdminLayout</span>(<span class="hljs-params">{ children }: <span class="hljs-title class_">Readonly</span>&lt;{ children: React.ReactNode }&gt;</span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">AdminGate</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ControlShell</span>&gt;</span>{children}<span class="hljs-tag">&lt;/<span class="hljs-name">ControlShell</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">AdminGate</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<p><strong>Toute page sous <code>/admin/*</code> hérite automatiquement de :</strong></p>
+<ol>
+<li><code>AdminGate</code> → vérifie le rôle <code>admin</code></li>
+<li><code>ControlShell</code> → sidebar + topbar admin</li>
+</ol>
+<p>C'est le pattern <strong>layout imbriqué</strong> de Next.js : pas besoin de répéter le shell dans chaque <code>page.tsx</code> admin.</p>
+<h3 id="9.5-composition-%3A-shell-%2B-contenu" tabindex="-1">9.5 Composition : shell + contenu</h3>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>Pattern</th>
+<th>Fichier page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public</td>
+<td><code>&lt;PublicShell&gt;&lt;MaVue /&gt;&lt;/PublicShell&gt;</code></td>
+<td><code>app/fiches/page.tsx</code></td>
+</tr>
+<tr>
+<td>Peintre</td>
+<td><code>&lt;PainterGate&gt;&lt;DashboardPeintrePage /&gt;&lt;/PainterGate&gt;</code></td>
+<td><code>app/dashboard/peintre/page.tsx</code></td>
+</tr>
+<tr>
+<td>Admin</td>
+<td>Layout automatique via <code>admin/layout.tsx</code></td>
+<td><code>app/admin/page.tsx</code></td>
+</tr>
+</tbody>
+</table>
+<pre class="hljs"><code><div><span class="hljs-comment">// app/dashboard/peintre/page.tsx</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Page</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">PainterGate</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">DashboardPeintrePage</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">PainterGate</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<p><code>DashboardPeintrePage</code> utilise lui-même <code>&lt;PainterShell&gt;</code> en interne pour la navigation par panneaux.</p>
+<hr>
+<h2 id="10.-gestion-d'%C3%A9tat-avec-react-context" tabindex="-1">10. Gestion d'état avec React Context</h2>
+<h3 id="10.1-le-probl%C3%A8me-du-%C2%AB-prop-drilling-%C2%BB" tabindex="-1">10.1 Le problème du « prop drilling »</h3>
+<p>Sans Context, il faudrait passer <code>session</code>, <code>fiches</code>, <code>login</code>… à travers dizaines de composants. Le <strong>Context API</strong> centralise l'état.</p>
+<h3 id="10.2-demostorecontext-%E2%80%94-le-c%C5%93ur-de-l'app" tabindex="-1">10.2 <code>DemoStoreContext</code> — le cœur de l'app</h3>
+<p>Fichier : <code>src/context/DemoStoreContext.tsx</code> (~620 lignes)</p>
+<table>
+<thead>
+<tr>
+<th>Catégorie</th>
+<th>Exemples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Session</td>
+<td><code>session</code>, <code>login</code>, <code>logout</code>, <code>register</code></td>
+</tr>
+<tr>
+<td>Données</td>
+<td><code>fiches</code>, <code>roadmaps</code>, <code>questions</code></td>
+</tr>
+<tr>
+<td>Filtres</td>
+<td><code>publishedFiches</code>, <code>publishedRoadmaps</code></td>
+</tr>
+<tr>
+<td>CRUD fiches</td>
+<td><code>saveFicheDraft</code>, <code>submitFicheForReview</code>, <code>approveFiche</code></td>
+</tr>
+<tr>
+<td>CRUD roadmaps</td>
+<td><code>saveRoadmapDraft</code>, <code>submitRoadmapForReview</code>, …</td>
+</tr>
+<tr>
+<td>Utilitaires</td>
+<td><code>getFicheBySlug</code>, <code>getMyFiches</code>, <code>askQuestion</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="10.3-cr%C3%A9er-et-consommer-un-contexte" tabindex="-1">10.3 Créer et consommer un contexte</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">// Provider (layout.tsx via DemoProvider)</span>
+&lt;<span class="hljs-title class_">DemoStoreProvider</span>&gt;{children}&lt;/<span class="hljs-title class_">DemoStoreProvider</span>&gt;
+
+<span class="hljs-comment">// Consumer (n'importe quel composant enfant)</span>
+<span class="hljs-keyword">const</span> { publishedFiches, askQuestion, isHydrated } = <span class="hljs-title function_">useDemoStore</span>()
+</div></code></pre>
+<p>Le hook <code>useDemoStore()</code> lance une erreur explicite si utilisé hors du Provider :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">if</span> (!context) {
+  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">'useDemoStore must be used within DemoStoreProvider'</span>)
+}
+</div></code></pre>
+<h3 id="10.4-usecallback-et-usememo" tabindex="-1">10.4 <code>useCallback</code> et <code>useMemo</code></h3>
+<p>Le Context recrée son objet <code>value</code> à chaque render. Sans optimisation, tous les consommateurs se re-rendraient inutilement.</p>
+<p><strong><code>useCallback</code></strong> — mémorise une <strong>fonction</strong> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> login = <span class="hljs-title function_">useCallback</span>((<span class="hljs-attr">email</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">password</span>: <span class="hljs-built_in">string</span>): <span class="hljs-function"><span class="hljs-params">LoginResult</span> =&gt;</span> {
+  <span class="hljs-comment">// ... logique de connexion</span>
+  <span class="hljs-title function_">saveSession</span>(nextSession)
+  <span class="hljs-title function_">setSession</span>(nextSession)
+  <span class="hljs-keyword">return</span> { <span class="hljs-attr">ok</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">redirectTo</span>: <span class="hljs-string">'/admin'</span> }
+}, [])  <span class="hljs-comment">// dépendances vides = fonction stable</span>
+</div></code></pre>
+<p><strong><code>useMemo</code></strong> — mémorise une <strong>valeur calculée</strong> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> publishedFiches = <span class="hljs-title function_">useMemo</span>(
+  <span class="hljs-function">() =&gt;</span> data.<span class="hljs-property">fiches</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">f</span>) =&gt;</span> f.<span class="hljs-property">status</span> === <span class="hljs-string">'published'</span>),
+  [data.<span class="hljs-property">fiches</span>],
+)
+
+<span class="hljs-keyword">const</span> value = <span class="hljs-title function_">useMemo</span>(<span class="hljs-function">() =&gt;</span> ({
+  session,
+  publishedFiches,
+  login,
+  logout,
+  <span class="hljs-comment">// ... toutes les propriétés exposées</span>
+}), [session, publishedFiches, login, logout, <span class="hljs-comment">/* ... */</span>])
+</div></code></pre>
+<p><strong>Pourquoi c'est important ici :</strong> <code>DemoStoreContext</code> expose ~30 propriétés. <code>useMemo</code> sur <code>value</code> évite que <code>HomePage</code>, <code>FichesPage</code>, <code>PaintCanvas</code>… se re-rendent tous quand seul un champ sans rapport change.</p>
+<h3 id="10.5-pattern-%C2%AB-r%C3%A9sultat-typ%C3%A9-%C2%BB" tabindex="-1">10.5 Pattern « résultat typé »</h3>
+<p>Au lieu de lancer des exceptions ou retourner <code>null</code>, les actions métier retournent un <strong>union type</strong> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">type</span> <span class="hljs-title class_">LoginResult</span> =
+  | { <span class="hljs-attr">ok</span>: <span class="hljs-literal">true</span>; <span class="hljs-attr">redirectTo</span>: <span class="hljs-built_in">string</span> }
+  | { <span class="hljs-attr">ok</span>: <span class="hljs-literal">false</span>; <span class="hljs-attr">error</span>: <span class="hljs-built_in">string</span> }
+
+<span class="hljs-keyword">type</span> <span class="hljs-title class_">SaveContentResult</span> =
+  | { <span class="hljs-attr">ok</span>: <span class="hljs-literal">true</span>; <span class="hljs-attr">slug</span>: <span class="hljs-built_in">string</span>; <span class="hljs-attr">status</span>: <span class="hljs-title class_">ContentStatus</span> }
+  | { <span class="hljs-attr">ok</span>: <span class="hljs-literal">false</span>; <span class="hljs-attr">error</span>: <span class="hljs-built_in">string</span> }
+</div></code></pre>
+<p><strong>Utilisation côté UI :</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> result = <span class="hljs-title function_">saveFicheDraft</span>(form, editingFicheSlug)
+<span class="hljs-keyword">if</span> (!result.<span class="hljs-property">ok</span>) {
+  <span class="hljs-title function_">setEditorMessage</span>({ <span class="hljs-attr">type</span>: <span class="hljs-string">'error'</span>, <span class="hljs-attr">text</span>: result.<span class="hljs-property">error</span> })
+  <span class="hljs-keyword">return</span>
+}
+<span class="hljs-title function_">setEditingFicheSlug</span>(result.<span class="hljs-property">slug</span>)
+<span class="hljs-title function_">setEditorMessage</span>({ <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>, <span class="hljs-attr">text</span>: <span class="hljs-string">'Brouillon enregistré.'</span> })
+</div></code></pre>
+<p>TypeScript <strong>rétrécit</strong> le type après <code>if (!result.ok)</code> : dans le bloc <code>else</code>, <code>result.slug</code> est garanti d'exister. C'est une <em>discriminated union</em> — le champ <code>ok</code> sert de discriminant.</p>
+<hr>
+<h2 id="11.-persistance-locale-(mode-d%C3%A9mo)" tabindex="-1">11. Persistance locale (mode démo)</h2>
+<h3 id="11.1-localstorage-en-bref" tabindex="-1">11.1 <code>localStorage</code> en bref</h3>
+<table>
+<thead>
+<tr>
+<th>Clé</th>
+<th>Contenu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>artplastique-demo-session</code></td>
+<td>Utilisateur connecté (<code>DemoSession</code>)</td>
+</tr>
+<tr>
+<td><code>artplastique-demo-data</code></td>
+<td>Fiches, roadmaps, questions (<code>DemoData</code>)</td>
+</tr>
+<tr>
+<td><code>artplastique-registered-users</code></td>
+<td>Comptes peintres créés via signup</td>
+</tr>
+</tbody>
+</table>
+<p>Fichier : <code>src/lib/demoStorage.ts</code></p>
+<h3 id="11.2-garde-typeof-window" tabindex="-1">11.2 Garde <code>typeof window</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">loadSession</span>(<span class="hljs-params"></span>): <span class="hljs-title class_">DemoSession</span> | <span class="hljs-literal">null</span> {
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">window</span> === <span class="hljs-string">'undefined'</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">const</span> raw = <span class="hljs-variable language_">window</span>.<span class="hljs-property">localStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-variable constant_">SESSION_KEY</span>)
+    <span class="hljs-keyword">if</span> (!raw) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(raw) <span class="hljs-keyword">as</span> <span class="hljs-title class_">DemoSession</span>
+  } <span class="hljs-keyword">catch</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>
+  }
+}
+</div></code></pre>
+<p>Next.js exécute du code côté serveur où <code>window</code> n'existe pas.</p>
+<h3 id="11.3-fusion-seed-%2B-stockage" tabindex="-1">11.3 Fusion seed + stockage</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">// demoSeed.ts</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">createInitialDemoData</span>(<span class="hljs-params"></span>): <span class="hljs-title class_">DemoData</span> {
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">fiches</span>: [...seededFiches, extraDraft],      <span class="hljs-comment">// fiches de siteContent.ts + brouillon démo</span>
+    <span class="hljs-attr">roadmaps</span>: [...seededRoadmaps, extraRoadmapDraft],
+    <span class="hljs-attr">questions</span>: seededQuestions,
+  }
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">mergeStoredDemoData</span>(<span class="hljs-params"><span class="hljs-attr">stored</span>: <span class="hljs-title class_">Partial</span>&lt;<span class="hljs-title class_">DemoData</span>&gt; | <span class="hljs-literal">null</span></span>): <span class="hljs-title class_">DemoData</span> {
+  <span class="hljs-keyword">const</span> initial = <span class="hljs-title function_">createInitialDemoData</span>()
+  <span class="hljs-keyword">if</span> (!stored) <span class="hljs-keyword">return</span> initial
+
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">fiches</span>: stored.<span class="hljs-property">fiches</span> ?? initial.<span class="hljs-property">fiches</span>,
+    <span class="hljs-attr">roadmaps</span>: stored.<span class="hljs-property">roadmaps</span> ?? initial.<span class="hljs-property">roadmaps</span>,
+    <span class="hljs-attr">questions</span>: stored.<span class="hljs-property">questions</span> ?? initial.<span class="hljs-property">questions</span>,
+  }
+}
+</div></code></pre>
+<p><strong>Logique :</strong></p>
+<ol>
+<li>Au premier lancement → données seed (fiches riches de <code>siteContent.ts</code>, quelques brouillons, questions fictives)</li>
+<li>Après modifications → tout est sauvegardé dans <code>localStorage</code> via <code>saveDemoData()</code></li>
+<li>Au rechargement → <code>mergeStoredDemoData(loadDemoData())</code> restaure l'état utilisateur</li>
+</ol>
+<p>Les fiches seed reçoivent des métadonnées démo :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> <span class="hljs-attr">seededFiches</span>: <span class="hljs-title class_">DemoFiche</span>[] = seedFiches.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">fiche, index</span>) =&gt;</span> ({
+  ...fiche,
+  <span class="hljs-attr">authorId</span>: <span class="hljs-string">'marie'</span>,
+  <span class="hljs-attr">status</span>: index === <span class="hljs-number">0</span> ? <span class="hljs-string">'review'</span> : <span class="hljs-string">'published'</span>,  <span class="hljs-comment">// 1ère fiche en modération pour tester</span>
+  <span class="hljs-attr">createdAt</span>: <span class="hljs-string">'2025-05-01T09:00:00.000Z'</span>,
+  <span class="hljs-attr">updatedAt</span>: now,
+}))
+</div></code></pre>
+<h3 id="11.4-resetdemodata" tabindex="-1">11.4 <code>resetDemoData</code></h3>
+<p>Bouton dans le dashboard admin :</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// AdminPage.tsx</span>
+&lt;button <span class="hljs-keyword">type</span>=<span class="hljs-string">"button"</span> className=<span class="hljs-string">"topbar-btn"</span> onClick={resetDemoData}&gt;
+  Réinitialiser les données de démo
+&lt;/button&gt;
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment">// DemoStoreContext.tsx</span>
+<span class="hljs-keyword">const</span> resetDemoData = <span class="hljs-title function_">useCallback</span>(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-title function_">clearDemoData</span>()                        <span class="hljs-comment">// efface localStorage (data + session partielle)</span>
+  <span class="hljs-title function_">persistData</span>(<span class="hljs-title function_">createInitialDemoData</span>())   <span class="hljs-comment">// recharge les seeds</span>
+}, [persistData])
+</div></code></pre>
+<p>Utile pour revenir à l'état initial après des tests (création de fiches, modération, etc.).</p>
+<hr>
+<h2 id="12.-authentification-et-r%C3%B4les" tabindex="-1">12. Authentification et rôles</h2>
+<h3 id="12.1-les-trois-r%C3%B4les" tabindex="-1">12.1 Les trois rôles</h3>
+<table>
+<thead>
+<tr>
+<th>Rôle</th>
+<th>Email démo</th>
+<th>Mot de passe</th>
+<th>Redirection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Visiteur</td>
+<td>—</td>
+<td>—</td>
+<td>Pages publiques</td>
+</tr>
+<tr>
+<td>Peintre</td>
+<td>compte créé via signup</td>
+<td><code>demo</code> (ou mot de passe choisi)</td>
+<td><code>/dashboard/peintre</code></td>
+</tr>
+<tr>
+<td>Admin</td>
+<td><code>admin@artplastique.demo</code></td>
+<td><code>demo</code></td>
+<td><code>/admin</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="12.2-flux-de-connexion" tabindex="-1">12.2 Flux de connexion</h3>
+<pre class="hljs"><code><div>AuthPage → login(email, password)
+    → vérifie demoUsers (admin) puis registeredUsers (peintres)
+    → saveSession() dans localStorage
+    → router.push(redirectTo)
+</div></code></pre>
+<p>Si un utilisateur déjà connecté visite <code>/connexion</code>, il est redirigé automatiquement :</p>
+<pre class="hljs"><code><div><span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">if</span> (!isHydrated || !session) <span class="hljs-keyword">return</span>
+  router.<span class="hljs-title function_">replace</span>(<span class="hljs-title function_">homePathForRole</span>(session.<span class="hljs-property">role</span>))
+}, [isHydrated, session, router])
+</div></code></pre>
+<h3 id="12.3-requirerole-%E2%80%94-garde-de-route" tabindex="-1">12.3 <code>RequireRole</code> — garde de route</h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">RequireRole</span>(<span class="hljs-params">{ role, children }: <span class="hljs-title class_">RequireRoleProps</span></span>) {
+  <span class="hljs-keyword">const</span> { session, isHydrated } = <span class="hljs-title function_">useDemoStore</span>()
+  <span class="hljs-keyword">const</span> router = <span class="hljs-title function_">useRouter</span>()
+
+  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-keyword">if</span> (!isHydrated) <span class="hljs-keyword">return</span>
+    <span class="hljs-keyword">if</span> (!session) {
+      router.<span class="hljs-title function_">replace</span>(<span class="hljs-string">'/connexion'</span>)
+      <span class="hljs-keyword">return</span>
+    }
+    <span class="hljs-keyword">if</span> (session.<span class="hljs-property">role</span> !== role) {
+      router.<span class="hljs-title function_">replace</span>(<span class="hljs-title function_">homePathForRole</span>(session.<span class="hljs-property">role</span>))
+    }
+  }, [isHydrated, session, role, router])
+
+  <span class="hljs-keyword">if</span> (!isHydrated) <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Spinner</span> /&gt;</span></span>
+  <span class="hljs-keyword">if</span> (!session || session.<span class="hljs-property">role</span> !== role) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>
+  <span class="hljs-keyword">return</span> children
+}
+</div></code></pre>
+<h3 id="12.4-admingate-et-paintergate" tabindex="-1">12.4 <code>AdminGate</code> et <code>PainterGate</code></h3>
+<p>Ce sont des <strong>wrappers fins</strong> autour de <code>RequireRole</code> — pattern « composant spécialisé » :</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// AdminGate.tsx</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">AdminGate</span>(<span class="hljs-params">{ children }: { children: ReactNode }</span>) {
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">RequireRole</span> <span class="hljs-attr">role</span>=<span class="hljs-string">"admin"</span>&gt;</span>{children}<span class="hljs-tag">&lt;/<span class="hljs-name">RequireRole</span>&gt;</span></span>
+}
+
+<span class="hljs-comment">// PainterGate.tsx</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">PainterGate</span>(<span class="hljs-params">{ children }: { children: ReactNode }</span>) {
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">RequireRole</span> <span class="hljs-attr">role</span>=<span class="hljs-string">"peintre"</span>&gt;</span>{children}<span class="hljs-tag">&lt;/<span class="hljs-name">RequireRole</span>&gt;</span></span>
+}
+</div></code></pre>
+<p><strong>Avantage :</strong> le code appelant est plus lisible (<code>&lt;PainterGate&gt;</code> vs <code>&lt;RequireRole role="peintre"&gt;</code>) et on peut ajouter une logique spécifique plus tard sans toucher chaque page.</p>
+<h3 id="12.5-inscription-peintre" tabindex="-1">12.5 Inscription peintre</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">// AuthPage.tsx</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">handleRegister</span>(<span class="hljs-params"><span class="hljs-attr">event</span>: <span class="hljs-title class_">React</span>.<span class="hljs-title class_">FormEvent</span></span>) {
+  event.<span class="hljs-title function_">preventDefault</span>()
+  <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">register</span>(registerName, registerEmail, registerPassword)
+  <span class="hljs-keyword">if</span> (!result.<span class="hljs-property">ok</span>) {
+    <span class="hljs-title function_">setMessage</span>({ <span class="hljs-attr">type</span>: <span class="hljs-string">'error'</span>, <span class="hljs-attr">text</span>: result.<span class="hljs-property">error</span> })
+    <span class="hljs-keyword">return</span>
+  }
+  router.<span class="hljs-title function_">push</span>(result.<span class="hljs-property">redirectTo</span>)
+}
+</div></code></pre>
+<p><strong>Validations dans <code>register()</code> :</strong></p>
+<ul>
+<li>Email admin réservé → erreur</li>
+<li>Nom obligatoire, email valide, mot de passe ≥ 3 caractères</li>
+<li>Email déjà utilisé → erreur</li>
+<li>Création d'un <code>id</code> unique (<code>peintre-${Date.now()}</code>)</li>
+<li>Sauvegarde dans <code>registeredUsers</code> (localStorage)</li>
+<li>Connexion automatique + redirection dashboard</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> newUser = {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">'peintre-'</span> + <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
+  <span class="hljs-attr">email</span>: normalizedEmail,
+  password,
+  <span class="hljs-attr">name</span>: name.<span class="hljs-title function_">trim</span>(),
+  <span class="hljs-attr">handle</span>: name.<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">toLowerCase</span>().<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">'.'</span>),
+  <span class="hljs-attr">role</span>: <span class="hljs-string">'peintre'</span> <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span>,
+  <span class="hljs-comment">// ...</span>
+}
+<span class="hljs-title function_">upsertRegisteredUser</span>(newUser)
+<span class="hljs-title function_">saveSession</span>(<span class="hljs-title function_">toSession</span>(newUser))
+</div></code></pre>
+<hr>
+<h2 id="13.-le-mod%C3%A8le-de-donn%C3%A9es-%3A-fiches-et-roadmaps" tabindex="-1">13. Le modèle de données : fiches et roadmaps</h2>
+<h3 id="13.1-type-fiche" tabindex="-1">13.1 Type <code>Fiche</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">Fiche</span> = {
+  <span class="hljs-attr">slug</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">title</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">question</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">category</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">tool</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">duration</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">level</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">summary</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">tags</span>: <span class="hljs-built_in">string</span>[]
+  <span class="hljs-attr">sections</span>: <span class="hljs-title class_">FicheSection</span>[]
+  <span class="hljs-attr">pigmentCode</span>?: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">swatch</span>?: <span class="hljs-built_in">string</span>[]
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">FicheSection</span> = {
+  <span class="hljs-attr">label</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">title</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">paragraphs</span>: <span class="hljs-built_in">string</span>[]
+}
+</div></code></pre>
+<h3 id="13.2-type-roadmap" tabindex="-1">13.2 Type <code>Roadmap</code></h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">Roadmap</span> = {
+  <span class="hljs-attr">slug</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">title</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">audience</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">duration</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">level</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">summary</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">steps</span>: <span class="hljs-title class_">RoadmapStep</span>[]
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">RoadmapStep</span> = {
+  <span class="hljs-attr">title</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">description</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">ficheSlugs</span>: <span class="hljs-built_in">string</span>[]   <span class="hljs-comment">// liens vers des fiches existantes</span>
+}
+</div></code></pre>
+<h3 id="13.3-extension-d%C3%A9mo-%3A-statuts-et-auteur" tabindex="-1">13.3 Extension démo : statuts et auteur</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">// types/content.ts</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">ContentStatus</span> = <span class="hljs-string">'draft'</span> | <span class="hljs-string">'review'</span> | <span class="hljs-string">'published'</span> | <span class="hljs-string">'rejected'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">DemoFiche</span> = <span class="hljs-title class_">Fiche</span> &amp; {
+  <span class="hljs-attr">authorId</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">status</span>: <span class="hljs-title class_">ContentStatus</span>
+  <span class="hljs-attr">createdAt</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">updatedAt</span>: <span class="hljs-built_in">string</span>
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">DemoRoadmap</span> = <span class="hljs-title class_">Roadmap</span> &amp; {
+  <span class="hljs-attr">authorId</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">status</span>: <span class="hljs-title class_">ContentStatus</span>
+  <span class="hljs-attr">createdAt</span>: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">updatedAt</span>: <span class="hljs-built_in">string</span>
+}
+</div></code></pre>
+<p>Les types de base (<code>Fiche</code>, <code>Roadmap</code>) décrivent le <strong>contenu éditorial</strong>. Les types <code>Demo*</code> ajoutent la <strong>gestion de publication</strong> nécessaire à la plateforme.</p>
+<p>Affichage des badges :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">statusMeta</span>(<span class="hljs-params"><span class="hljs-attr">status</span>: <span class="hljs-title class_">ContentStatus</span></span>) {
+  <span class="hljs-keyword">switch</span> (status) {
+    <span class="hljs-keyword">case</span> <span class="hljs-string">'published'</span>: <span class="hljs-keyword">return</span> { <span class="hljs-attr">label</span>: <span class="hljs-string">'● Publié'</span>, <span class="hljs-attr">className</span>: <span class="hljs-string">'badge-published'</span> }
+    <span class="hljs-keyword">case</span> <span class="hljs-string">'review'</span>:    <span class="hljs-keyword">return</span> { <span class="hljs-attr">label</span>: <span class="hljs-string">'◐ En révision'</span>, <span class="hljs-attr">className</span>: <span class="hljs-string">'badge-review'</span> }
+    <span class="hljs-keyword">case</span> <span class="hljs-string">'rejected'</span>:  <span class="hljs-keyword">return</span> { <span class="hljs-attr">label</span>: <span class="hljs-string">'✕ Rejetée'</span>, <span class="hljs-attr">className</span>: <span class="hljs-string">'badge-draft'</span> }
+    <span class="hljs-attr">default</span>:          <span class="hljs-keyword">return</span> { <span class="hljs-attr">label</span>: <span class="hljs-string">'○ Brouillon'</span>, <span class="hljs-attr">className</span>: <span class="hljs-string">'badge-draft'</span> }
+  }
+}
+</div></code></pre>
+<h3 id="13.4-organisation-des-fiches-dans-data%2F" tabindex="-1">13.4 Organisation des fiches dans <code>data/</code></h3>
+<p>Le fichier principal <code>siteContent.ts</code> contient la majorité des fiches inline (tableau <code>fiches: Fiche[]</code>).</p>
+<p>Certaines fiches volumineuses sont <strong>extraites</strong> dans des modules séparés pour la lisibilité :</p>
+<pre class="hljs"><code><div>src/data/siteContent/fiches/
+├── fiche-lavis.ts
+├── fiche-glacis.ts        (si extrait)
+├── fiche-pinceaux.ts
+└── ...
+</div></code></pre>
+<p>Exemple d'un module extrait :</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// fiche-lavis.ts</span>
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">Fiche</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../types'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-attr">ficheLavis</span>: <span class="hljs-title class_">Fiche</span> = {
+  <span class="hljs-attr">slug</span>: <span class="hljs-string">'lavis'</span>,
+  <span class="hljs-attr">title</span>: <span class="hljs-string">'Le lavis'</span>,
+  <span class="hljs-attr">question</span>: <span class="hljs-string">'Comment maîtriser le lavis en peinture ?'</span>,
+  <span class="hljs-attr">category</span>: <span class="hljs-string">'Technique'</span>,
+  <span class="hljs-attr">sections</span>: [
+    { <span class="hljs-attr">label</span>: <span class="hljs-string">'Définition'</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">'La couche transparente'</span>, <span class="hljs-attr">paragraphs</span>: [<span class="hljs-string">'...'</span>] },
+    <span class="hljs-comment">// ...</span>
+  ],
+}
+</div></code></pre>
+<p><strong>Pattern modulaire :</strong> un fichier = une fiche = export nommé. On peut ensuite les réimporter dans <code>siteContent.ts</code> avec un spread ou un <code>concat</code>.</p>
+<h3 id="13.5-g%C3%A9n%C3%A9ration-de-slugs" tabindex="-1">13.5 Génération de slugs</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">// lib/slugify.ts</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">slugify</span>(<span class="hljs-params"><span class="hljs-attr">value</span>: <span class="hljs-built_in">string</span></span>) {
+  <span class="hljs-keyword">return</span> value
+    .<span class="hljs-title function_">toLowerCase</span>()
+    .<span class="hljs-title function_">normalize</span>(<span class="hljs-string">'NFD'</span>)                              <span class="hljs-comment">// décompose les accents</span>
+    .<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/[\u0300-\u036f]/g</span>, <span class="hljs-string">''</span>)              <span class="hljs-comment">// supprime les diacritiques</span>
+    .<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/[^a-z0-9]+/g</span>, <span class="hljs-string">'-'</span>)                  <span class="hljs-comment">// remplace espaces/symboles par -</span>
+    .<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/^-+|-+$/g</span>, <span class="hljs-string">''</span>)                       <span class="hljs-comment">// trim les tirets</span>
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">uniqueSlug</span>(<span class="hljs-params"><span class="hljs-attr">base</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">existing</span>: <span class="hljs-built_in">string</span>[]</span>) {
+  <span class="hljs-keyword">let</span> slug = <span class="hljs-title function_">slugify</span>(base)
+  <span class="hljs-keyword">if</span> (!slug) slug = <span class="hljs-string">`fiche-<span class="hljs-subst">${<span class="hljs-built_in">Date</span>.now()}</span>`</span>
+  <span class="hljs-keyword">if</span> (!existing.<span class="hljs-title function_">includes</span>(slug)) <span class="hljs-keyword">return</span> slug
+
+  <span class="hljs-keyword">let</span> index = <span class="hljs-number">2</span>
+  <span class="hljs-keyword">while</span> (existing.<span class="hljs-title function_">includes</span>(<span class="hljs-string">`<span class="hljs-subst">${slug}</span>-<span class="hljs-subst">${index}</span>`</span>)) {
+    index += <span class="hljs-number">1</span>
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${slug}</span>-<span class="hljs-subst">${index}</span>`</span>
+}
+</div></code></pre>
+<p>Exemples :</p>
+<ul>
+<li><code>"Le glacis"</code> → <code>le-glacis</code></li>
+<li><code>"Le glacis"</code> (déjà pris) → <code>le-glacis-2</code></li>
+<li>Titre vide → <code>fiche-1719667200000</code></li>
+</ul>
+<hr>
+<h2 id="14.-workflow-%C3%A9ditorial-(brouillon-%E2%86%92-publication)" tabindex="-1">14. Workflow éditorial (brouillon → publication)</h2>
+<h3 id="14.1-les-statuts-de-contenu" tabindex="-1">14.1 Les statuts de contenu</h3>
+<pre class="hljs"><code><div>draft  →  review  →  published
+                 ↘  rejected
+</div></code></pre>
+<table>
+<thead>
+<tr>
+<th>Statut</th>
+<th>Visible public</th>
+<th>Modifiable par l'auteur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>draft</code></td>
+<td>Non</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td><code>review</code></td>
+<td>Non</td>
+<td>Oui (en attente)</td>
+</tr>
+<tr>
+<td><code>published</code></td>
+<td>Oui</td>
+<td>Non (sauf nouvelle version)</td>
+</tr>
+<tr>
+<td><code>rejected</code></td>
+<td>Non</td>
+<td>Oui</td>
+</tr>
+</tbody>
+</table>
+<p>Seules les fiches/roadmaps <code>published</code> apparaissent dans <code>publishedFiches</code> et <code>publishedRoadmaps</code>.</p>
+<h3 id="14.2-parcours-peintre" tabindex="-1">14.2 Parcours peintre</h3>
+<p><strong>Étape 1 — Créer ou répondre à une question</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// DashboardPeintrePage.tsx</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">openEditorForQuestion</span>(<span class="hljs-params"><span class="hljs-attr">questionText</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">questionId</span>: <span class="hljs-built_in">string</span></span>) {
+  <span class="hljs-title function_">setForm</span>({
+    ...<span class="hljs-title function_">emptyFicheForm</span>(),
+    <span class="hljs-attr">question</span>: questionText,
+    <span class="hljs-attr">title</span>: questionText.<span class="hljs-title function_">replace</span>(<span class="hljs-string">'?'</span>, <span class="hljs-string">''</span>).<span class="hljs-title function_">replace</span>(<span class="hljs-string">'Comment '</span>, <span class="hljs-string">''</span>),
+  })
+  <span class="hljs-title function_">setAnsweringQuestionId</span>(questionId)
+  <span class="hljs-title function_">setActivePanel</span>(<span class="hljs-string">'editeur'</span>)
+}
+</div></code></pre>
+<p><strong>Étape 2 — Enregistrer un brouillon</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">function</span> <span class="hljs-title function_">handleSaveDraft</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">saveFicheDraft</span>(form, editingFicheSlug, answeringQuestionId)
+  <span class="hljs-keyword">if</span> (!result.<span class="hljs-property">ok</span>) {
+    <span class="hljs-title function_">setEditorMessage</span>({ <span class="hljs-attr">type</span>: <span class="hljs-string">'error'</span>, <span class="hljs-attr">text</span>: result.<span class="hljs-property">error</span> })
+    <span class="hljs-keyword">return</span>
+  }
+  <span class="hljs-title function_">setEditingFicheSlug</span>(result.<span class="hljs-property">slug</span>)
+  <span class="hljs-title function_">setEditorMessage</span>({ <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>, <span class="hljs-attr">text</span>: <span class="hljs-string">'Brouillon enregistré.'</span> })
+}
+</div></code></pre>
+<p><strong>Étape 3 — Soumettre à modération</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">function</span> <span class="hljs-title function_">handleSubmitForReview</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">submitFicheForReview</span>(form, editingFicheSlug, answeringQuestionId)
+  <span class="hljs-keyword">if</span> (!result.<span class="hljs-property">ok</span>) { <span class="hljs-comment">/* erreur */</span> <span class="hljs-keyword">return</span> }
+  <span class="hljs-title function_">setEditorMessage</span>({
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'success'</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">'Fiche soumise à modération. Un administrateur doit l\'approuver pour publication.'</span>,
+  })
+  <span class="hljs-title function_">setActivePanel</span>(<span class="hljs-string">'fiches'</span>)
+}
+</div></code></pre>
+<p><strong>Étape 4 — Admin approuve</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// AdminPage.tsx</span>
+&lt;button onClick={<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">approveFiche</span>(fiche.<span class="hljs-property">slug</span>)}&gt;✓&lt;/button&gt;
+</div></code></pre>
+<p><code>approveFiche</code> passe le statut de <code>review</code> à <code>published</code>. La fiche apparaît immédiatement sur <code>/fiches</code>.</p>
+<h3 id="14.3-file-de-mod%C3%A9ration-admin" tabindex="-1">14.3 File de modération admin</h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> getModerationQueue = <span class="hljs-title function_">useCallback</span>(
+  <span class="hljs-function">() =&gt;</span> data.<span class="hljs-property">fiches</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">f</span>) =&gt;</span> f.<span class="hljs-property">status</span> === <span class="hljs-string">'review'</span>),
+  [data.<span class="hljs-property">fiches</span>],
+)
+</div></code></pre>
+<p>Affichage dans <code>AdminPage</code> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> moderationQueue = <span class="hljs-title function_">getModerationQueue</span>(<span class="hljs-params"></span>)
+
+{moderationQueue.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">fiche</span>) =&gt;</span> (
+  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{fiche.slug}</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"mod-item"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"mod-title"</span>&gt;</span>{fiche.title}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> approveFiche(fiche.slug)}&gt;✓<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> rejectFiche(fiche.slug)}&gt;✕<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+))}
+</div></code></pre>
+<p>Pages dédiées : <code>/admin/fiches</code> et <code>/admin/roadmaps</code> pour une modération plus complète (sélection multiple, suppression…).</p>
+<h3 id="14.4-questions-visiteurs-%E2%86%92-fiches" tabindex="-1">14.4 Questions visiteurs → fiches</h3>
+<pre class="hljs"><code><div>Visiteur (HomePage)
+    │ askQuestion(text, name)
+    ▼
+questions[] status: 'pending'
+    │
+    ▼
+Peintre voit la question (panel 'questions')
+    │ openEditorForQuestion()
+    ▼
+Crée une fiche liée (questionId passé à saveFicheDraft)
+    │
+    ▼
+DemoStoreContext met à jour la question :
+    status: 'answered', ficheSlug: slug
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment">// Dans upsertFiche, si questionId fourni :</span>
+nextQuestions = nextQuestions.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">q</span>) =&gt;</span>
+  q.<span class="hljs-property">id</span> === questionId ? { ...q, <span class="hljs-attr">status</span>: <span class="hljs-string">'answered'</span>, <span class="hljs-attr">ficheSlug</span>: slug } : q
+)
+</div></code></pre>
+<hr>
+<h2 id="15.-typescript-dans-le-projet" tabindex="-1">15. TypeScript dans le projet</h2>
+<h3 id="15.1-pourquoi-typescript-%3F" tabindex="-1">15.1 Pourquoi TypeScript ?</h3>
+<ul>
+<li>Erreurs détectées à la compilation</li>
+<li>Autocomplétion dans l'éditeur</li>
+<li>Documentation vivante des structures de données</li>
+</ul>
+<h3 id="15.2-types-vs-interfaces" tabindex="-1">15.2 Types vs interfaces</h3>
+<p>Le projet utilise principalement <code>type</code> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">Fiche</span> = { <span class="hljs-attr">slug</span>: <span class="hljs-built_in">string</span>; <span class="hljs-attr">title</span>: <span class="hljs-built_in">string</span>; ... }
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">ContentStatus</span> = <span class="hljs-string">'draft'</span> | <span class="hljs-string">'review'</span> | <span class="hljs-string">'published'</span> | <span class="hljs-string">'rejected'</span>
+</div></code></pre>
+<p><strong>Pourquoi <code>type</code> ici ?</strong></p>
+<ul>
+<li>Unions de littéraux (<code>ContentStatus</code>) — idiomatique avec <code>type</code></li>
+<li>Intersection (<code>DemoFiche = Fiche &amp; { ... }</code>) — très lisible</li>
+<li>Pas besoin de <code>interface</code> mergeable (pattern classes)</li>
+</ul>
+<p>On pourrait utiliser <code>interface</code> pour les objets extensibles, mais <code>type</code> est cohérent dans tout le projet.</p>
+<h3 id="15.3-types-utilitaires-du-projet" tabindex="-1">15.3 Types utilitaires du projet</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FicheFormInput</code></td>
+<td>Champs du formulaire d'édition (tags en string, pas en array)</td>
+</tr>
+<tr>
+<td><code>RoadmapFormInput</code></td>
+<td>Formulaire roadmap avec <code>steps: RoadmapStepInput[]</code></td>
+</tr>
+<tr>
+<td><code>SaveContentResult</code></td>
+<td><code>{ ok: true, slug, status } | { ok: false, error }</code></td>
+</tr>
+<tr>
+<td><code>ContentStatus</code></td>
+<td>Union <code>'draft' | 'review' | 'published' | 'rejected'</code></td>
+</tr>
+<tr>
+<td><code>VisitorQuestion</code></td>
+<td>Questions posées sur l'accueil</td>
+</tr>
+<tr>
+<td><code>DemoData</code></td>
+<td><code>{ fiches, roadmaps, questions }</code> — structure localStorage</td>
+</tr>
+<tr>
+<td><code>DemoSession</code></td>
+<td>Session utilisateur connecté</td>
+</tr>
+<tr>
+<td><code>UserRole</code></td>
+<td><code>'peintre' | 'admin'</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Helpers de conversion formulaire ↔ objet :</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">ficheToForm</span>(<span class="hljs-params"><span class="hljs-attr">fiche</span>: <span class="hljs-title class_">DemoFiche</span></span>): <span class="hljs-title class_">FicheFormInput</span> { ... }
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">buildSections</span>(<span class="hljs-params"><span class="hljs-attr">input</span>: <span class="hljs-title class_">FicheFormInput</span></span>): <span class="hljs-title class_">FicheSection</span>[] { ... }
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">parseTags</span>(<span class="hljs-params"><span class="hljs-attr">raw</span>: <span class="hljs-built_in">string</span></span>): <span class="hljs-built_in">string</span>[] {
+  <span class="hljs-keyword">return</span> raw.<span class="hljs-title function_">split</span>(<span class="hljs-string">','</span>).<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">tag</span>) =&gt;</span> tag.<span class="hljs-title function_">trim</span>()).<span class="hljs-title function_">filter</span>(<span class="hljs-title class_">Boolean</span>)
+}
+</div></code></pre>
+<h3 id="15.4-readonly-et-props-next.js" tabindex="-1">15.4 <code>Readonly</code> et props Next.js</h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">RootLayout</span>(<span class="hljs-params">{
+  children,
+}: <span class="hljs-title class_">Readonly</span>&lt;{
+  children: React.ReactNode
+}&gt;</span>) { ... }
+</div></code></pre>
+<p><code>Readonly&lt;&gt;</code> empêche la mutation accidentelle des props. <code>React.ReactNode</code> accepte tout ce que React peut rendre (éléments, texte, fragments, <code>null</code>).</p>
+<p><code>strict: true</code> dans <code>tsconfig.json</code> active les vérifications strictes (null checks, etc.).</p>
+<hr>
+<h2 id="16.-le-canvas-de-peinture-(paintcanvas)" tabindex="-1">16. Le canvas de peinture (PaintCanvas)</h2>
+<h3 id="16.1-pr%C3%A9sentation" tabindex="-1">16.1 Présentation</h3>
+<p><code>PaintCanvas</code> est un widget global monté dans <code>layout.tsx</code>. Il offre :</p>
+<ul>
+<li>Plusieurs outils de dessin (crayon, pinceau, formes, gomme, remplissage…)</li>
+<li>Palettes de couleurs artistiques</li>
+<li>Undo/redo, export PNG</li>
+<li>Mode IA (génération de dessin selon le contexte de la page)</li>
+</ul>
+<p>Fichier : <code>src/components/PaintCanvas.tsx</code> (~1300 lignes)</p>
+<h3 id="16.2-concepts-html5-canvas" tabindex="-1">16.2 Concepts HTML5 Canvas</h3>
+<p><strong>Deux calques canvas</strong> (fond + dessin) pour séparer le background du tracé :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> drawCanvasRef = useRef&lt;<span class="hljs-title class_">HTMLCanvasElement</span> | <span class="hljs-literal">null</span>&gt;(<span class="hljs-literal">null</span>)
+<span class="hljs-keyword">const</span> bgCanvasRef = useRef&lt;<span class="hljs-title class_">HTMLCanvasElement</span> | <span class="hljs-literal">null</span>&gt;(<span class="hljs-literal">null</span>)
+
+<span class="hljs-comment">// Obtenir le contexte 2D</span>
+<span class="hljs-keyword">const</span> ctx = drawCanvasRef.<span class="hljs-property">current</span>?.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">'2d'</span>)
+</div></code></pre>
+<p><strong>Événements souris pour dessiner :</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">function</span> <span class="hljs-title function_">onMouseDown</span>(<span class="hljs-params"><span class="hljs-attr">e</span>: <span class="hljs-title class_">React</span>.<span class="hljs-title class_">MouseEvent</span>&lt;<span class="hljs-title class_">HTMLCanvasElement</span>&gt;</span>) {
+  isDrawing.<span class="hljs-property">current</span> = <span class="hljs-literal">true</span>
+  <span class="hljs-keyword">const</span> { x, y } = <span class="hljs-title function_">getCanvasCoords</span>(e)
+  ctx.<span class="hljs-title function_">beginPath</span>()
+  ctx.<span class="hljs-title function_">moveTo</span>(x, y)
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">onMouseMove</span>(<span class="hljs-params"><span class="hljs-attr">e</span>: <span class="hljs-title class_">React</span>.<span class="hljs-title class_">MouseEvent</span>&lt;<span class="hljs-title class_">HTMLCanvasElement</span>&gt;</span>) {
+  <span class="hljs-keyword">if</span> (!isDrawing.<span class="hljs-property">current</span>) <span class="hljs-keyword">return</span>
+  <span class="hljs-keyword">const</span> { x, y } = <span class="hljs-title function_">getCanvasCoords</span>(e)
+  ctx.<span class="hljs-title function_">lineTo</span>(x, y)
+  ctx.<span class="hljs-title function_">stroke</span>()
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">onMouseUp</span>(<span class="hljs-params"></span>) {
+  isDrawing.<span class="hljs-property">current</span> = <span class="hljs-literal">false</span>
+}
+</div></code></pre>
+<p><strong>Remplissage (flood fill)</strong> — algorithme par pile dans <code>PaintCanvas.tsx</code> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">function</span> <span class="hljs-title function_">floodFill</span>(<span class="hljs-params"><span class="hljs-attr">ctx</span>: <span class="hljs-title class_">CanvasRenderingContext2D</span>, <span class="hljs-attr">x</span>: <span class="hljs-built_in">number</span>, <span class="hljs-attr">y</span>: <span class="hljs-built_in">number</span>, <span class="hljs-attr">fillColor</span>: <span class="hljs-built_in">string</span></span>) {
+  <span class="hljs-keyword">const</span> imageData = ctx.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, canvas.<span class="hljs-property">width</span>, canvas.<span class="hljs-property">height</span>)
+  <span class="hljs-comment">// parcours en largeur des pixels de même couleur...</span>
+  ctx.<span class="hljs-title function_">putImageData</span>(imageData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+}
+</div></code></pre>
+<h3 id="16.3-palettes-et-outils" tabindex="-1">16.3 Palettes et outils</h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">PALETTES</span> = {
+  <span class="hljs-attr">terres</span>: {
+    <span class="hljs-attr">label</span>: <span class="hljs-string">'Terres &amp; Tradition'</span>,
+    <span class="hljs-attr">colors</span>: [<span class="hljs-string">'#201712'</span>, <span class="hljs-string">'#3f2c22'</span>, <span class="hljs-string">'#5b3221'</span>, <span class="hljs-string">'#9d6a3b'</span>, ...]
+  },
+  <span class="hljs-attr">impressionniste</span>: { <span class="hljs-attr">label</span>: <span class="hljs-string">'Impressionnisme'</span>, <span class="hljs-attr">colors</span>: [...] },
+  <span class="hljs-attr">pop</span>: { <span class="hljs-attr">label</span>: <span class="hljs-string">'Pop / Moderne'</span>, <span class="hljs-attr">colors</span>: [...] },
+  <span class="hljs-attr">monochrome</span>: { <span class="hljs-attr">label</span>: <span class="hljs-string">'Monochrome'</span>, <span class="hljs-attr">colors</span>: [...] },
+} <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span>
+
+<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">TOOLS</span> = [
+  { <span class="hljs-attr">id</span>: <span class="hljs-string">'pencil'</span>, <span class="hljs-attr">label</span>: <span class="hljs-string">'Crayon'</span>, <span class="hljs-attr">icon</span>: <span class="hljs-string">'✏️'</span> },
+  { <span class="hljs-attr">id</span>: <span class="hljs-string">'brush'</span>, <span class="hljs-attr">label</span>: <span class="hljs-string">'Pinceau'</span>, <span class="hljs-attr">icon</span>: <span class="hljs-string">'🖌️'</span> },
+  { <span class="hljs-attr">id</span>: <span class="hljs-string">'eraser'</span>, <span class="hljs-attr">label</span>: <span class="hljs-string">'Gomme'</span>, <span class="hljs-attr">icon</span>: <span class="hljs-string">'⬜'</span> },
+  { <span class="hljs-attr">id</span>: <span class="hljs-string">'fill'</span>, <span class="hljs-attr">label</span>: <span class="hljs-string">'Remplir'</span>, <span class="hljs-attr">icon</span>: <span class="hljs-string">'🪣'</span> },
+  <span class="hljs-comment">// ...</span>
+] <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span>
+
+<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">SIZES</span> = [<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">8</span>, <span class="hljs-number">14</span>, <span class="hljs-number">22</span>, <span class="hljs-number">32</span>, <span class="hljs-number">48</span>]
+</div></code></pre>
+<p><code>as const</code> fige les types en littéraux — TypeScript infère <code>PaletteType = 'terres' | 'impressionniste' | ...</code>.</p>
+<h3 id="16.4-int%C3%A9gration-ia-(aipaintservice)" tabindex="-1">16.4 Intégration IA (<code>aiPaintService</code>)</h3>
+<p>Le service définit des <strong>commandes de dessin</strong> sérialisables :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">DrawCommand</span> =
+  | { <span class="hljs-attr">action</span>: <span class="hljs-string">'setBg'</span>; <span class="hljs-attr">color</span>: <span class="hljs-built_in">string</span> }
+  | { <span class="hljs-attr">action</span>: <span class="hljs-string">'setColor'</span>; <span class="hljs-attr">color</span>: <span class="hljs-built_in">string</span> }
+  | { <span class="hljs-attr">action</span>: <span class="hljs-string">'line'</span>; <span class="hljs-attr">x1</span>: <span class="hljs-built_in">number</span>; <span class="hljs-attr">y1</span>: <span class="hljs-built_in">number</span>; <span class="hljs-attr">x2</span>: <span class="hljs-built_in">number</span>; <span class="hljs-attr">y2</span>: <span class="hljs-built_in">number</span> }
+  | { <span class="hljs-attr">action</span>: <span class="hljs-string">'circle'</span>; <span class="hljs-attr">cx</span>: <span class="hljs-built_in">number</span>; <span class="hljs-attr">cy</span>: <span class="hljs-built_in">number</span>; <span class="hljs-attr">r</span>: <span class="hljs-built_in">number</span> }
+  | { <span class="hljs-attr">action</span>: <span class="hljs-string">'spray'</span>; <span class="hljs-attr">x</span>: <span class="hljs-built_in">number</span>; <span class="hljs-attr">y</span>: <span class="hljs-built_in">number</span>; <span class="hljs-attr">radius</span>: <span class="hljs-built_in">number</span>; <span class="hljs-attr">density</span>: <span class="hljs-built_in">number</span> }
+  <span class="hljs-comment">// ...</span>
+</div></code></pre>
+<p><code>PaintCanvas</code> construit un contexte depuis la page visitée et appelle l'IA :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> handleAiPaint = <span class="hljs-title function_">useCallback</span>(<span class="hljs-title function_">async</span> () =&gt; {
+  <span class="hljs-title function_">setIsAiPainting</span>(<span class="hljs-literal">true</span>)
+  <span class="hljs-keyword">const</span> <span class="hljs-attr">context</span>: <span class="hljs-title class_">AIContext</span> = {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'fiche'</span>,
+    <span class="hljs-attr">title</span>: currentFiche?.<span class="hljs-property">title</span> ?? <span class="hljs-string">'Art'</span>,
+    <span class="hljs-attr">summary</span>: currentFiche?.<span class="hljs-property">summary</span> ?? <span class="hljs-string">''</span>,
+    <span class="hljs-attr">tags</span>: currentFiche?.<span class="hljs-property">tags</span>,
+  }
+  <span class="hljs-keyword">const</span> commands = <span class="hljs-keyword">await</span> <span class="hljs-title function_">generatePaintCommands</span>(context)
+  <span class="hljs-comment">// exécute chaque commande sur le canvas</span>
+  <span class="hljs-title function_">setIsAiPainting</span>(<span class="hljs-literal">false</span>)
+}, [<span class="hljs-comment">/* ... */</span>])
+</div></code></pre>
+<p>L'IA retourne un tableau JSON de commandes, exécutées une par une sur le canvas — pattern <strong>interpréteur de commandes</strong>.</p>
+<h3 id="16.5-ficheswatch-%E2%80%94-mini-canvas-d%C3%A9coratif" tabindex="-1">16.5 <code>FicheSwatch</code> — mini canvas décoratif</h3>
+<p>Sur l'accueil, chaque fiche peut afficher un aperçu coloré procédural :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">function</span> <span class="hljs-title function_">FicheSwatch</span>(<span class="hljs-params">{ id, colors }: { id: <span class="hljs-built_in">string</span>; colors: <span class="hljs-built_in">string</span>[] }</span>) {
+  <span class="hljs-keyword">const</span> canvasRef = useRef&lt;<span class="hljs-title class_">HTMLCanvasElement</span> | <span class="hljs-literal">null</span>&gt;(<span class="hljs-literal">null</span>)
+
+  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-keyword">const</span> context = canvasRef.<span class="hljs-property">current</span>?.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">'2d'</span>)
+    <span class="hljs-comment">// bandes de couleur + grain aléatoire (points noirs semi-transparents)</span>
+    colors.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">color, index</span>) =&gt;</span> {
+      context.<span class="hljs-property">fillStyle</span> = color
+      context.<span class="hljs-title function_">fillRect</span>(index * segmentWidth, <span class="hljs-number">0</span>, segmentWidth + <span class="hljs-number">1</span>, height)
+    })
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">800</span>; i++) {
+      context.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">`rgba(0,0,0,<span class="hljs-subst">${<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">0.15</span>}</span>)`</span>
+      context.<span class="hljs-title function_">fillRect</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * width, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * height, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)
+    }
+  }, [colors])
+
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">canvas</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">{canvasRef}</span> <span class="hljs-attr">id</span>=<span class="hljs-string">{id}</span> <span class="hljs-attr">width</span>=<span class="hljs-string">{300}</span> <span class="hljs-attr">height</span>=<span class="hljs-string">{96}</span> /&gt;</span></span>
+}
+</div></code></pre>
+<p>Même technique sur <code>FichesPage</code> via <code>querySelectorAll</code> et <code>data-swatch</code> — le grain donne un aspect « matière picturale ».</p>
+<hr>
+<h2 id="17.-styles-et-css-global" tabindex="-1">17. Styles et CSS global</h2>
+<h3 id="17.1-approche-css-du-projet" tabindex="-1">17.1 Approche CSS du projet</h3>
+<p>Un seul fichier global : <code>src/app/globals.css</code> (~8000 lignes). Pas de Tailwind ni CSS Modules.</p>
+<p><strong>Variables CSS</strong> (<code>:root</code>) :</p>
+<pre class="hljs"><code><div><span class="hljs-selector-pseudo">:root</span> {
+  <span class="hljs-attr">--page</span>: <span class="hljs-number">#f8f1e7</span>;
+  <span class="hljs-attr">--surface</span>: <span class="hljs-number">#fffdfa</span>;
+  <span class="hljs-attr">--ink</span>: <span class="hljs-number">#201712</span>;
+  <span class="hljs-attr">--bone</span>: <span class="hljs-number">#2a2019</span>;
+  <span class="hljs-attr">--bone-muted</span>: <span class="hljs-number">#7b6b5d</span>;
+  <span class="hljs-attr">--ochre</span>: <span class="hljs-number">#9d6a3b</span>;
+  <span class="hljs-attr">--ochre-light</span>: <span class="hljs-number">#d6b189</span>;
+  <span class="hljs-attr">--stroke</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">42</span>, <span class="hljs-number">32</span>, <span class="hljs-number">25</span>, <span class="hljs-number">0.11</span>);
+  <span class="hljs-attr">--shadow</span>: <span class="hljs-number">0</span> <span class="hljs-number">24px</span> <span class="hljs-number">70px</span> <span class="hljs-built_in">rgba</span>(<span class="hljs-number">42</span>, <span class="hljs-number">32</span>, <span class="hljs-number">25</span>, <span class="hljs-number">0.12</span>);
+}
+</div></code></pre>
+<p><strong>Polices</strong> (Google Fonts) :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">@import</span> url(<span class="hljs-string">'https://fonts.googleapis.com/css2?family=Poppins...&amp;family=Playfair+Display...'</span>);
+</div></code></pre>
+<ul>
+<li><code>Poppins</code> — texte courant</li>
+<li><code>Playfair Display</code> — titres élégants</li>
+<li><code>DM Mono</code> — code, données techniques</li>
+</ul>
+<h3 id="17.2-organisation-des-classes" tabindex="-1">17.2 Organisation des classes</h3>
+<table>
+<thead>
+<tr>
+<th>Préfixe / classe</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.app-shell</code>, <code>.public-shell</code></td>
+<td>Layout pages publiques</td>
+</tr>
+<tr>
+<td><code>.painter-shell</code>, <code>.painter-sidebar</code></td>
+<td>Dashboard peintre</td>
+</tr>
+<tr>
+<td><code>.admin-shell</code>, <code>.sidebar</code></td>
+<td>Espace admin</td>
+</tr>
+<tr>
+<td><code>.topbar</code>, <code>.topnav-link</code></td>
+<td>Barre de navigation</td>
+</tr>
+<tr>
+<td><code>.fiches-grid</code>, <code>.fiche-card</code></td>
+<td>Grille de fiches</td>
+</tr>
+<tr>
+<td><code>.auth-guard-loading</code>, <code>.auth-guard-spinner</code></td>
+<td>État chargement session</td>
+</tr>
+<tr>
+<td><code>.badge-published</code>, <code>.badge-review</code>, <code>.badge-draft</code></td>
+<td>Statuts de contenu</td>
+</tr>
+<tr>
+<td><code>.mod-item</code>, <code>.mod-btn.approve</code></td>
+<td>File de modération</td>
+</tr>
+<tr>
+<td><code>.card</code>, <code>.card-header</code>, <code>.card-body</code></td>
+<td>Cartes dashboard</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemple badge publié :</strong></p>
+<pre class="hljs"><code><div><span class="hljs-selector-class">.badge-published</span> {
+  <span class="hljs-attribute">background</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">106</span>, <span class="hljs-number">118</span>, <span class="hljs-number">98</span>, <span class="hljs-number">0.15</span>);
+  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">var</span>(--accent-green);
+}
+</div></code></pre>
+<p>Les classes sont <strong>sémantiques</strong> (décrivent le rôle, pas l'apparence) — proche d'une méthodologie BEM simplifiée.</p>
+<h3 id="17.3-bonnes-pratiques-accessibilit%C3%A9" tabindex="-1">17.3 Bonnes pratiques accessibilité</h3>
+<p>Exemples présents dans le projet :</p>
+<pre class="hljs"><code><div>&lt;nav aria-label=<span class="hljs-string">"Navigation principale"</span>&gt;...&lt;/nav&gt;
+<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/"</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">"ArtPlastique"</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span></span>
+<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"auth-guard-spinner"</span> <span class="hljs-attr">aria-hidden</span> /&gt;</span></span>
+<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">canvas</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"grain-overlay"</span> <span class="hljs-attr">aria-hidden</span>=<span class="hljs-string">"true"</span> /&gt;</span></span>
+<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">"Notifications"</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+</div></code></pre>
+<p><strong>Structure sémantique :</strong></p>
+<ul>
+<li><code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;aside&gt;</code> — pas uniquement des <code>&lt;div&gt;</code></li>
+<li>Labels sur les boutons icône seuls</li>
+<li><code>aria-hidden</code> sur les éléments purement décoratifs (spinners, grain canvas)</li>
+</ul>
+<hr>
+<h2 id="18.-exercices-pratiques" tabindex="-1">18. Exercices pratiques</h2>
+<h3 id="niveau-1-%E2%80%94-d%C3%A9couverte" tabindex="-1">Niveau 1 — Découverte</h3>
+<p><strong>Exercice 1 — Modifier les métadonnées</strong></p>
+<ol>
+<li>Ouvrez <code>src/app/layout.tsx</code></li>
+<li>Changez <code>title: 'ArtPlastique'</code> en <code>title: 'ArtPlastique — Cours'</code></li>
+<li>Rechargez — l'onglet du navigateur doit refléter le changement</li>
+</ol>
+<p><strong>Exercice 2 — Ajouter un lien de navigation</strong></p>
+<ol>
+<li>Dans <code>src/data/siteContent.ts</code>, ajoutez à <code>publicNav</code> :<pre class="hljs"><code><div>{ <span class="hljs-attr">label</span>: <span class="hljs-string">'À propos'</span>, <span class="hljs-attr">to</span>: <span class="hljs-string">'/a-propos'</span> }
+</div></code></pre>
+</li>
+<li>Créez <code>src/app/a-propos/page.tsx</code> avec un titre simple</li>
+<li>Vérifiez que le lien apparaît dans le header (hors accueil)</li>
+</ol>
+<p><strong>Exercice 3 — Compteur de fiches</strong></p>
+<ol>
+<li>Dans <code>HomePage.tsx</code>, affichez <code>{publishedFiches.length} fiches disponibles</code></li>
+<li>Placez-le dans la section hero ou stats</li>
+</ol>
+<hr>
+<h3 id="niveau-2-%E2%80%94-react" tabindex="-1">Niveau 2 — React</h3>
+<p><strong>Exercice 4 — Composant <code>TagList</code></strong></p>
+<p>Créez <code>src/components/TagList.tsx</code> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">type</span> <span class="hljs-title class_">TagListProps</span> = { <span class="hljs-attr">tags</span>: <span class="hljs-built_in">string</span>[]; <span class="hljs-attr">max</span>?: <span class="hljs-built_in">number</span> }
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">TagList</span>(<span class="hljs-params">{ tags, max = <span class="hljs-number">5</span> }: <span class="hljs-title class_">TagListProps</span></span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"tag-list"</span>&gt;</span>
+      {tags.slice(0, max).map((tag) =&gt; (
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{tag}</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"tag"</span>&gt;</span>{tag}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+      ))}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<p>Utilisez-le dans <code>FicheDetailPage</code> ou <code>FichesPage</code>.</p>
+<p><strong>Exercice 5 — Filtre par catégorie</strong></p>
+<p><code>FichesPage</code> a déjà un filtre par checkbox. Améliorez-le :</p>
+<ul>
+<li>Ajoutez un filtre par <strong>niveau</strong> (<code>Débutant</code>, <code>Intermédiaire</code>, <code>Avancé</code>)</li>
+<li>Combinez les deux filtres dans le <code>useMemo</code> de <code>filtered</code></li>
+</ul>
+<p><strong>Exercice 6 — Expérience <code>isHydrated</code></strong></p>
+<ol>
+<li>Commentez temporairement le guard <code>if (!isHydrated) return &lt;Spinner /&gt;</code> dans <code>HomePage</code></li>
+<li>Observez le flash : données vides puis données chargées</li>
+<li>Remettez le guard — comprenez pourquoi il est indispensable avec <code>localStorage</code></li>
+</ol>
+<hr>
+<h3 id="niveau-3-%E2%80%94-next.js" tabindex="-1">Niveau 3 — Next.js</h3>
+<p><strong>Exercice 7 — Page <code>/a-propos</code> complète</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// src/app/a-propos/page.tsx</span>
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">PublicShell</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@/components/PublicShell'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">Page</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">PublicShell</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"page-header"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>À propos <span class="hljs-tag">&lt;<span class="hljs-name">em</span>&gt;</span>d'ArtPlastique<span class="hljs-tag">&lt;/<span class="hljs-name">em</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Plateforme de référence pour les arts plastiques.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">PublicShell</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<p><strong>Exercice 8 — Route dynamique <code>/categories/[slug]</code></strong></p>
+<ol>
+<li>Créez <code>src/app/categories/[slug]/page.tsx</code></li>
+<li>Affichez les fiches publiées dont <code>category</code> correspond au slug (décodé)</li>
+<li>Liez depuis <code>/categories</code> si la page liste les catégories</li>
+</ol>
+<p><strong>Exercice 9 — Server vs Client</strong></p>
+<ol>
+<li>Créez une page sans <code>'use client'</code> qui affiche seulement du texte statique</li>
+<li>Ajoutez un <code>useState</code> — Next.js affiche une erreur</li>
+<li>Ajoutez <code>'use client'</code> — l'erreur disparaît</li>
+</ol>
+<hr>
+<h3 id="niveau-4-%E2%80%94-%C3%A9tat-et-donn%C3%A9es" tabindex="-1">Niveau 4 — État et données</h3>
+<p><strong>Exercice 10 — Inspecter le localStorage</strong></p>
+<ol>
+<li>Créez un compte peintre via <code>/connexion</code></li>
+<li>Créez une fiche brouillon</li>
+<li>Ouvrez DevTools → Application → Local Storage</li>
+<li>Trouvez <code>artplastique-demo-data</code> — votre fiche y est en JSON</li>
+</ol>
+<p><strong>Exercice 11 — <code>getFichesByCategory</code></strong></p>
+<p>Ajoutez dans <code>DemoStoreContext</code> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> getFichesByCategory = <span class="hljs-title function_">useCallback</span>(
+  <span class="hljs-function">(<span class="hljs-params"><span class="hljs-attr">category</span>: <span class="hljs-built_in">string</span></span>) =&gt;</span> publishedFiches.<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">f</span>) =&gt;</span> f.<span class="hljs-property">category</span> === category),
+  [publishedFiches],
+)
+</div></code></pre>
+<p>Exposez-la dans <code>value</code> et utilisez-la dans une vue catégorie.</p>
+<p><strong>Exercice 12 — Cycle complet de modération</strong></p>
+<ol>
+<li>Connectez-vous en peintre, soumettez une fiche (<code>submitFicheForReview</code>)</li>
+<li>Déconnectez-vous, connectez-vous en admin (<code>admin@artplastique.demo</code> / <code>demo</code>)</li>
+<li>Approuvez la fiche dans <code>/admin</code></li>
+<li>Vérifiez qu'elle apparaît sur <code>/fiches</code></li>
+</ol>
+<hr>
+<h3 id="niveau-5-%E2%80%94-canvas" tabindex="-1">Niveau 5 — Canvas</h3>
+<p><strong>Exercice 13 — Canvas minimal</strong></p>
+<pre class="hljs"><code><div><span class="hljs-string">'use client'</span>
+
+<span class="hljs-keyword">import</span> { useRef, useEffect } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">MiniCanvas</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> ref = useRef&lt;<span class="hljs-title class_">HTMLCanvasElement</span>&gt;(<span class="hljs-literal">null</span>)
+
+  <span class="hljs-title function_">useEffect</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-keyword">const</span> ctx = ref.<span class="hljs-property">current</span>?.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">'2d'</span>)
+    <span class="hljs-keyword">if</span> (!ctx) <span class="hljs-keyword">return</span>
+    ctx.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">'#9d6a3b'</span>
+    ctx.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">50</span>, <span class="hljs-number">50</span>, <span class="hljs-number">200</span>, <span class="hljs-number">100</span>)
+  }, [])
+
+  <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">canvas</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">{ref}</span> <span class="hljs-attr">width</span>=<span class="hljs-string">{300}</span> <span class="hljs-attr">height</span>=<span class="hljs-string">{200}</span> /&gt;</span></span>
+}
+</div></code></pre>
+<p><strong>Exercice 14 — Reproduire <code>FicheSwatch</code></strong></p>
+<ol>
+<li>Lisez <code>FicheSwatch</code> dans <code>HomePage.tsx</code></li>
+<li>Créez un composant standalone avec une prop <code>colors: string[]</code></li>
+<li>Affichez-le avec <code>['#1a3a5c', '#4a7aaa', '#8abadf']</code></li>
+</ol>
+<hr>
+<h3 id="projet-fil-rouge-%E2%80%94-page-%C2%AB-mes-favoris-%C2%BB" tabindex="-1">Projet fil rouge — Page « Mes favoris »</h3>
+<p><strong>Objectif :</strong> page listant les fiches bookmarkées, persistance séparée.</p>
+<p><strong>Étapes suggérées :</strong></p>
+<ol>
+<li>
+<p><strong>Storage</strong> — <code>src/lib/favoritesStorage.ts</code> :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">KEY</span> = <span class="hljs-string">'artplastique-favorites'</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">loadFavorites</span>(<span class="hljs-params"></span>): <span class="hljs-built_in">string</span>[] { ... }  <span class="hljs-comment">// slugs</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">toggleFavorite</span>(<span class="hljs-params"><span class="hljs-attr">slug</span>: <span class="hljs-built_in">string</span></span>): <span class="hljs-built_in">string</span>[] { ... }
+</div></code></pre>
+</li>
+<li>
+<p><strong>Hook ou Context</strong> — exposez <code>favorites</code>, <code>isFavorite(slug)</code>, <code>toggleFavorite(slug)</code></p>
+</li>
+<li>
+<p><strong>UI</strong> — bouton ♥ sur <code>FicheDetailPage</code> et <code>fiche-card</code></p>
+</li>
+<li>
+<p><strong>Route</strong> — <code>/favoris</code> avec <code>PublicShell</code>, liste des fiches dont le slug est dans <code>favorites</code></p>
+</li>
+<li>
+<p><strong>Bonus</strong> — compteur dans le header, animation au clic</p>
+</li>
+</ol>
+<p>Ce projet combine : routing, hooks, persistance, filtrage de données, UI — tout le stack du cours.</p>
+<hr>
+<h2 id="19.-annexes" tabindex="-1">19. Annexes</h2>
+<h3 id="a.-glossaire" tabindex="-1">A. Glossaire</h3>
+<table>
+<thead>
+<tr>
+<th>Terme</th>
+<th>Définition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Composant</strong></td>
+<td>Fonction React retournant du JSX</td>
+</tr>
+<tr>
+<td><strong>Props</strong></td>
+<td>Données passées à un composant enfant</td>
+</tr>
+<tr>
+<td><strong>État (state)</strong></td>
+<td>Donnée mutable interne au composant</td>
+</tr>
+<tr>
+<td><strong>Context</strong></td>
+<td>Mécanisme de state global React</td>
+</tr>
+<tr>
+<td><strong>Slug</strong></td>
+<td>Identifiant URL lisible (<code>glacis</code>, <code>lavis</code>)</td>
+</tr>
+<tr>
+<td><strong>Hydratation</strong></td>
+<td>Passage du HTML serveur au React interactif côté client</td>
+</tr>
+<tr>
+<td><strong>App Router</strong></td>
+<td>Système de routage de Next.js basé sur <code>app/</code></td>
+</tr>
+<tr>
+<td><strong>Server/Client Component</strong></td>
+<td>Composant exécuté serveur vs navigateur</td>
+</tr>
+<tr>
+<td><strong>Shell</strong></td>
+<td>Coquille UI (header, sidebar, footer) autour du contenu</td>
+</tr>
+<tr>
+<td><strong>Gate</strong></td>
+<td>Composant guard qui bloque l'accès selon le rôle</td>
+</tr>
+<tr>
+<td><strong>Seed</strong></td>
+<td>Données initiales injectées au premier lancement</td>
+</tr>
+<tr>
+<td><strong>Discriminated union</strong></td>
+<td>Type union avec un champ discriminant (<code>ok: true/false</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="b.-fichiers-cl%C3%A9s-%C3%A0-conna%C3%AEtre" tabindex="-1">B. Fichiers clés à connaître</h3>
+<table>
+<thead>
+<tr>
+<th>Fichier</th>
+<th>Importance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/app/layout.tsx</code></td>
+<td>Point d'entrée UI global</td>
+</tr>
+<tr>
+<td><code>src/context/DemoStoreContext.tsx</code></td>
+<td>Logique métier centrale</td>
+</tr>
+<tr>
+<td><code>src/data/siteContent.ts</code></td>
+<td>Contenu éditorial initial</td>
+</tr>
+<tr>
+<td><code>src/data/demoSeed.ts</code></td>
+<td>Transformation seed → DemoData</td>
+</tr>
+<tr>
+<td><code>src/lib/demoStorage.ts</code></td>
+<td>Persistance localStorage</td>
+</tr>
+<tr>
+<td><code>src/components/RequireRole.tsx</code></td>
+<td>Protection des routes</td>
+</tr>
+<tr>
+<td><code>src/views/HomePage.tsx</code></td>
+<td>Accueil, questions, swatches</td>
+</tr>
+<tr>
+<td><code>src/views/DashboardPeintrePage.tsx</code></td>
+<td>Éditeur peintre complet</td>
+</tr>
+<tr>
+<td><code>src/views/AdminPage.tsx</code></td>
+<td>Modération et reset démo</td>
+</tr>
+<tr>
+<td><code>src/components/PaintCanvas.tsx</code></td>
+<td>Widget dessin global</td>
+</tr>
+</tbody>
+</table>
+<h3 id="c.-comptes-et-mots-de-passe-d%C3%A9mo" tabindex="-1">C. Comptes et mots de passe démo</h3>
+<table>
+<thead>
+<tr>
+<th>Compte</th>
+<th>Email</th>
+<th>Mot de passe</th>
+<th>Accès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin</strong></td>
+<td><code>admin@artplastique.demo</code></td>
+<td><code>demo</code></td>
+<td><code>/admin</code></td>
+</tr>
+<tr>
+<td><strong>Peintre</strong></td>
+<td>Créer via « Créer un compte » sur <code>/connexion</code></td>
+<td><code>demo</code> ou votre choix (≥ 3 car.)</td>
+<td><code>/dashboard/peintre</code></td>
+</tr>
+</tbody>
+</table>
+<p>Sur la page connexion, un bouton « Remplir compte démo admin » appelle <code>fillDemoAccount('admin@artplastique.demo')</code>.</p>
+<p>L'email admin est <strong>réservé</strong> — impossible de s'inscrire avec.</p>
+<h3 id="d.-ressources-externes" tabindex="-1">D. Ressources externes</h3>
+<table>
+<thead>
+<tr>
+<th>Ressource</th>
+<th>URL</th>
+<th>Pour quoi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>React</td>
+<td><a href="https://react.dev">react.dev</a></td>
+<td>Hooks, composants, Context</td>
+</tr>
+<tr>
+<td>Next.js</td>
+<td><a href="https://nextjs.org/docs">nextjs.org/docs</a></td>
+<td>App Router, routing, metadata</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td><a href="https://www.typescriptlang.org/docs/handbook/">typescriptlang.org/docs/handbook</a></td>
+<td>Types, unions, generics</td>
+</tr>
+<tr>
+<td>MDN Canvas</td>
+<td><a href="https://developer.mozilla.org/fr/docs/Web/API/Canvas_API">developer.mozilla.org/docs/Web/API/Canvas_API</a></td>
+<td>API 2D, drawImage, fillRect</td>
+</tr>
+</tbody>
+</table>
+<h3 id="e.-changelog-du-cours" tabindex="-1">E. Changelog du cours</h3>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Modification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-06-29</td>
+<td>v1 — Création du document (structure + sections partielles)</td>
+</tr>
+<tr>
+<td>2026-06-29</td>
+<td>v2 — Complétion intégrale : React hooks, shells, Context, persistance, auth, workflow, TypeScript, canvas, CSS, exercices détaillés, annexes</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><em>Fin du cours ArtPlastique. Vous disposez maintenant d'une cartographie complète du projet pour progresser en React et Next.js sur une base de code réelle.</em></p>
+
+    </div>
+
+
+</body></html>
